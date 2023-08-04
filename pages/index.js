@@ -3,11 +3,26 @@ import Image from "next/image";
 import styles from "@/styles/Home.module.css";
 import { Field, Formik, Form } from "formik";
 import * as Yup from "yup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Spinner } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { initiateSignIn } from "@/redux/services/userService";
+import { useRouter } from "next/router";
+import { ADMIN_USERS } from "@/util/urls";
+import { isAuthenticated } from "@/util/auth";
 
 export default function Home() {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const userStore = useSelector((state) => state.user);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.push(ADMIN_USERS);
+    }
+  }, []);
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
       .email("Invalid email address format")
@@ -20,7 +35,21 @@ export default function Home() {
     password: "",
   };
 
-  const handleSubmit = () => {};
+  const _handleSubmit = async (values) => {
+    setIsSubmitting(true);
+    try {
+      const response = await dispatch(initiateSignIn(values));
+      if (response.status === 200) {
+        setIsSubmitting(false);
+        router.push(ADMIN_USERS);
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      setError(error);
+    }
+  };
+
+  // console.log(userStore.user);
 
   return (
     <>
@@ -37,25 +66,34 @@ export default function Home() {
         >
           <div className={`col-lg-4 ${styles.login_form}`}>
             <p className="text-center">
-              <Image src="/images/logo.png" width={250} height={80} />
+              <Image
+                src="/images/logo.png"
+                width={250}
+                height={80}
+                alt="logo"
+              />
             </p>
+
+            <p className="error">{error}</p>
 
             <Formik
               initialValues={initialSigninValues}
               validationSchema={LoginSchema}
-              onSubmit={handleSubmit}
+              onSubmit={_handleSubmit}
+              enableReinitialize
             >
               {({ values, errors, touched }) => (
                 <Form>
                   <div role="group" className="d-flex flex-column mb-3">
                     <div className="inputfield">
-                      <label for="email">Email</label>
+                      <label htmlFor="email">Email</label>
                       <Field
                         name="email"
                         type="email"
                         label=""
                         className="form-control"
-                        placeholder="Enter email"
+
+                        // placeholder="Enter email"
                       />
                     </div>
                     {errors.email ? (
@@ -67,13 +105,13 @@ export default function Home() {
 
                   <div role="group" className="d-flex flex-column">
                     <div className="inputfield">
-                      <label for="password">Password</label>
+                      <label htmlFor="password">Password</label>
                       <Field
                         name="password"
                         type="password"
                         label=""
                         className="form-control"
-                        placeholder="Enter password"
+                        // placeholder="Enter password"
                       />
                     </div>
                     {errors.password ? (
@@ -96,7 +134,7 @@ export default function Home() {
                         aria-hidden="true"
                       />
                     ) : (
-                      "Continue"
+                      "Sign In"
                     )}
                   </button>
                 </Form>
