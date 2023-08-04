@@ -20,8 +20,8 @@ export const getCurrentUser = () => {
 
       dispatch(setUser(response.data));
     } catch (error) {
-      //   clearAll();
-      //   location.href = "/";
+      clearAll();
+      location.href = "/";
     }
   };
 };
