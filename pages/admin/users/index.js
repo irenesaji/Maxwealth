@@ -1,6 +1,8 @@
 import AdminLayout from "@/pages/layouts/adminLayout";
 import DataTable from "react-data-table-component";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+
 const columns = [
   {
     name: "Title",
@@ -28,17 +30,21 @@ const data = [
 ];
 
 export default function index() {
-  const [domloaded, setDomLoaded] = useState(false);
+  const userStore = useSelector((state) => state.user);
+  const [user, setUser] = useState(null);
+  const [domLoaded, setDomLoaded] = useState(false);
   useEffect(() => {
     setDomLoaded(true);
-  }, []);
+    setUser(userStore);
+  }, [user]);
+
   return (
     <>
       <AdminLayout>
         <h2 className="mt-5 mb-5">
           <strong>Users</strong>
         </h2>
-        {domloaded && (
+        {domLoaded && (
           <DataTable
             columns={columns}
             data={data}

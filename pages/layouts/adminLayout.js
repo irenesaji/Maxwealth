@@ -17,7 +17,7 @@ export default function AdminLayout({ children }) {
           </p>
           <Navigation></Navigation>
         </div>
-        <div className="col-lg-9 offset-lg-3">{children}</div>
+        <div className="col-lg-9 offset-lg-3 pe-5">{children}</div>
       </div>
     </>
   );
