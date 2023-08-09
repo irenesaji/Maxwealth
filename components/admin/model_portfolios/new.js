@@ -1,0 +1,98 @@
+import { useState, useEffect } from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import { Field, Formik, Form } from "formik";
+import { createAllocation } from "@/redux/services/admin/allocations/allocations";
+import { Spinner } from "react-bootstrap";
+import * as Yup from "yup";
+
+export default function New({ show, onHide }) {
+  const [error, setError] = useState("");
+  const [msg, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState("");
+  const newValues = {
+    name: "",
+    description: "",
+  };
+  const Schema = Yup.object().shape({
+    email: Yup.string().required("Name is required"),
+  });
+
+  useEffect(() => {
+    setMessage("");
+    setError("");
+  });
+
+  const handleSubmit = async (values) => {
+    setIsSubmitting(true);
+    try {
+      const response = await createAllocation(values);
+      setMessage("Allocation created successfully!");
+      setIsSubmitting(false);
+      onHide(true);
+      location.reload();
+    } catch (error) {
+      setIsSubmitting(false);
+      setError(error.response);
+    }
+  };
+
+  return (
+    <>
+      <Modal show={show} onHide={onHide}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create New</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <Formik
+            initialValues={newValues}
+            enableReinitialize
+            onSubmit={handleSubmit}
+            validationSchema={Schema}
+          >
+            {({ values, errors, touched, setFieldValue }) => (
+              <Form>
+                <div>
+                  <label for="name">
+                    Name <span style={{ color: "red" }}>*</span>
+                  </label>
+                  <Field type="text" name="name" className="form-control" />
+                </div>
+
+                <div className="mt-3">
+                  <label for="description">Description</label> &nbsp;
+                  <Field
+                    component="textarea"
+                    name="description"
+                    className="form-control"
+                    rows="6"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary mt-5"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      role="status"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    "Create"
+                  )}
+                </button>
+                <p style={{ color: "red" }}>{error}</p>
+                <p style={{ color: "green" }}>{msg}</p>
+              </Form>
+            )}
+          </Formik>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
+}

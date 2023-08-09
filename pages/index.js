@@ -18,11 +18,11 @@ export default function Home() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
 
-  useEffect(() => {
-    if (isAuthenticated()) {
-      router.push(ADMIN_USERS);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (isAuthenticated()) {
+  //     router.push(ADMIN_USERS);
+  //   }
+  // }, []);
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
       .email("Invalid email address format")

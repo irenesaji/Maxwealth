@@ -9,7 +9,7 @@ module.exports = {
   publicRuntimeConfig: {
     BASE_URL:
       process.env.REACT_APP_ENVIRONMENT === "development"
-        ? "https://advithapi.mindstack.in/"
+        ? "https://findolaapi.mindstack.in"
         : "",
   },
 };

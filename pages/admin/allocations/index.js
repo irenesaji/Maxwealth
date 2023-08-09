@@ -2,15 +2,20 @@ import AdminLayout from "@/layouts/adminLayout";
 import DataTable from "react-data-table-component";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { getUsers, getSearchResults } from "@/redux/services/admin/users/users";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import UpdateModal from "@/components/admin/users/update";
-
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import NewModal from "@/components/admin/model_portfolios/new";
+import {
+  getAllocations,
+  createAllocation,
+  getSearchResults,
+} from "@/redux/services/admin/allocations/allocations";
+import { useRouter } from "next/router";
+import { ADMIN_ALLOCATIONS } from "@/util/urls";
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
-  const [allUsers, setAllUsers] = useState(null);
+  const [allAllocations, setAllAllocations] = useState(null);
   const [domLoaded, setDomLoaded] = useState(false);
   const [totalRows, setTotalRows] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -18,61 +23,75 @@ export default function Index() {
   const [perPage, setPerPage] = useState(10);
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
-  const [selectedUser, setSelectedUser] = useState([]);
-
+  const [selectedAllocation, setSelectedAllocation] = useState([]);
+  const router = useRouter();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const columns = [
     {
+      name: "ID",
+      selector: (row) => row.id,
+      sortable: true,
+    },
+    {
       name: "Name",
-      selector: (row) => row.full_name,
+      selector: (row) => row.name,
       sortable: true,
     },
     {
-      name: "Email",
-      selector: (row) => row.email,
-      sortable: true,
-    },
-    {
-      name: "Mobile",
-      selector: (row) => row.mobile,
+      name: "Description",
+      selector: (row) => row.description,
       sortable: true,
     },
 
-    {
-      name: "is_active",
-      selector: (row) => <span>{row.is_active ? "Yes" : "No"}</span>,
-      sortable: false,
-    },
-    {
-      name: "is_blocked",
-      selector: (row) => <span>{row.blocked ? "Yes" : "No"}</span>,
-      sortable: false,
-    },
     {
       name: "",
       selector: (row) => (
-        <FontAwesomeIcon
-          icon={faPenToSquare}
-          width={15}
-          style={{ cursor: "pointer" }}
+        <a
+          href="javascript:void(0);"
           onClick={() => {
-            handleUpdate(row.id);
+            handleView(row.id);
           }}
-        />
+        >
+          <FontAwesomeIcon
+            icon={faEye}
+            width={12}
+            style={{ cursor: "pointer" }}
+          />
+        </a>
       ),
       sortable: false,
     },
+    // {
+    //   name: "",
+    //   selector: (row) => (
+    //     <FontAwesomeIcon
+    //       icon={faTrashAlt}
+    //       width={12}
+    //       style={{ cursor: "pointer", color: "red" }}
+    //       onClick={() => {
+    //         handleUpdate(row.id);
+    //       }}
+    //     />
+    //   ),
+    //   sortable: false,
+    // },
   ];
 
-  const users = async (currentPage, newPerPage) => {
+  const handleView = (id) => {
+    router.push({
+      pathname: `${ADMIN_ALLOCATIONS}/${id}`,
+    });
+  };
+
+  const allocations = async (currentPage, newPerPage) => {
     try {
-      const response = await getUsers(
+      const response = await getAllocations(
         currentPage || page,
         newPerPage || perPage
       );
-      setAllUsers(response.data);
+      setAllAllocations(response.data);
       setTotalRows(response.total);
     } catch (error) {
       console.log(error);
@@ -85,16 +104,16 @@ export default function Index() {
   }, [user]);
 
   useEffect(() => {
-    users();
+    allocations();
   }, []);
 
   const handlePageChange = (page) => {
-    users(page);
+    allocations(page);
   };
 
   const handlePerRowsChange = async (newPerPage, page) => {
     setLoading(true);
-    users(page, newPerPage);
+    allocations(page, newPerPage);
     setPerPage(newPerPage);
     setLoading(false);
   };
@@ -102,27 +121,27 @@ export default function Index() {
   const handleSearch = async (e) => {
     try {
       const response = await getSearchResults(e.target.value, page, perPage);
-      setAllUsers(response.data);
+      setAllAllocations(response.data);
       setTotalRows(response.total);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleUpdate = (id) => {
-    handleShow();
-    const selectedUser = allUsers.filter((user) => {
-      return user.id === id;
-    });
-    setId(id);
-    setSelectedUser(selectedUser);
-  };
+  // const handleUpdate = (id) => {
+  //   handleShow();
+  //   const selectedAllocation = allAllocations.filter((allocation) => {
+  //     return allocation.id === id;
+  //   });
+  //   setId(id);
+  //   setSelectedAllocation(selectedAllocation);
+  // };
 
   return (
     <>
       <AdminLayout>
         <h2 className="mt-5 mb-5">
-          <strong>Users</strong>
+          <strong>Allocations</strong>
         </h2>
         <div className="row mb-5">
           <div className="col-lg-4">
@@ -133,12 +152,16 @@ export default function Index() {
               onChange={handleSearch}
             />
           </div>
-          <div className="col-lg-4"></div>
+          <div className="col-lg-8 d-flex justify-content-end">
+            <button className="btn btn-primary" onClick={handleShow}>
+              Create Allocation
+            </button>
+          </div>
         </div>
-        {domLoaded && allUsers && (
+        {domLoaded && allAllocations && (
           <DataTable
             columns={columns}
-            data={allUsers}
+            data={allAllocations}
             progressPending={loading}
             pagination
             paginationServer
@@ -148,12 +171,7 @@ export default function Index() {
           />
         )}
 
-        <UpdateModal
-          show={show}
-          onHide={handleClose}
-          id={id}
-          user={selectedUser}
-        />
+        <NewModal show={show} onHide={handleClose} />
       </AdminLayout>
     </>
   );

@@ -1,2 +1,6 @@
 export const SIGNIN = `api/auth/login`;
 export const CURRENT_USER = `api/user/current`;
+export const ADMIN_USERS = `/api/admin/users`;
+export const ADMIN_MODEL_PORTFOLIOS = `/api/admin/model_portfolios`;
+export const ADMIN_MODEL_PORTFOLIOS_FUNDS = `/api/admin/model_portfolio_funds`;
+export const ADMIN_MODEL_PORTFOLIOS_FUNDS_NEW = `/api/admin/model_portfolio_funds/bulk`;
