@@ -9,6 +9,9 @@ import {
   ADMIN_USERS,
   ADMIN_ALLOCATIONS,
   ADMIN_RISK_PROFILES,
+  ADMIN_RISK_PROFILES_ANSWERS,
+  ADMIN_RISK_PROFILES_ANSWER_WEIGHTAGE,
+  ADMIN_RISK_PROFILES_QUESTIONS,
 } from "@/util/urls";
 
 export default function Navigation() {
@@ -40,7 +43,12 @@ export default function Navigation() {
         <ListGroup.Item
           action
           href={ADMIN_RISK_PROFILES}
-          active={router.pathname === ADMIN_RISK_PROFILES}
+          active={
+            router.pathname === ADMIN_RISK_PROFILES ||
+            router.pathname === ADMIN_RISK_PROFILES_ANSWERS ||
+            router.pathname === ADMIN_RISK_PROFILES_QUESTIONS ||
+            router.pathname === ADMIN_RISK_PROFILES_ANSWER_WEIGHTAGE
+          }
         >
           Risk Profiles
         </ListGroup.Item>

@@ -5,3 +5,4 @@ export const ADMIN_MODEL_PORTFOLIOS = `/api/admin/model_portfolios`;
 export const ADMIN_MODEL_PORTFOLIOS_FUNDS = `/api/admin/model_portfolio_funds`;
 export const ADMIN_MODEL_PORTFOLIOS_FUNDS_NEW = `/api/admin/model_portfolio_funds/bulk`;
 export const ADMIN_RISK_PROFILES = `/api/admin/risk_profiles`;
+export const ADMIN_RISK_PROFILES_QUESTIONS = `/api/admin/risk_profile_questions`;

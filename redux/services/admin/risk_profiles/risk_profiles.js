@@ -1,4 +1,7 @@
-import { ADMIN_RISK_PROFILES } from "@/util/endpoints";
+import {
+  ADMIN_RISK_PROFILES,
+  ADMIN_RISK_PROFILES_QUESTIONS,
+} from "@/util/endpoints";
 import getConfig from "next/config";
 import axios from "axios";
 const { publicRuntimeConfig } = getConfig();
@@ -70,6 +73,82 @@ export const deleteRiskProfile = async (id) => {
     // };
     const response = await axios.delete(
       `${BASE_URL}${ADMIN_RISK_PROFILES}/${id}`
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const getRiskProfileQuestions = async (page, perPage) => {
+  try {
+    // const headers = {
+    //   // Authorization: `Bearer ${getToken()}`,
+    //   "Content-Type": "application/json",
+    // };
+
+    const response = await axios.get(
+      `${BASE_URL}${ADMIN_RISK_PROFILES_QUESTIONS}`,
+      {
+        // headers: headers,
+        params: {
+          fields: "iid,description,question,is_active,created_at,updated_at",
+          limit: perPage,
+          page: page,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const createRiskProfileQuestion = async (data) => {
+  try {
+    // const headers = {
+    //   // Authorization: `Bearer ${getToken()}`,
+    //   "Content-Type": "application/json",
+    // };
+
+    const response = await axios.post(
+      `${BASE_URL}${ADMIN_RISK_PROFILES_QUESTIONS}`,
+      data
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const updateRiskProfileQuestion = async (data, id) => {
+  try {
+    // const headers = {
+    //   // Authorization: `Bearer ${getToken()}`,
+    //   "Content-Type": "application/json",
+    // };
+    const response = await axios.patch(
+      `${BASE_URL}${ADMIN_RISK_PROFILES_QUESTIONS}/${id}`,
+      data
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const deleteRiskProfileQuestion = async (id) => {
+  try {
+    // const headers = {
+    //   // Authorization: `Bearer ${getToken()}`,
+    //   "Content-Type": "application/json",
+    // };
+    const response = await axios.delete(
+      `${BASE_URL}${ADMIN_RISK_PROFILES_QUESTIONS}/${id}`
     );
 
     return response.data;

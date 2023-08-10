@@ -144,3 +144,8 @@ select.form-control {
   appearance: auto;
   -webkit-appearance: auto;
 }
+
+.list-group-item.active {
+  background: #1bba00;
+  border: 1px solid #1bba00;
+}

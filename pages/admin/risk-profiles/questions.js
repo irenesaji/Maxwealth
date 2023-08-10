@@ -8,15 +8,41 @@ import {
   faPenToSquare,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import NewModal from "@/components/admin/risk_profiles/new";
-import ViewModal from "@/components/admin/risk_profiles/view";
-import UpdateModal from "@/components/admin/risk_profiles/update";
-import DeleteModal from "@/components/admin/risk_profiles/delete";
+import NewModal from "@/components/admin/risk_profiles/newQuestion";
+import UpdateModal from "@/components/admin/risk_profiles/updateQuestion";
+import DeleteModal from "@/components/admin/risk_profiles/deleteQuestion";
 import { useRouter } from "next/router";
 import { ADMIN_ALLOCATIONS } from "@/util/urls";
-import { getRiskProfiles } from "@/redux/services/admin/risk_profiles/risk_profiles";
+import { getRiskProfileQuestions } from "@/redux/services/admin/risk_profiles/risk_profiles";
 import Navigation from "@/components/admin/risk_profiles/navigation";
-export default function Index() {
+
+const ExpandedComponent = ({ data }) => {
+  // Use the data prop to render content
+  return (
+    <div className="pt-5 pb-5">
+      <table className="table">
+        <tr>
+          <td>ID:</td>
+          <td>{data.id}</td>
+        </tr>
+        <tr>
+          <td>Question:</td>
+          <td>{data.question}</td>
+        </tr>
+        <tr>
+          <td>Description:</td>
+          <td>{data.description}</td>
+        </tr>
+        <tr>
+          <td>isActive:</td>
+          <td>{data.is_active ? "Yes" : "No"}</td>
+        </tr>
+      </table>
+    </div>
+  );
+};
+
+export default function Questions() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
   const [allProfiles, setAllProfiles] = useState(null);
@@ -26,7 +52,7 @@ export default function Index() {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [show, setShow] = useState(false);
-  const [showView, setShowView] = useState(false);
+
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [id, setId] = useState("");
@@ -34,8 +60,7 @@ export default function Index() {
   const router = useRouter();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const handleCloseView = () => setShowView(false);
-  const handleShowView = () => setShowView(true);
+
   const handleCloseUpdate = () => setShowUpdate(false);
   const handleShowUpdate = () => setShowUpdate(true);
   const handleCloseDelete = () => setShowDelete(false);
@@ -46,41 +71,27 @@ export default function Index() {
       name: "ID",
       selector: (row) => row.id,
       sortable: true,
+      width: "100px",
     },
     {
-      name: "Name",
-      selector: (row) => row.name,
+      name: "Question",
+      selector: (row) => row.question,
       sortable: true,
+      width: "300px",
     },
     {
       name: "Description",
       selector: (row) => row.description,
       sortable: true,
+      width: "300px",
     },
     {
       name: "IsActive",
       selector: (row) => <span>{row.is_active ? "Yes" : "No"}</span>,
       sortable: false,
+      width: "100px",
     },
 
-    {
-      name: "",
-      selector: (row) => (
-        <a
-          href="javascript:void(0);"
-          onClick={() => {
-            handleView(row.id);
-          }}
-        >
-          <FontAwesomeIcon
-            icon={faEye}
-            width={12}
-            style={{ cursor: "pointer" }}
-          />
-        </a>
-      ),
-      sortable: false,
-    },
     {
       name: "",
       selector: (row) => (
@@ -94,6 +105,7 @@ export default function Index() {
         />
       ),
       sortable: false,
+      width: "50px",
     },
     {
       name: "",
@@ -108,6 +120,7 @@ export default function Index() {
         />
       ),
       sortable: false,
+      width: "50px",
     },
   ];
 
@@ -126,7 +139,7 @@ export default function Index() {
 
   const risk_profiles = async (currentPage, newPerPage) => {
     try {
-      const response = await getRiskProfiles(
+      const response = await getRiskProfileQuestions(
         currentPage || page,
         newPerPage || perPage
       );
@@ -195,7 +208,7 @@ export default function Index() {
           </div>
           <div className="col-lg-8 d-flex justify-content-end">
             <button className="btn btn-primary" onClick={handleShow}>
-              Create Risk Profile
+              Create Question
             </button>
           </div>
         </div>
@@ -209,16 +222,16 @@ export default function Index() {
             paginationTotalRows={totalRows}
             onChangePage={handlePageChange}
             onChangeRowsPerPage={handlePerRowsChange}
+            expandableRows
+            // expandableRowExpanded={(row) => row.defaultExpanded}
+            expandableRowsComponent={ExpandedComponent}
+            expandableRowsComponentProps={{ allProfiles }}
           />
         )}
 
         <NewModal show={show} onHide={handleClose} />
         <DeleteModal show={showDelete} onHide={handleCloseDelete} id={id} />
-        <ViewModal
-          show={showView}
-          onHide={handleCloseView}
-          risk={selectedRisk}
-        />
+
         <UpdateModal
           show={showUpdate}
           onHide={handleCloseUpdate}
