@@ -1,6 +1,7 @@
 import {
   ADMIN_RISK_PROFILES,
   ADMIN_RISK_PROFILES_QUESTIONS,
+  ADMIN_RISK_ANSWER_WEIGHTAGE,
 } from "@/util/endpoints";
 import getConfig from "next/config";
 import axios from "axios";
@@ -93,7 +94,7 @@ export const getRiskProfileQuestions = async (page, perPage) => {
       {
         // headers: headers,
         params: {
-          fields: "iid,description,question,is_active,created_at,updated_at",
+          fields: "id,description,question,is_active,created_at,updated_at",
           limit: perPage,
           page: page,
         },
@@ -149,6 +150,82 @@ export const deleteRiskProfileQuestion = async (id) => {
     // };
     const response = await axios.delete(
       `${BASE_URL}${ADMIN_RISK_PROFILES_QUESTIONS}/${id}`
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const getRiskProfileAnswerWeightage = async (page, perPage) => {
+  try {
+    // const headers = {
+    //   // Authorization: `Bearer ${getToken()}`,
+    //   "Content-Type": "application/json",
+    // };
+
+    const response = await axios.get(
+      `${BASE_URL}${ADMIN_RISK_ANSWER_WEIGHTAGE}`,
+      {
+        // headers: headers,
+        params: {
+          fields: "id,weightage,created_at,updated_at",
+          limit: perPage,
+          page: page,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const createRiskAnswerWeightage = async (data) => {
+  try {
+    // const headers = {
+    //   // Authorization: `Bearer ${getToken()}`,
+    //   "Content-Type": "application/json",
+    // };
+
+    const response = await axios.post(
+      `${BASE_URL}${ADMIN_RISK_ANSWER_WEIGHTAGE}`,
+      data
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const updateRiskAnswerWeightage = async (data, id) => {
+  try {
+    // const headers = {
+    //   // Authorization: `Bearer ${getToken()}`,
+    //   "Content-Type": "application/json",
+    // };
+    const response = await axios.patch(
+      `${BASE_URL}${ADMIN_RISK_ANSWER_WEIGHTAGE}/${id}`,
+      data
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const deleteRiskAnswerWeightage = async (id) => {
+  try {
+    // const headers = {
+    //   // Authorization: `Bearer ${getToken()}`,
+    //   "Content-Type": "application/json",
+    // };
+    const response = await axios.delete(
+      `${BASE_URL}${ADMIN_RISK_ANSWER_WEIGHTAGE}/${id}`
     );
 
     return response.data;

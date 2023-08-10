@@ -8,41 +8,15 @@ import {
   faPenToSquare,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import NewModal from "@/components/admin/risk_profiles/newQuestion";
-import UpdateModal from "@/components/admin/risk_profiles/updateQuestion";
-import DeleteModal from "@/components/admin/risk_profiles/deleteQuestion";
+import NewModal from "@/components/admin/risk_profiles/newAnswerWeightage";
+import UpdateModal from "@/components/admin/risk_profiles/updateAnswerWeightage";
+import DeleteModal from "@/components/admin/risk_profiles/deleteAnswerWeightage";
 import { useRouter } from "next/router";
 import { ADMIN_ALLOCATIONS } from "@/util/urls";
-import { getRiskProfileQuestions } from "@/redux/services/admin/risk_profiles/risk_profiles";
+import { getRiskProfileAnswerWeightage } from "@/redux/services/admin/risk_profiles/risk_profiles";
 import Navigation from "@/components/admin/risk_profiles/navigation";
 
-const ExpandedComponent = ({ data }) => {
-  // Use the data prop to render content
-  return (
-    <div className="pt-5 pb-5">
-      <table className="table">
-        <tr>
-          <td>ID:</td>
-          <td>{data.id}</td>
-        </tr>
-        <tr>
-          <td>Question:</td>
-          <td>{data.question}</td>
-        </tr>
-        <tr>
-          <td>Description:</td>
-          <td>{data.description}</td>
-        </tr>
-        <tr>
-          <td>isActive:</td>
-          <td>{data.is_active ? "Yes" : "No"}</td>
-        </tr>
-      </table>
-    </div>
-  );
-};
-
-export default function Questions() {
+export default function AnswerWightage() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
   const [allProfiles, setAllProfiles] = useState(null);
@@ -74,22 +48,10 @@ export default function Questions() {
       width: "100px",
     },
     {
-      name: "Question",
-      selector: (row) => row.question,
+      name: "Weightage",
+      selector: (row) => row.weightage,
       sortable: true,
       width: "300px",
-    },
-    {
-      name: "Description",
-      selector: (row) => row.description,
-      sortable: true,
-      width: "300px",
-    },
-    {
-      name: "IsActive",
-      selector: (row) => <span>{row.is_active ? "Yes" : "No"}</span>,
-      sortable: false,
-      width: "100px",
     },
 
     {
@@ -131,7 +93,7 @@ export default function Questions() {
 
   const risk_profiles = async (currentPage, newPerPage) => {
     try {
-      const response = await getRiskProfileQuestions(
+      const response = await getRiskProfileAnswerWeightage(
         currentPage || page,
         newPerPage || perPage
       );
@@ -186,7 +148,7 @@ export default function Questions() {
       <AdminLayout>
         <Navigation></Navigation>
         <h2 className="mt-5 mb-5">
-          <strong>Questions</strong>
+          <strong>Answer Weightage</strong>
         </h2>
 
         <div className="row mb-5">
@@ -200,7 +162,7 @@ export default function Questions() {
           </div>
           <div className="col-lg-8 d-flex justify-content-end">
             <button className="btn btn-primary" onClick={handleShow}>
-              Create Question
+              Create Answer Weightage
             </button>
           </div>
         </div>
@@ -214,10 +176,6 @@ export default function Questions() {
             paginationTotalRows={totalRows}
             onChangePage={handlePageChange}
             onChangeRowsPerPage={handlePerRowsChange}
-            expandableRows
-            // expandableRowExpanded={(row) => row.defaultExpanded}
-            expandableRowsComponent={ExpandedComponent}
-            expandableRowsComponentProps={{ allProfiles }}
           />
         )}
 
