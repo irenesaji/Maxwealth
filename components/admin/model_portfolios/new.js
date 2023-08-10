@@ -15,7 +15,7 @@ export default function New({ show, onHide }) {
     description: "",
   };
   const Schema = Yup.object().shape({
-    email: Yup.string().required("Name is required"),
+    name: Yup.string().required("Name is required"),
   });
 
   useEffect(() => {
@@ -54,14 +54,21 @@ export default function New({ show, onHide }) {
             {({ values, errors, touched, setFieldValue }) => (
               <Form>
                 <div>
-                  <label for="name">
+                  <label htmlFor="name">
                     Name <span style={{ color: "red" }}>*</span>
                   </label>
                   <Field type="text" name="name" className="form-control" />
+                  {errors.name ? (
+                    <>
+                      <p style={{ color: "red", fontSize: 12 }}>
+                        {errors.name}
+                      </p>
+                    </>
+                  ) : null}
                 </div>
 
                 <div className="mt-3">
-                  <label for="description">Description</label> &nbsp;
+                  <label htmlFor="description">Description</label> &nbsp;
                   <Field
                     component="textarea"
                     name="description"

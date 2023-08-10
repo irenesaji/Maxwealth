@@ -48,7 +48,7 @@ export default function Update({ show, onHide, id, user }) {
           >
             {({ values, errors, touched, setFieldValue }) => (
               <Form>
-                <label for="isactive">isActive?</label>
+                <label htmlFor="is_active">isActive?</label>
                 <div className="d-flex align-items-center">
                   <Field
                     type="radio"
@@ -58,7 +58,7 @@ export default function Update({ show, onHide, id, user }) {
                     onChange={() => setFieldValue("is_active", true)}
                   />
                   &nbsp;
-                  <label for="isactive">Yes</label> &nbsp;
+                  <label htmlFor="is_active">Yes</label> &nbsp;
                   <Field
                     type="radio"
                     name="is_active"
@@ -67,10 +67,10 @@ export default function Update({ show, onHide, id, user }) {
                     onChange={() => setFieldValue("is_active", false)}
                   />
                   &nbsp;
-                  <label for="isactive">No</label>
+                  <label htmlFor="is_active">No</label>
                 </div>
 
-                <label for="isblocked">isBlocked?</label>
+                <label htmlFor="is_blocked">isBlocked?</label>
                 <div className="d-flex align-items-center">
                   <Field
                     type="radio"
@@ -80,7 +80,7 @@ export default function Update({ show, onHide, id, user }) {
                     onChange={() => setFieldValue("is_blocked", true)}
                   />
                   &nbsp;
-                  <label for="isactive">Yes</label> &nbsp;
+                  <label for="is_blocked">Yes</label> &nbsp;
                   <Field
                     type="radio"
                     name="is_blocked"
@@ -89,7 +89,7 @@ export default function Update({ show, onHide, id, user }) {
                     onChange={() => setFieldValue("is_blocked", false)}
                   />
                   &nbsp;
-                  <label for="isactive">No</label>
+                  <label for="is_blocked">No</label>
                 </div>
                 <button
                   type="submit"

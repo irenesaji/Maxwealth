@@ -139,3 +139,8 @@ table tr td {
 table tr td {
   padding: 10px;
 }
+
+select.form-control {
+  appearance: auto;
+  -webkit-appearance: auto;
+}

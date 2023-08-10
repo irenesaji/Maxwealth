@@ -5,7 +5,11 @@ import { initiateLogout } from "@/redux/services/userService";
 import { useRouter } from "next/router";
 import { isAuthenticated } from "@/util/auth";
 import { useDispatch } from "react-redux";
-import { ADMIN_USERS, ADMIN_ALLOCATIONS } from "@/util/urls";
+import {
+  ADMIN_USERS,
+  ADMIN_ALLOCATIONS,
+  ADMIN_RISK_PROFILES,
+} from "@/util/urls";
 
 export default function Navigation() {
   const router = useRouter();
@@ -19,13 +23,27 @@ export default function Navigation() {
   return (
     <>
       <ListGroup defaultActiveKey="#">
-        <ListGroup.Item action href={ADMIN_USERS}>
-          Users Management
+        <ListGroup.Item
+          action
+          href={ADMIN_USERS}
+          active={router.pathname === ADMIN_USERS}
+        >
+          Users
         </ListGroup.Item>
-        <ListGroup.Item action href={ADMIN_ALLOCATIONS}>
-          Allocations Management
+        <ListGroup.Item
+          action
+          href={ADMIN_ALLOCATIONS}
+          active={router.pathname === ADMIN_ALLOCATIONS}
+        >
+          Allocations
         </ListGroup.Item>
-        <ListGroup.Item action>Goals Management</ListGroup.Item>
+        <ListGroup.Item
+          action
+          href={ADMIN_RISK_PROFILES}
+          active={router.pathname === ADMIN_RISK_PROFILES}
+        >
+          Risk Profiles
+        </ListGroup.Item>
         <ListGroup.Item
           action
           onClick={() => {

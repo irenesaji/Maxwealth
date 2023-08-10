@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Field, Formik, Form } from "formik";
 import { createFund } from "@/redux/services/admin/allocations/funds";
@@ -10,6 +9,7 @@ export default function New({ show, onHide, allocationId }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
+  const [allocations, setAllocations] = useState([]);
   const newValues = {
     scheme_isin: "",
     scheme_name: "",
@@ -107,7 +107,9 @@ export default function New({ show, onHide, allocationId }) {
                   />
                   {errors.scheme_name ? (
                     <>
-                      <p style={{ color: "red" }}>{errors.scheme_name}</p>
+                      <p style={{ color: "red", fontSize: 12 }}>
+                        {errors.scheme_name}
+                      </p>
                     </>
                   ) : null}
                 </div>
@@ -123,7 +125,9 @@ export default function New({ show, onHide, allocationId }) {
                   />
                   {errors.scheme_category ? (
                     <>
-                      <p style={{ color: "red" }}>{errors.scheme_category}</p>
+                      <p style={{ color: "red", fontSize: 12 }}>
+                        {errors.scheme_category}
+                      </p>
                     </>
                   ) : null}
                 </div>
@@ -139,7 +143,7 @@ export default function New({ show, onHide, allocationId }) {
                   />
                   {errors.scheme_asset_class ? (
                     <>
-                      <p style={{ color: "red" }}>
+                      <p style={{ color: "red", fontSize: 12 }}>
                         {errors.scheme_asset_class}
                       </p>
                     </>
@@ -158,7 +162,7 @@ export default function New({ show, onHide, allocationId }) {
                   />
                   {errors.allocation_percentage ? (
                     <>
-                      <p style={{ color: "red" }}>
+                      <p style={{ color: "red", fontSize: 12 }}>
                         {errors.allocation_percentage}
                       </p>
                     </>
@@ -172,7 +176,9 @@ export default function New({ show, onHide, allocationId }) {
                   <Field type="text" name="priority" className="form-control" />
                   {errors.priority ? (
                     <>
-                      <p style={{ color: "red" }}>{errors.priority}</p>
+                      <p style={{ color: "red", fontSize: 12 }}>
+                        {errors.priority}
+                      </p>
                     </>
                   ) : null}
                 </div>
@@ -186,7 +192,9 @@ export default function New({ show, onHide, allocationId }) {
                   />
                   {errors.scheme_logo ? (
                     <>
-                      <p style={{ color: "red" }}>{errors.scheme_logo}</p>
+                      <p style={{ color: "red", fontSize: 12 }}>
+                        {errors.scheme_logo}
+                      </p>
                     </>
                   ) : null}
                 </div>
