@@ -1,7 +1,7 @@
 import getConfig from "next/config";
 import { setUser } from "../reducers/userReducer";
 import { setUserId, setToken, clearAll, getToken } from "@/util/common";
-import { SIGNIN, CURRENT_USER } from "@/util/endpoints";
+import { SIGNIN, CURRENT_USER, GENERATE_OTP } from "@/util/endpoints";
 import axios from "axios";
 
 const { publicRuntimeConfig } = getConfig();
@@ -26,12 +26,24 @@ export const getCurrentUser = () => {
   };
 };
 
+export const generateOTPService = async (phone) => {
+  try {
+    const response = await axios.post(`${BASE_URL}${GENERATE_OTP}`, {
+      mobile: phone,
+    });
+    return response;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
 export const initiateSignIn = (values) => {
+  console.log(values);
   return async (dispatch) => {
     try {
       const response = await axios.post(`${BASE_URL}${SIGNIN}`, {
-        email: values.email,
-        password: values.password,
+        mobile: values.phone,
+        otp: values.otp,
       });
       setToken(response.data.access_token);
       setUserId(response.data.id);

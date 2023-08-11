@@ -18,9 +18,9 @@ export default function Navigation() {
   const router = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
-    // if (!isAuthenticated()) {
-    //   router.push("/");
-    // }
+    if (!isAuthenticated()) {
+      router.push("/");
+    }
     // dispatch(getCurrentUser());
   }, []);
   return (

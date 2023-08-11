@@ -6,7 +6,10 @@ import * as Yup from "yup";
 import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { initiateSignIn } from "@/redux/services/userService";
+import {
+  initiateSignIn,
+  generateOTPService,
+} from "@/redux/services/userService";
 import { useRouter } from "next/router";
 import { ADMIN_USERS } from "@/util/urls";
 import { isAuthenticated } from "@/util/auth";
@@ -17,25 +20,28 @@ export default function Home() {
   const userStore = useSelector((state) => state.user);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [timer, setTimer] = useState(30);
+  const [isTimerActive, setIsTimerActive] = useState(true);
+  const [otpHasBeenSent, setotpHasBeenSent] = useState(true);
+  const [handleOTP, setHandleOTP] = useState(0);
 
-  // useEffect(() => {
-  //   if (isAuthenticated()) {
-  //     router.push(ADMIN_USERS);
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.push(ADMIN_USERS);
+    }
+  }, []);
   const LoginSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email address format")
-      .required("Email is required"),
-    password: Yup.string().required("Password is required"),
+    phone: Yup.string().required("Mobile Number is required"),
   });
 
   const initialSigninValues = {
-    email: "",
-    password: "",
+    phone: "",
+    otp: "",
   };
 
-  const _handleSubmit = async (values) => {
+  const _handleSubmit = async (e, values) => {
+    console.log(values);
     setIsSubmitting(true);
     try {
       const response = await dispatch(initiateSignIn(values));
@@ -50,6 +56,30 @@ export default function Home() {
   };
 
   // console.log(userStore.user);
+
+  const generateOTP = async (e, values) => {
+    setMobile(values.phone);
+
+    try {
+      const response = await generateOTPService(values.phone || mobile);
+    } catch (error) {
+      console.log(error.response);
+    }
+
+    var timeLeft = 30; // set the time limit in seconds
+    var timer = setInterval(function () {
+      setIsTimerActive(true);
+      setotpHasBeenSent(true);
+      timeLeft--;
+      setTimer(timeLeft);
+
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        setotpHasBeenSent(false);
+        setIsTimerActive(false);
+      }
+    }, 1000);
+  };
 
   return (
     <>
@@ -79,64 +109,114 @@ export default function Home() {
             <Formik
               initialValues={initialSigninValues}
               validationSchema={LoginSchema}
-              onSubmit={_handleSubmit}
               enableReinitialize
             >
-              {({ values, errors, touched }) => (
+              {({ values, errors, touched, setFieldValue }) => (
                 <Form>
-                  <div role="group" className="d-flex flex-column mb-3">
-                    <div className="inputfield">
-                      <label htmlFor="email">Email</label>
-                      <Field
-                        name="email"
-                        type="email"
-                        label=""
-                        className="form-control"
+                  {!mobile ? (
+                    <>
+                      <div role="group" className="d-flex flex-column mb-3">
+                        <div className="inputfield">
+                          <label htmlFor="phone">Mobile</label>
+                          <Field
+                            name="phone"
+                            type="text"
+                            label=""
+                            className="form-control"
 
-                        // placeholder="Enter email"
-                      />
-                    </div>
-                    {errors.email ? (
-                      <>
-                        <p className="error">{errors.email}</p>
-                      </>
-                    ) : null}
-                  </div>
+                            // placeholder="Enter email"
+                          />
+                        </div>
+                        {errors.phone ? (
+                          <>
+                            <p className="error">{errors.phone}</p>
+                          </>
+                        ) : null}
+                      </div>
 
-                  <div role="group" className="d-flex flex-column">
-                    <div className="inputfield">
-                      <label htmlFor="password">Password</label>
-                      <Field
-                        name="password"
-                        type="password"
-                        label=""
-                        className="form-control"
-                        // placeholder="Enter password"
-                      />
-                    </div>
-                    {errors.password ? (
-                      <>
-                        <p className="error">{errors.password}</p>
-                      </>
-                    ) : null}
-                  </div>
+                      <button
+                        type="button"
+                        className="btn btn-primary mt-5 w-100"
+                        disabled={isSubmitting}
+                        onClick={(e) => {
+                          generateOTP(e, values);
+                        }}
+                      >
+                        {isSubmitting ? (
+                          <Spinner
+                            as="span"
+                            animation="border"
+                            role="status"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          "Generate OTP"
+                        )}
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <div role="group" className="d-flex flex-column">
+                        <div className="inputfield">
+                          <label htmlFor="otp">OTP</label>
+                          <Field
+                            name="otp"
+                            type="text"
+                            label=""
+                            className="form-control"
+                            // placeholder="Enter password"
+                          />
+                        </div>
+                        {errors.otp ? (
+                          <>
+                            <p className="error">{errors.otp}</p>
+                          </>
+                        ) : null}
+                      </div>
 
-                  <button
-                    type="submit"
-                    className="btn btn-primary mt-5 w-100"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <Spinner
-                        as="span"
-                        animation="border"
-                        role="status"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      "Sign In"
-                    )}
-                  </button>
+                      <div className="resendOTP">
+                        {isTimerActive ? (
+                          <div>
+                            <p className="resendOTPTimer">
+                              Resend OTP in {timer} seconds
+                            </p>
+                          </div>
+                        ) : (
+                          <div>
+                            <p className="resendOTPRequest">
+                              Didn't receive OTP?{" "}
+                              <a
+                                href="#"
+                                onClick={(e) => {
+                                  generateOTP(e, values);
+                                }}
+                              >
+                                Resend OTP
+                              </a>
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        className="btn btn-primary mt-5 w-100"
+                        disabled={isSubmitting}
+                        onClick={(e) => _handleSubmit(e, values)}
+                      >
+                        {isSubmitting ? (
+                          <Spinner
+                            as="span"
+                            animation="border"
+                            role="status"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          "Submit"
+                        )}
+                      </button>
+                    </>
+                  )}
                 </Form>
               )}
             </Formik>

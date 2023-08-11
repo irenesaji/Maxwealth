@@ -1,18 +1,19 @@
 import { ADMIN_USERS } from "@/util/endpoints";
 import getConfig from "next/config";
 import axios from "axios";
+import { getToken } from "@/util/common";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
 export const getUsers = async (page, perPage) => {
   try {
-    // const headers = {
-    //   // Authorization: `Bearer ${getToken()}`,
-    //   "Content-Type": "application/json",
-    // };
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_USERS}`, {
-      // headers: headers,
+      headers: headers,
       params: {
         fields:
           "id,email,full_name,country_code,mobile,mobile_verified,is_active,is_blocked",
@@ -29,13 +30,13 @@ export const getUsers = async (page, perPage) => {
 
 export const getSearchResults = async (value, page, perPage) => {
   try {
-    // const headers = {
-    //   // Authorization: `Bearer ${getToken()}`,
-    //   "Content-Type": "application/json",
-    // };
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_USERS}`, {
-      // headers: headers,
+      headers: headers,
       params: {
         fields:
           "id,email,full_name,country_code,mobile,mobile_verified,is_active,is_blocked",
@@ -52,13 +53,19 @@ export const getSearchResults = async (value, page, perPage) => {
 
 export const updateUser = async (id, data) => {
   try {
-    // const headers = {
-    //   // Authorization: `Bearer ${getToken()}`,
-    //   "Content-Type": "application/json",
-    // };
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
     console.log(data);
 
-    const response = await axios.patch(`${BASE_URL}${ADMIN_USERS}/${id}`, data);
+    const response = await axios.patch(
+      `${BASE_URL}${ADMIN_USERS}/${id}`,
+      data,
+      {
+        headers: headers,
+      }
+    );
 
     return response.data;
   } catch (error) {

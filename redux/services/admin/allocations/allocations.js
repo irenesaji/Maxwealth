@@ -1,18 +1,19 @@
 import { ADMIN_MODEL_PORTFOLIOS } from "@/util/endpoints";
 import getConfig from "next/config";
 import axios from "axios";
+import { getToken } from "@/util/common";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
 export const getAllocations = async (page, perPage) => {
   try {
-    // const headers = {
-    //   // Authorization: `Bearer ${getToken()}`,
-    //   "Content-Type": "application/json",
-    // };
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_MODEL_PORTFOLIOS}`, {
-      // headers: headers,
+      headers: headers,
       params: {
         fields: "id,name,description",
         limit: perPage,
@@ -28,13 +29,13 @@ export const getAllocations = async (page, perPage) => {
 
 export const getSearchResults = async (value, page, perPage) => {
   try {
-    // const headers = {
-    //   // Authorization: `Bearer ${getToken()}`,
-    //   "Content-Type": "application/json",
-    // };
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_MODEL_PORTFOLIOS}`, {
-      // headers: headers,
+      headers: headers,
       params: {
         fields: "id,name,description",
         limit: perPage,
@@ -50,14 +51,15 @@ export const getSearchResults = async (value, page, perPage) => {
 
 export const createAllocation = async (data) => {
   try {
-    // const headers = {
-    //   // Authorization: `Bearer ${getToken()}`,
-    //   "Content-Type": "application/json",
-    // };
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
 
     const response = await axios.post(
       `${BASE_URL}${ADMIN_MODEL_PORTFOLIOS}`,
-      data
+      data,
+      { headers: headers }
     );
 
     return response.data;
