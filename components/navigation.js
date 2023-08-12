@@ -12,6 +12,7 @@ import {
   ADMIN_RISK_PROFILES_ANSWERS,
   ADMIN_RISK_PROFILES_ANSWER_WEIGHTAGE,
   ADMIN_RISK_PROFILES_QUESTIONS,
+  ADMIN_GOALS,
 } from "@/util/urls";
 
 export default function Navigation() {
@@ -51,6 +52,13 @@ export default function Navigation() {
           }
         >
           Risk Profiles
+        </ListGroup.Item>
+        <ListGroup.Item
+          action
+          href={ADMIN_GOALS}
+          active={router.pathname === ADMIN_GOALS}
+        >
+          Goals
         </ListGroup.Item>
         <ListGroup.Item
           action

@@ -188,8 +188,6 @@ export default function Answers() {
     try {
       const response = await getRiskProfileAnswerWeightage();
       setWeightageData(response);
-
-      return selectedWeightage ? selectedWeightage.weightage : "N/A";
     } catch (error) {
       console.log(error.response);
     }
