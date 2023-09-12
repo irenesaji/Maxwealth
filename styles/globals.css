@@ -76,7 +76,7 @@ input {
 .btn-primary:hover,
 .btn-primary:active {
   background: #1bba00 !important;
-  border: 1px solid #1bba00;
+  border: 1px solid #1bba00 !important;
   border-radius: 10px;
   min-height: 48px;
 }
@@ -94,7 +94,7 @@ h3 {
   position: absolute;
   height: 100vh;
   background-color: #def7e5;
-  padding: 0;
+  padding: 0 !important;
   box-shadow: 0 0 10px #e9e4e4;
 }
 
@@ -120,7 +120,7 @@ h3 {
 }
 
 .offset-lg-3 {
-  margin-left: 26%;
+  margin-left: 26% !important;
 }
 
 input[type="text"]:focus,
@@ -146,6 +146,6 @@ select.form-control {
 }
 
 .list-group-item.active {
-  background: #1bba00;
-  border: 1px solid #1bba00;
+  background: #1bba00 !important;
+  border: 1px solid #1bba00 !important;
 }
