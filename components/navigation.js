@@ -13,16 +13,17 @@ import {
   ADMIN_RISK_PROFILES_ANSWER_WEIGHTAGE,
   ADMIN_RISK_PROFILES_QUESTIONS,
   ADMIN_GOALS,
+  ADMIN_TRANSACTIONS,
 } from "@/util/urls";
 
 export default function Navigation() {
   const router = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
+    // dispatch(getCurrentUser());
     if (!isAuthenticated()) {
       router.push("/");
     }
-    // dispatch(getCurrentUser());
   }, []);
   return (
     <>
@@ -59,6 +60,13 @@ export default function Navigation() {
           active={router.pathname === ADMIN_GOALS}
         >
           Goals
+        </ListGroup.Item>
+        <ListGroup.Item
+          action
+          href={ADMIN_TRANSACTIONS}
+          active={router.pathname === ADMIN_TRANSACTIONS}
+        >
+          Transactions
         </ListGroup.Item>
         <ListGroup.Item
           action

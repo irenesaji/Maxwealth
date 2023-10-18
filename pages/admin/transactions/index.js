@@ -2,15 +2,16 @@ import AdminLayout from "@/layouts/adminLayout";
 import DataTable from "react-data-table-component";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { getUsers, getSearchResults } from "@/redux/services/admin/users/users";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import UpdateModal from "@/components/admin/users/update";
+import UpdateModal from "@/components/admin/goals/update";
+import { useRouter } from "next/router";
+import { getTransactions } from "@/redux/services/admin/transactions/transactions";
 
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
-  const [allUsers, setAllUsers] = useState(null);
+  const [allAllocations, setAllAllocations] = useState(null);
   const [domLoaded, setDomLoaded] = useState(false);
   const [totalRows, setTotalRows] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -18,83 +19,83 @@ export default function Index() {
   const [perPage, setPerPage] = useState(10);
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
-  const [selectedUser, setSelectedUser] = useState([]);
 
+  const router = useRouter();
+  const [TransactionData, setTransactionData] = useState([]);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const columns = [
     {
-      name: "Name",
-      selector: (row) => row.full_name,
+      name: "Folio",
+      selector: (row) => row[0],
+      sortable: true,
+      width: "160px",
+    },
+    {
+      name: "Isin",
+      selector: (row) => row[2],
       sortable: true,
     },
     {
-      name: "Email",
-      selector: (row) => row.email,
+      name: "Type",
+      selector: (row) => row[3],
       sortable: true,
     },
     {
-      name: "Mobile",
-      selector: (row) => row.mobile,
+      name: "Amount",
+      selector: (row) => row[4],
       sortable: true,
     },
 
     {
-      name: "is_active",
-      selector: (row) => <span>{row.is_active ? "Yes" : "No"}</span>,
-      sortable: false,
+      name: "Nav",
+      selector: (row) => row[7],
+      sortable: true,
+    },
+
+    {
+      name: "Units",
+      selector: (row) => row[5],
+      sortable: true,
     },
     {
-      name: "is_blocked",
-      selector: (row) => <span>{row.is_blocked ? "Yes" : "No"}</span>,
-      sortable: false,
+      name: "Traded On",
+      selector: (row) => row[6],
+      sortable: true,
     },
     {
-      name: "",
-      selector: (row) => (
-        <FontAwesomeIcon
-          icon={faPenToSquare}
-          width={15}
-          style={{ cursor: "pointer" }}
-          onClick={() => {
-            handleUpdate(row.id);
-          }}
-        />
-      ),
-      sortable: false,
+      name: "Fund Type",
+      selector: (row) => row[11],
+      sortable: true,
     },
   ];
 
-  const users = async (currentPage, newPerPage) => {
+  const transactions = async () => {
     try {
-      const response = await getUsers(
-        currentPage || page,
-        newPerPage || perPage
-      );
-      setAllUsers(response.data);
+      const response = await getTransactions();
+      setTransactionData(response);
       setTotalRows(response.total);
     } catch (error) {
       console.log(error);
     }
   };
-
   useEffect(() => {
     setDomLoaded(true);
     setUser(userStore);
   }, [user]);
 
   useEffect(() => {
-    users();
+    transactions();
   }, []);
 
   const handlePageChange = (page) => {
-    users(page);
+    goals(page);
   };
 
   const handlePerRowsChange = async (newPerPage, page) => {
     setLoading(true);
-    users(page, newPerPage);
+    transactions();
     setPerPage(newPerPage);
     setLoading(false);
   };
@@ -102,27 +103,18 @@ export default function Index() {
   const handleSearch = async (e) => {
     try {
       const response = await getSearchResults(e.target.value, page, perPage);
-      setAllUsers(response.data);
+      setAllAllocations(response.data);
       setTotalRows(response.total);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleUpdate = (id) => {
-    handleShow();
-    const selectedUser = allUsers.filter((user) => {
-      return user.id === id;
-    });
-    setId(id);
-    setSelectedUser(selectedUser);
-  };
-
   return (
     <>
       <AdminLayout>
         <h2 className="mt-5 mb-5">
-          <strong>Users</strong>
+          <strong>Transactions</strong>
         </h2>
         <div className="row mb-5">
           <div className="col-lg-4">
@@ -133,12 +125,16 @@ export default function Index() {
               onChange={handleSearch}
             />
           </div>
-          <div className="col-lg-4"></div>
+          {/* <div className="col-lg-8 d-flex justify-content-end">
+            <button className="btn btn-primary" onClick={handleShow}>
+              Create Allocation
+            </button>
+          </div> */}
         </div>
-        {domLoaded && allUsers && (
+        {domLoaded && (
           <DataTable
             columns={columns}
-            data={allUsers}
+            data={TransactionData}
             progressPending={loading}
             pagination
             paginationServer
@@ -147,13 +143,6 @@ export default function Index() {
             onChangeRowsPerPage={handlePerRowsChange}
           />
         )}
-
-        <UpdateModal
-          show={show}
-          onHide={handleClose}
-          id={id}
-          user={selectedUser}
-        />
       </AdminLayout>
     </>
   );

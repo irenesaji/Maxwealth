@@ -1,6 +1,6 @@
 export const SIGNIN = `/api/auth/verify_otp`;
 export const GENERATE_OTP = `/api/auth/generate_otp`;
-export const CURRENT_USER = `api/user/current`;
+export const CURRENT_USER = `/api/user/current`;
 export const ADMIN_USERS = `/api/admin/users`;
 export const ADMIN_MODEL_PORTFOLIOS = `/api/admin/model_portfolios`;
 export const ADMIN_MODEL_PORTFOLIOS_FUNDS = `/api/admin/model_portfolio_funds`;
@@ -10,3 +10,4 @@ export const ADMIN_RISK_PROFILES_QUESTIONS = `/api/admin/risk_profile_questions`
 export const ADMIN_RISK_ANSWER_WEIGHTAGE = `/api/admin/risk_answer_weightages`;
 export const ADMIN_RISK_ANSWER_CHOICES = `/api/admin/risk_answer_choices`;
 export const ADMIN_GOALS = `/api/admin/goals`;
+export const ADMIN_TRANSACTIONS = `/api/admin/reports/transaction_list`;

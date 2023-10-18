@@ -18,6 +18,8 @@ export const getCurrentUser = () => {
         headers: headers,
       });
 
+      console.log(response);
+
       dispatch(setUser(response.data));
     } catch (error) {
       clearAll();
