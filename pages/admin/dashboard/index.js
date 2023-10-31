@@ -5,12 +5,14 @@ import {
   getAumReport,
   getSummaryReport,
 } from "@/redux/services/admin/reports/reports";
+import { Spinner } from "react-bootstrap";
 export default function Dashboard() {
   const [aum, setAum] = useState("");
   const [aumArr, setAumArr] = useState([]);
   const [summary, setSummary] = useState("");
   const [summaryArr, setSummaryArr] = useState([]);
   const [isClient, setIsClient] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(0);
   const summaryOptions = [
     {
       value: "redemption",
@@ -68,10 +70,13 @@ export default function Dashboard() {
   };
 
   const aumFunc = async () => {
+    setIsSubmitting(1);
     try {
       const response = await getAumReport();
       setAumArr(response);
+      setIsSubmitting(0);
     } catch (error) {
+      setIsSubmitting(0);
       console.log(error);
     }
   };
@@ -108,17 +113,29 @@ export default function Dashboard() {
             <h4 className="mb-3" style={{ fontSize: "18px" }}>
               Transactions Summary
             </h4>
-            {isClient && summaryArr.length != "" && (
-              <Select
-                options={summaryOptions}
-                onChange={handleSummary}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                placeholder="Select Types"
-                menuPortalTarget={document.body}
-                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+            {isSubmitting ? (
+              <Spinner
+                as="span"
+                animation="border"
+                role="status"
+                aria-hidden="true"
+                size="sm"
               />
+            ) : (
+              isClient &&
+              summaryArr.length != "" && (
+                <Select
+                  options={summaryOptions}
+                  onChange={handleSummary}
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  placeholder="Select Types"
+                  menuPortalTarget={document.body}
+                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                />
+              )
             )}
+
             <div
               className="d-flex align-items-center justify-content-center"
               style={{ minHeight: "150px" }}
@@ -138,7 +155,15 @@ export default function Dashboard() {
             <h4 className="mb-3" style={{ fontSize: "18px" }}>
               AUM Summary
             </h4>
-            {aumArr.length != "" ? (
+            {isSubmitting ? (
+              <Spinner
+                as="span"
+                animation="border"
+                role="status"
+                aria-hidden="true"
+                size="sm"
+              />
+            ) : aumArr.length != "" ? (
               <Select
                 options={aumOptions}
                 onChange={handleAum}
@@ -149,6 +174,7 @@ export default function Dashboard() {
             ) : (
               ""
             )}
+
             <div
               className="d-flex align-items-center justify-content-center"
               style={{ minHeight: "150px" }}

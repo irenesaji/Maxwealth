@@ -47,7 +47,7 @@ export default function Home() {
       const response = await dispatch(initiateSignIn(values));
       if (response.status === 200) {
         setIsSubmitting(false);
-        router.push(ADMIN_USERS);
+        router.push(ADMIN_DASHBOARD);
       }
     } catch (error) {
       setIsSubmitting(false);
