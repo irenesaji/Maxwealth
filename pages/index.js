@@ -11,7 +11,7 @@ import {
   generateOTPService,
 } from "@/redux/services/userService";
 import { useRouter } from "next/router";
-import { ADMIN_USERS } from "@/util/urls";
+import { ADMIN_DASHBOARD, ADMIN_USERS } from "@/util/urls";
 import { isAuthenticated } from "@/util/auth";
 
 export default function Home() {
@@ -28,7 +28,7 @@ export default function Home() {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      router.push(ADMIN_USERS);
+      router.push(ADMIN_DASHBOARD);
     }
   }, []);
   const LoginSchema = Yup.object().shape({

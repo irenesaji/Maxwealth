@@ -4,8 +4,16 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { getUsers, getSearchResults } from "@/redux/services/admin/users/users";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faEye } from "@fortawesome/free-solid-svg-icons";
 import UpdateModal from "@/components/admin/users/update";
+import View from "@/components/admin/kyc/view";
+import {
+  getKYCAddress,
+  getKYCBank,
+  getKYCNominee,
+  getKYCProofs,
+  getKYCOnboarding,
+} from "@/redux/services/admin/kyc/kyc";
 
 export default function Index() {
   const userStore = useSelector((state) => state.user);
@@ -19,20 +27,29 @@ export default function Index() {
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
   const [selectedUser, setSelectedUser] = useState([]);
-
+  const [showKyc, setShowKyc] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleCloseKyc = () => setShowKyc(false);
+  const handleShowKyc = () => setShowKyc(true);
+  const [onboarding, setOnboarding] = useState([]);
+  const [address, setAddress] = useState([]);
+  const [bank, setBank] = useState([]);
+  const [proofs, setProofs] = useState([]);
+  const [nominee, setNominee] = useState([]);
 
   const columns = [
     {
       name: "Name",
       selector: (row) => row.full_name,
       sortable: true,
+      width: "160px",
     },
     {
       name: "Email",
       selector: (row) => row.email,
       sortable: true,
+      width: "230px",
     },
     {
       name: "Mobile",
@@ -48,6 +65,24 @@ export default function Index() {
     {
       name: "is_blocked",
       selector: (row) => <span>{row.is_blocked ? "Yes" : "No"}</span>,
+      sortable: false,
+    },
+    {
+      name: "Kyc Details",
+      selector: (row) => (
+        <a
+          href="javascript:void(0);"
+          onClick={() => {
+            handleView(row.id);
+          }}
+        >
+          <FontAwesomeIcon
+            icon={faEye}
+            width={12}
+            style={{ cursor: "pointer" }}
+          />
+        </a>
+      ),
       sortable: false,
     },
     {
@@ -74,6 +109,51 @@ export default function Index() {
       );
       setAllUsers(response.data);
       setTotalRows(response.total);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onboardingFunc = async (id) => {
+    try {
+      const response = await getKYCOnboarding(id);
+      setOnboarding(response?.[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addressFunc = async (id) => {
+    try {
+      const response = await getKYCAddress(id);
+      setAddress(response?.[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const bankFunc = async (id) => {
+    try {
+      const response = await getKYCBank(id);
+      setBank(response?.[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const proofsFunc = async (id) => {
+    try {
+      const response = await getKYCProofs(id);
+      setProofs(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const nomineeFunc = async (id) => {
+    try {
+      const response = await getKYCNominee(id);
+      setNominee(response);
     } catch (error) {
       console.log(error);
     }
@@ -107,6 +187,16 @@ export default function Index() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleView = (id) => {
+    setId(id);
+    onboardingFunc(id);
+    addressFunc(id);
+    bankFunc(id);
+    proofsFunc(id);
+    nomineeFunc(id);
+    handleShowKyc();
   };
 
   const handleUpdate = (id) => {
@@ -147,6 +237,16 @@ export default function Index() {
             onChangeRowsPerPage={handlePerRowsChange}
           />
         )}
+
+        <View
+          show={showKyc}
+          onHide={handleCloseKyc}
+          onboarding={onboarding}
+          address={address}
+          bank={bank}
+          proofs={proofs}
+          nominee={nominee}
+        />
 
         <UpdateModal
           show={show}

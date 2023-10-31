@@ -7,3 +7,6 @@ export const ADMIN_RISK_PROFILES_ANSWERS = "/admin/risk-profiles/answers";
 export const ADMIN_RISK_PROFILES_QUESTIONS = "/admin/risk-profiles/questions";
 export const ADMIN_GOALS = "/admin/goals";
 export const ADMIN_TRANSACTIONS = "/admin/transactions";
+export const ADMIN_REDEMPTIONS = "/admin/transactions/redemptions";
+export const ADMIN_PURCHASE = "/admin/transactions/purchases";
+export const ADMIN_DASHBOARD = "/admin/dashboard";

@@ -14,6 +14,8 @@ import {
   ADMIN_RISK_PROFILES_QUESTIONS,
   ADMIN_GOALS,
   ADMIN_TRANSACTIONS,
+  ADMIN_REDEMPTIONS,
+  ADMIN_PURCHASE,
 } from "@/util/urls";
 
 export default function Navigation() {
@@ -64,7 +66,11 @@ export default function Navigation() {
         <ListGroup.Item
           action
           href={ADMIN_TRANSACTIONS}
-          active={router.pathname === ADMIN_TRANSACTIONS}
+          active={
+            router.pathname === ADMIN_TRANSACTIONS ||
+            router.pathname === ADMIN_REDEMPTIONS ||
+            router.pathname === ADMIN_PURCHASE
+          }
         >
           Transactions
         </ListGroup.Item>

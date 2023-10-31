@@ -1,11 +1,19 @@
-import { ADMIN_TRANSACTIONS } from "@/util/endpoints";
+import {
+  ADMIN_TRANSACTIONS,
+  ADMIN_FOLIOS,
+  ADMIN_REDEMPTION_PLANS,
+  ADMIN_TRANSACTIONS_LIST,
+  ADMIN_REDEMPTIONS_LIST,
+  ADMIN_PURCHASE_PLANS,
+  ADMIN_PURCHASE_LIST,
+} from "@/util/endpoints";
 import getConfig from "next/config";
 import axios from "axios";
 import { getToken } from "@/util/common";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
-export const getTransactions = async () => {
+export const getTransactionsList = async (page, perPage) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
@@ -13,7 +21,7 @@ export const getTransactions = async () => {
     };
 
     const response = await axios.post(
-      `${BASE_URL}${ADMIN_TRANSACTIONS}`,
+      `${BASE_URL}${ADMIN_TRANSACTIONS}?page=${page}&limit=${perPage}`,
       {
         partner: null,
         traded_on_from: null,
@@ -21,6 +29,129 @@ export const getTransactions = async () => {
         primary_investor_name: null,
         folio_number: null,
         pan_number: null,
+        limit: perPage,
+        page: page,
+      },
+      { headers: headers }
+    );
+    return response.data.data.data.rows;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const getTransactions = async (
+  selectedFolio,
+  selectedTypes,
+  selectedFromDate,
+  selectedToDate
+) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
+
+    const response = await axios.get(`${BASE_URL}${ADMIN_TRANSACTIONS}`, {
+      headers: headers,
+      params: {
+        folios: selectedFolio,
+        types: selectedTypes,
+        from: selectedFromDate,
+        to: selectedToDate,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const getAllFolios = async () => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
+
+    const response = await axios.get(`${BASE_URL}${ADMIN_FOLIOS}`, {
+      headers: headers,
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const getAllRedemptionPlans = async () => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
+
+    const response = await axios.get(`${BASE_URL}${ADMIN_REDEMPTION_PLANS}`, {
+      headers: headers,
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const getRedemptionsList = async (selectedPlans, selectedStatus) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
+
+    const response = await axios.post(
+      `${BASE_URL}${ADMIN_REDEMPTIONS_LIST}`,
+      {
+        plans: selectedPlans,
+        states: selectedStatus,
+      },
+      { headers: headers }
+    );
+    return response.data.data.data.rows;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const getAllPurchasePlans = async () => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
+
+    const response = await axios.get(`${BASE_URL}${ADMIN_PURCHASE_PLANS}`, {
+      headers: headers,
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const getPurchaseList = async (selectedPlans, selectedStatus) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
+
+    const response = await axios.post(
+      `${BASE_URL}${ADMIN_PURCHASE_LIST}`,
+      {
+        plans: selectedPlans,
+        states: selectedStatus,
       },
       { headers: headers }
     );

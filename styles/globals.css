@@ -149,3 +149,12 @@ select.form-control {
   background: #1bba00 !important;
   border: 1px solid #1bba00 !important;
 }
+
+.select__input-container input {
+  min-height: auto;
+}
+
+.select__input-container input:focus {
+  box-shadow: none !important;
+  border: none;
+}
