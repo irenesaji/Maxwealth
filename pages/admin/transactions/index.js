@@ -105,6 +105,7 @@ export default function Index() {
   ];
 
   const handleTransactions = async () => {
+    setIsSubmitting(1);
     try {
       const response = await getTransactions(
         selectedFolio,
@@ -113,7 +114,9 @@ export default function Index() {
         selectedToDate
       );
       setTransactionData(response.data.data);
+      setIsSubmitting(0);
     } catch (error) {
+      setIsSubmitting(0);
       console.log(error);
     }
   };

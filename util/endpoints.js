@@ -22,3 +22,5 @@ export const ADMIN_REDEMPTION_PLANS = `/api/admin/reports/get_redemption_plans`;
 export const ADMIN_REDEMPTIONS_LIST = `/api/admin/reports/mf_redemption_list`;
 export const ADMIN_PURCHASE_PLANS = `/api/admin/reports/get_purchase_plans`;
 export const ADMIN_PURCHASE_LIST = `/api/admin/reports/mf_purchase_list`;
+export const ADMIN_AUM_REPORT = `/api/admin/reports/get_aum_report`;
+export const ADMIN_CATEGORY_SUMMARY = `/api/admin/reports/get_transaction_type_wise_amount_summary`;

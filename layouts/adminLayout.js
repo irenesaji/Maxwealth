@@ -11,7 +11,7 @@ export default function AdminLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="row mx-0">
-        <div className="col-lg-3 navigation">
+        <div className="col-lg-2 navigation">
           <p className="text-center mt-3">
             <Image src="/images/logo.png" width={250} height={80} />
           </p>

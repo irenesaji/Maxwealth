@@ -16,6 +16,7 @@ import {
   ADMIN_TRANSACTIONS,
   ADMIN_REDEMPTIONS,
   ADMIN_PURCHASE,
+  ADMIN_DASHBOARD,
 } from "@/util/urls";
 
 export default function Navigation() {
@@ -30,6 +31,13 @@ export default function Navigation() {
   return (
     <>
       <ListGroup defaultActiveKey="#">
+        <ListGroup.Item
+          action
+          href={ADMIN_DASHBOARD}
+          active={router.pathname === ADMIN_DASHBOARD}
+        >
+          Dashboard
+        </ListGroup.Item>
         <ListGroup.Item
           action
           href={ADMIN_USERS}

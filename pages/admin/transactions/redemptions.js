@@ -111,11 +111,13 @@ export default function Redemptions() {
   ];
 
   const handleTransactions = async () => {
+    setIsSubmitting(1);
     try {
       const response = await getRedemptionsList(selectedPlans, selectedStatus);
       setTransactionData(response);
-      console.log(response);
+      setIsSubmitting(0);
     } catch (error) {
+      setIsSubmitting(0);
       console.log(error);
     }
   };
