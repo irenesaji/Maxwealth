@@ -115,7 +115,6 @@ export default function AccountWise() {
     try {
       const response = await getAccountWiseReport(
         selectedAccountId,
-        selectedFromDate,
         selectedToDate
       );
 
