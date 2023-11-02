@@ -32,7 +32,7 @@ export default function Redemptions() {
   const [TransactionData, setTransactionData] = useState([]);
   const [selectedPlans, setSelectedPlans] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState([]);
-
+  const [btnSubmit, setBtnSubmit] = useState(0);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -111,18 +111,19 @@ export default function Redemptions() {
   ];
 
   const handleTransactions = async () => {
-    setIsSubmitting(1);
+    setBtnSubmit(1);
     try {
       const response = await getRedemptionsList(selectedPlans, selectedStatus);
       setTransactionData(response);
-      setIsSubmitting(0);
+      setBtnSubmit(0);
     } catch (error) {
-      setIsSubmitting(0);
+      setBtnSubmit(0);
       console.log(error);
     }
   };
 
   const redemptionFunc = async () => {
+    setIsSubmitting(1);
     try {
       const response = await getAllRedemptionPlans();
 
@@ -134,7 +135,9 @@ export default function Redemptions() {
         });
       });
       setRedemptiom(foliosArr);
+      setIsSubmitting(0);
     } catch (error) {
+      setIsSubmitting(0);
       console.log(error);
     }
   };
@@ -167,15 +170,25 @@ export default function Redemptions() {
         </h2>
         <div className="row mb-5" style={{ minHeight: "100px" }}>
           <div className="col-lg-3">
-            {redemption && (
-              <Select
-                options={redemption}
-                onChange={handleChangeFolio}
-                isMulti
-                className="basic-multi-select"
-                classNamePrefix="select"
-                placeholder="Select User"
+            {isSubmitting ? (
+              <Spinner
+                as="span"
+                animation="border"
+                role="status"
+                aria-hidden="true"
+                size="sm"
               />
+            ) : (
+              redemption && (
+                <Select
+                  options={redemption}
+                  onChange={handleChangeFolio}
+                  isMulti
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  placeholder="Select User"
+                />
+              )
             )}
 
             {/* <input
@@ -201,9 +214,9 @@ export default function Redemptions() {
               className="btn btn-primary"
               style={{ minHeight: "38px" }}
               onClick={handleTransactions}
-              disabled={isSubmitting}
+              disabled={btnSubmit}
             >
-              {isSubmitting ? (
+              {btnSubmit ? (
                 <Spinner
                   as="span"
                   animation="border"

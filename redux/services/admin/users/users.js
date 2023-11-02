@@ -1,4 +1,4 @@
-import { ADMIN_USERS } from "@/util/endpoints";
+import { ADMIN_USERS, ADMIN_USERS_ONBOARDING } from "@/util/endpoints";
 import getConfig from "next/config";
 import axios from "axios";
 import { getToken } from "@/util/common";
@@ -66,6 +66,27 @@ export const updateUser = async (id, data) => {
         headers: headers,
       }
     );
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const onBoarding = async () => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
+
+    const response = await axios.get(`${BASE_URL}${ADMIN_USERS_ONBOARDING}`, {
+      headers: headers,
+      params: {
+        fields:
+          "id,is_kyc_compliant,pan,full_name,date_of_birth,father_name,mother_name,marital_status,occupation,annual_income,nationality,signature_url,photo_url,video_url,fp_esign_status,kyc_id,fp_photo_file_id,fp_video_file_id,fp_signature_file_id,aadhaar_number,fp_esign_id,status,lat,lng,fp_investor_id,fp_investment_account_old_id,fp_investment_account_id,fp_kyc_status,fp_kyc_reject_reasons,user_id,created_at,updated_at",
+      },
+    });
 
     return response.data;
   } catch (error) {

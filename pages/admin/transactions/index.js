@@ -36,6 +36,7 @@ export default function Index() {
   const [selectedToDate, setSelectedToDate] = useState("");
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [btnSubmit, setBtnSubmit] = useState(0);
 
   const typesOptions = [
     { value: "purchase", label: "Purchase" },
@@ -105,7 +106,7 @@ export default function Index() {
   ];
 
   const handleTransactions = async () => {
-    setIsSubmitting(1);
+    setBtnSubmit(1);
     try {
       const response = await getTransactions(
         selectedFolio,
@@ -114,14 +115,15 @@ export default function Index() {
         selectedToDate
       );
       setTransactionData(response.data.data);
-      setIsSubmitting(0);
+      setBtnSubmit(0);
     } catch (error) {
-      setIsSubmitting(0);
+      setBtnSubmit(0);
       console.log(error);
     }
   };
 
   const foliosFunc = async () => {
+    setIsSubmitting(1);
     try {
       const response = await getAllFolios();
       let foliosArr = [];
@@ -132,7 +134,9 @@ export default function Index() {
         });
       });
       setFolios(foliosArr);
+      setIsSubmitting(0);
     } catch (error) {
+      setIsSubmitting(0);
       console.log(error);
     }
   };
@@ -190,17 +194,37 @@ export default function Index() {
         <h2 className="mt-5 mb-5">
           <strong>Transactions</strong>
         </h2>
+        <div className="row">
+          <div className="col-lg-3"></div>
+          <div className="col-lg-3"></div>
+          <div className="col-lg-2">
+            <label style={{ color: "rgb(128, 128, 128)" }}>From</label>
+          </div>
+          <div className="col-lg-2">
+            <label style={{ color: "rgb(128, 128, 128)" }}>To</label>
+          </div>
+        </div>
         <div className="row mb-5" style={{ minHeight: "100px" }}>
           <div className="col-lg-3">
-            {folios && (
-              <Select
-                options={folios}
-                onChange={handleChangeFolio}
-                isMulti
-                className="basic-multi-select"
-                classNamePrefix="select"
-                placeholder="Select Folio"
+            {isSubmitting ? (
+              <Spinner
+                as="span"
+                animation="border"
+                role="status"
+                aria-hidden="true"
+                size="sm"
               />
+            ) : (
+              folios && (
+                <Select
+                  options={folios}
+                  onChange={handleChangeFolio}
+                  isMulti
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  placeholder="Select Folio"
+                />
+              )
             )}
 
             {/* <input
@@ -241,9 +265,9 @@ export default function Index() {
               className="btn btn-primary"
               style={{ minHeight: "38px" }}
               onClick={handleTransactions}
-              disabled={isSubmitting}
+              disabled={btnSubmit}
             >
-              {isSubmitting ? (
+              {btnSubmit ? (
                 <Spinner
                   as="span"
                   animation="border"

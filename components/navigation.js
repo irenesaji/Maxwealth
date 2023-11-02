@@ -17,6 +17,10 @@ import {
   ADMIN_REDEMPTIONS,
   ADMIN_PURCHASE,
   ADMIN_DASHBOARD,
+  ADMIN_REPORTS,
+  ADMIN_REPORTS_CAPITAL_GAINS,
+  ADMIN_REPORTS_SCHEME_WISE,
+  ADMIN_REPORTS_ACCOUNT_WISE,
 } from "@/util/urls";
 
 export default function Navigation() {
@@ -81,6 +85,18 @@ export default function Navigation() {
           }
         >
           Transactions
+        </ListGroup.Item>
+        <ListGroup.Item
+          action
+          href={ADMIN_REPORTS}
+          active={
+            router.pathname === ADMIN_REPORTS ||
+            router.pathname === ADMIN_REPORTS_CAPITAL_GAINS ||
+            router.pathname === ADMIN_REPORTS_SCHEME_WISE ||
+            router.pathname === ADMIN_REPORTS_ACCOUNT_WISE
+          }
+        >
+          Reports
         </ListGroup.Item>
         <ListGroup.Item
           action

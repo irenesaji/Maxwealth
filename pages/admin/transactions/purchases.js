@@ -31,6 +31,7 @@ export default function Purchases() {
   const [TransactionData, setTransactionData] = useState([]);
   const [selectedPlans, setSelectedPlans] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState([]);
+  const [btnSubmit, setBtnSubmit] = useState(0);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -110,18 +111,19 @@ export default function Purchases() {
   ];
 
   const handleTransactions = async () => {
-    setIsSubmitting(1);
+    setBtnSubmit(1);
     try {
       const response = await getPurchaseList(selectedPlans, selectedStatus);
       setTransactionData(response);
-      setIsSubmitting(0);
+      setBtnSubmit(0);
     } catch (error) {
-      setIsSubmitting(0);
+      setBtnSubmit(0);
       console.log(error);
     }
   };
 
   const purchaseFunc = async () => {
+    setIsSubmitting(1);
     try {
       const response = await getAllPurchasePlans();
       let foliosArr = [];
@@ -131,8 +133,10 @@ export default function Purchases() {
           label: `${res.user_email}-${res.transaction_basket_items_fund_isin}`,
         });
       });
+      setIsSubmitting(0);
       setRedemptiom(foliosArr);
     } catch (error) {
+      setIsSubmitting(0);
       console.log(error);
     }
   };
@@ -165,15 +169,25 @@ export default function Purchases() {
         </h2>
         <div className="row mb-5" style={{ minHeight: "100px" }}>
           <div className="col-lg-3">
-            {redemption && (
-              <Select
-                options={redemption}
-                onChange={handleChangeFolio}
-                isMulti
-                className="basic-multi-select"
-                classNamePrefix="select"
-                placeholder="Select User"
+            {isSubmitting ? (
+              <Spinner
+                as="span"
+                animation="border"
+                role="status"
+                aria-hidden="true"
+                size="sm"
               />
+            ) : (
+              redemption && (
+                <Select
+                  options={redemption}
+                  onChange={handleChangeFolio}
+                  isMulti
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  placeholder="Select User"
+                />
+              )
             )}
 
             {/* <input
@@ -199,9 +213,9 @@ export default function Purchases() {
               className="btn btn-primary"
               style={{ minHeight: "38px" }}
               onClick={handleTransactions}
-              disabled={isSubmitting}
+              disabled={btnSubmit}
             >
-              {isSubmitting ? (
+              {btnSubmit ? (
                 <Spinner
                   as="span"
                   animation="border"

@@ -41,7 +41,6 @@ export default function Home() {
   };
 
   const _handleSubmit = async (e, values) => {
-    console.log(values);
     setIsSubmitting(true);
     try {
       const response = await dispatch(initiateSignIn(values));
