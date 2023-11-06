@@ -1,6 +1,6 @@
 export const SIGNIN = `/api/auth/verify_otp`;
 export const GENERATE_OTP = `/api/auth/generate_otp`;
-export const CURRENT_USER = `/api/user/current`;
+export const CURRENT_USER = `/api/auth/user`;
 export const ADMIN_USERS = `/api/admin/users`;
 export const ADMIN_USERS_ONBOARDING = `/api/admin/onboarding`;
 export const ADMIN_MODEL_PORTFOLIOS = `/api/admin/model_portfolios`;
