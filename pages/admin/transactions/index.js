@@ -194,16 +194,7 @@ export default function Index() {
         <h2 className="mt-5 mb-5">
           <strong>Transactions</strong>
         </h2>
-        <div className="row">
-          <div className="col-lg-3"></div>
-          <div className="col-lg-3"></div>
-          <div className="col-lg-2">
-            <label style={{ color: "rgb(128, 128, 128)" }}>From</label>
-          </div>
-          <div className="col-lg-2">
-            <label style={{ color: "rgb(128, 128, 128)" }}>To</label>
-          </div>
-        </div>
+       
         <div className="row mb-5" style={{ minHeight: "100px" }}>
           <div className="col-lg-3">
             {isSubmitting ? (

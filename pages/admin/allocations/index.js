@@ -3,8 +3,9 @@ import DataTable from "react-data-table-component";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import NewModal from "@/components/admin/model_portfolios/new";
+import UpdateModal from "@/components/admin/allocations/update";
 import {
   getAllocations,
   createAllocation,
@@ -22,11 +23,14 @@ export default function Index() {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [show, setShow] = useState(false);
+  const [showUpdate, setShowUpdate] = useState(false);
   const [id, setId] = useState("");
   const [selectedAllocation, setSelectedAllocation] = useState([]);
   const router = useRouter();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleCloseUpdate = () => setShowUpdate(false);
+  const handleShowUpdate = () => setShowUpdate(true);
 
   const columns = [
     {
@@ -60,6 +64,20 @@ export default function Index() {
             style={{ cursor: "pointer" }}
           />
         </a>
+      ),
+      sortable: false,
+    },
+    {
+      name: "",
+      selector: (row) => (
+        <FontAwesomeIcon
+          icon={faPenToSquare}
+          width={15}
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            handleUpdate(row.id);
+          }}
+        />
       ),
       sortable: false,
     },
@@ -128,14 +146,15 @@ export default function Index() {
     }
   };
 
-  // const handleUpdate = (id) => {
-  //   handleShow();
-  //   const selectedAllocation = allAllocations.filter((allocation) => {
-  //     return allocation.id === id;
-  //   });
-  //   setId(id);
-  //   setSelectedAllocation(selectedAllocation);
-  // };
+  const handleUpdate = (id) => {
+    handleShowUpdate();
+    const selectedAllocation = allAllocations.filter((allocation) => {
+      return allocation.id === id;
+    });
+
+    setId(id);
+    setSelectedAllocation(selectedAllocation);
+  };
 
   return (
     <>
@@ -172,6 +191,13 @@ export default function Index() {
         )}
 
         <NewModal show={show} onHide={handleClose} />
+
+        <UpdateModal
+          show={showUpdate}
+          onHide={handleCloseUpdate}
+          id={id}
+          allocations={selectedAllocation}
+        />
       </AdminLayout>
     </>
   );

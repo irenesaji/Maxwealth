@@ -67,3 +67,25 @@ export const createAllocation = async (data) => {
     throw error.response;
   }
 };
+
+export const updateAllocation = async (id, data) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+    };
+    console.log(data);
+
+    const response = await axios.patch(
+      `${BASE_URL}${ADMIN_MODEL_PORTFOLIOS}/${id}`,
+      data,
+      {
+        headers: headers,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
