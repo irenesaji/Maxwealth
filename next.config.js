@@ -11,7 +11,7 @@ module.exports = {
       process.env.REACT_APP_ENVIRONMENT === "development"
         ? "https://findola.mindstack.in"
         : process.env.REACT_APP_ENVIRONMENT === "staging"
-        ? "https://stage.findola.in"
+        ? "https://staging.findola.in"
         : "",
   },
 };
