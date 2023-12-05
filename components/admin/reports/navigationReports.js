@@ -22,6 +22,21 @@ export default function NavigationReports() {
       <ListGroup defaultActiveKey="#" horizontal className="mb-5 mt-5">
         <ListGroup.Item
           action
+          href={ADMIN_REPORTS_ACCOUNT_WISE}
+          active={router.pathname === ADMIN_REPORTS_ACCOUNT_WISE}
+        >
+          Account Wise
+        </ListGroup.Item>
+        <ListGroup.Item
+          action
+          href={ADMIN_REPORTS_SCHEME_WISE}
+          active={router.pathname === ADMIN_REPORTS_SCHEME_WISE}
+        >
+          Scheme Wise
+        </ListGroup.Item>
+
+        <ListGroup.Item
+          action
           href={ADMIN_REPORTS}
           active={router.pathname === ADMIN_REPORTS}
         >
@@ -33,20 +48,6 @@ export default function NavigationReports() {
           active={router.pathname === ADMIN_REPORTS_CAPITAL_GAINS}
         >
           Capital Gains
-        </ListGroup.Item>
-        <ListGroup.Item
-          action
-          href={ADMIN_REPORTS_SCHEME_WISE}
-          active={router.pathname === ADMIN_REPORTS_SCHEME_WISE}
-        >
-          Scheme Wise
-        </ListGroup.Item>
-        <ListGroup.Item
-          action
-          href={ADMIN_REPORTS_ACCOUNT_WISE}
-          active={router.pathname === ADMIN_REPORTS_ACCOUNT_WISE}
-        >
-          Account Wise
         </ListGroup.Item>
       </ListGroup>
     </>
