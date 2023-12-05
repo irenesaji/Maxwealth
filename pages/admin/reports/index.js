@@ -207,6 +207,38 @@ export default function Index() {
             </div>
           </div>
           <div className="row mb-5" style={{ minHeight: "100px" }}>
+            <div className="col-lg-4">
+              {isSubmitting ? (
+                <Spinner
+                  as="span"
+                  animation="border"
+                  role="status"
+                  aria-hidden="true"
+                  size="sm"
+                />
+              ) : (
+                accountId && (
+                  <Select
+                    options={accountId}
+                    onChange={handleChangeAccount}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    placeholder="Select Investment Account"
+                    menuPortalTarget={document.body}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
+                  />
+                )
+              )}
+
+              {/* <input
+              type="text"
+              className="form-control"
+              placeholder="Search.."
+              onChange={handleSearch}
+            /> */}
+            </div>
             <div className="col-lg-3">
               {isSubmitting ? (
                 <Spinner
@@ -225,39 +257,6 @@ export default function Index() {
                     className="basic-multi-select"
                     classNamePrefix="select"
                     placeholder="Select Folio"
-                    menuPortalTarget={document.body}
-                    styles={{
-                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    }}
-                  />
-                )
-              )}
-
-              {/* <input
-              type="text"
-              className="form-control"
-              placeholder="Search.."
-              onChange={handleSearch}
-            /> */}
-            </div>
-
-            <div className="col-lg-4">
-              {isSubmitting ? (
-                <Spinner
-                  as="span"
-                  animation="border"
-                  role="status"
-                  aria-hidden="true"
-                  size="sm"
-                />
-              ) : (
-                accountId && (
-                  <Select
-                    options={accountId}
-                    onChange={handleChangeAccount}
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                    placeholder="Select Investment Account"
                     menuPortalTarget={document.body}
                     styles={{
                       menuPortal: (base) => ({ ...base, zIndex: 9999 }),

@@ -148,6 +148,7 @@ select.form-control {
 
 .content-area .list-group-item {
   border: none;
+  background: none;
 }
 
 .content-area .list-group-item.active {
@@ -155,6 +156,7 @@ select.form-control {
   border: none;
   border-bottom: 3px solid #1bba00 !important;
   color: inherit;
+  border-radius: 0 !important;
 }
 
 .select__input-container input {
@@ -175,4 +177,8 @@ select.form-control {
   border: 1px solid #ebecf1;
   border-radius: 8px;
   background: #fff;
+}
+
+.rdt_TableHeadRow {
+  background: #fafafa !important;
 }
