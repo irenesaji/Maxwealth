@@ -164,58 +164,13 @@ export default function Purchases() {
     <>
       <AdminLayout>
         <NavigationTransactions />
-        <h2 className="mt-5 mb-5">
-          <strong>Purchases</strong>
-        </h2>
-        <div className="row mb-5" style={{ minHeight: "100px" }}>
-          <div className="col-lg-3">
-            {isSubmitting ? (
-              <Spinner
-                as="span"
-                animation="border"
-                role="status"
-                aria-hidden="true"
-                size="sm"
-              />
-            ) : (
-              redemption && (
-                <Select
-                  options={redemption}
-                  onChange={handleChangeFolio}
-                  isMulti
-                  className="basic-multi-select"
-                  classNamePrefix="select"
-                  placeholder="Select User"
-                />
-              )
-            )}
-
-            {/* <input
-              type="text"
-              className="form-control"
-              placeholder="Search.."
-              onChange={handleSearch}
-            /> */}
-          </div>
-          <div className="col-lg-3">
-            <Select
-              options={typesOptions}
-              onChange={handleChangeTypes}
-              isMulti
-              className="basic-multi-select"
-              classNamePrefix="select"
-              placeholder="Select Status"
-            />
-          </div>
-
-          <div className="col-lg-2">
-            <button
-              className="btn btn-primary"
-              style={{ minHeight: "38px" }}
-              onClick={handleTransactions}
-              disabled={btnSubmit}
-            >
-              {btnSubmit ? (
+        <div className="tab-body">
+          <h2 className="mt-5 mb-5">
+            <strong>Purchases</strong>
+          </h2>
+          <div className="row mb-5" style={{ minHeight: "100px" }}>
+            <div className="col-lg-3">
+              {isSubmitting ? (
                 <Spinner
                   as="span"
                   animation="border"
@@ -224,19 +179,66 @@ export default function Purchases() {
                   size="sm"
                 />
               ) : (
-                "Submit"
+                redemption && (
+                  <Select
+                    options={redemption}
+                    onChange={handleChangeFolio}
+                    isMulti
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    placeholder="Select User"
+                  />
+                )
               )}
-            </button>
-          </div>
-        </div>
 
-        {domLoaded && (
-          <DataTable
-            columns={columns}
-            data={TransactionData}
-            progressPending={loading}
-          />
-        )}
+              {/* <input
+              type="text"
+              className="form-control"
+              placeholder="Search.."
+              onChange={handleSearch}
+            /> */}
+            </div>
+            <div className="col-lg-3">
+              <Select
+                options={typesOptions}
+                onChange={handleChangeTypes}
+                isMulti
+                className="basic-multi-select"
+                classNamePrefix="select"
+                placeholder="Select Status"
+              />
+            </div>
+
+            <div className="col-lg-2">
+              <button
+                className="btn btn-primary"
+                style={{ minHeight: "38px" }}
+                onClick={handleTransactions}
+                disabled={btnSubmit}
+              >
+                {btnSubmit ? (
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    role="status"
+                    aria-hidden="true"
+                    size="sm"
+                  />
+                ) : (
+                  "Submit"
+                )}
+              </button>
+            </div>
+          </div>
+
+          {domLoaded && (
+            <DataTable
+              columns={columns}
+              data={TransactionData}
+              progressPending={loading}
+            />
+          )}
+        </div>
       </AdminLayout>
     </>
   );

@@ -13,11 +13,11 @@ export default function AdminLayout({ children }) {
       <div className="row mx-0">
         <div className="col-lg-2 navigation">
           <p className="text-center mt-3">
-            <Image src="/images/logo.png" width={250} height={80} />
+            <Image src="/images/logo.png" width={230} height={60} />
           </p>
           <Navigation></Navigation>
         </div>
-        <div className="col-lg-9 offset-lg-3 pe-5">{children}</div>
+        <div className="col-lg-9 offset-lg-3 pe-5 content-area">{children}</div>
       </div>
     </>
   );

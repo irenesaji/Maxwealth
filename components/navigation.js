@@ -88,7 +88,7 @@ export default function Navigation() {
         </ListGroup.Item>
         <ListGroup.Item
           action
-          href={ADMIN_REPORTS}
+          href={ADMIN_REPORTS_ACCOUNT_WISE}
           active={
             router.pathname === ADMIN_REPORTS ||
             router.pathname === ADMIN_REPORTS_CAPITAL_GAINS ||

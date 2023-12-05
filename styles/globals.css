@@ -52,6 +52,7 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   font-family: "Inter", sans-serif;
+  background: #fcfcfc;
 }
 
 body {
@@ -145,9 +146,15 @@ select.form-control {
   -webkit-appearance: auto;
 }
 
-.list-group-item.active {
-  background: #1bba00 !important;
-  border: 1px solid #1bba00 !important;
+.content-area .list-group-item {
+  border: none;
+}
+
+.content-area .list-group-item.active {
+  background: none !important;
+  border: none;
+  border-bottom: 3px solid #1bba00 !important;
+  color: inherit;
 }
 
 .select__input-container input {
@@ -157,4 +164,15 @@ select.form-control {
 .select__input-container input:focus {
   box-shadow: none !important;
   border: none;
+}
+
+.content-area .list-group-item-action {
+  width: auto;
+}
+
+.content-area .tab-body {
+  padding: 15px;
+  border: 1px solid #ebecf1;
+  border-radius: 8px;
+  background: #fff;
 }

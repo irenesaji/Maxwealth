@@ -191,74 +191,14 @@ export default function Index() {
     <>
       <AdminLayout>
         <NavigationTransactions />
-        <h2 className="mt-5 mb-5">
-          <strong>Transactions</strong>
-        </h2>
-       
-        <div className="row mb-5" style={{ minHeight: "100px" }}>
-          <div className="col-lg-3">
-            {isSubmitting ? (
-              <Spinner
-                as="span"
-                animation="border"
-                role="status"
-                aria-hidden="true"
-                size="sm"
-              />
-            ) : (
-              folios && (
-                <Select
-                  options={folios}
-                  onChange={handleChangeFolio}
-                  isMulti
-                  className="basic-multi-select"
-                  classNamePrefix="select"
-                  placeholder="Select Folio"
-                />
-              )
-            )}
+        <div className="tab-body">
+          <h2 className="mt-5 mb-5">
+            <strong>Transactions</strong>
+          </h2>
 
-            {/* <input
-              type="text"
-              className="form-control"
-              placeholder="Search.."
-              onChange={handleSearch}
-            /> */}
-          </div>
-          <div className="col-lg-3">
-            <Select
-              options={typesOptions}
-              onChange={handleChangeTypes}
-              isMulti
-              className="basic-multi-select"
-              classNamePrefix="select"
-              placeholder="Select Types"
-            />
-          </div>
-          <div className="col-lg-2">
-            <input
-              type="date"
-              className="form-control"
-              style={{ minHeight: "38px", color: "hsl(0, 0%, 50%)" }}
-              onChange={handleFromDate}
-            />
-          </div>
-          <div className="col-lg-2">
-            <input
-              type="date"
-              className="form-control"
-              style={{ minHeight: "38px", color: "hsl(0, 0%, 50%)" }}
-              onChange={handleToDate}
-            />
-          </div>
-          <div className="col-lg-2">
-            <button
-              className="btn btn-primary"
-              style={{ minHeight: "38px" }}
-              onClick={handleTransactions}
-              disabled={btnSubmit}
-            >
-              {btnSubmit ? (
+          <div className="row mb-5" style={{ minHeight: "100px" }}>
+            <div className="col-lg-3">
+              {isSubmitting ? (
                 <Spinner
                   as="span"
                   animation="border"
@@ -267,24 +207,86 @@ export default function Index() {
                   size="sm"
                 />
               ) : (
-                "Submit"
+                folios && (
+                  <Select
+                    options={folios}
+                    onChange={handleChangeFolio}
+                    isMulti
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    placeholder="Select Folio"
+                  />
+                )
               )}
-            </button>
-          </div>
-        </div>
 
-        {domLoaded && (
-          <DataTable
-            columns={columns}
-            data={TransactionData}
-            progressPending={loading}
-            pagination
-            paginationServer
-            paginationTotalRows={totalRows}
-            onChangePage={handlePageChange}
-            onChangeRowsPerPage={handlePerRowsChange}
-          />
-        )}
+              {/* <input
+              type="text"
+              className="form-control"
+              placeholder="Search.."
+              onChange={handleSearch}
+            /> */}
+            </div>
+            <div className="col-lg-3">
+              <Select
+                options={typesOptions}
+                onChange={handleChangeTypes}
+                isMulti
+                className="basic-multi-select"
+                classNamePrefix="select"
+                placeholder="Select Types"
+              />
+            </div>
+            <div className="col-lg-2">
+              <input
+                type="date"
+                className="form-control"
+                style={{ minHeight: "38px", color: "hsl(0, 0%, 50%)" }}
+                onChange={handleFromDate}
+              />
+            </div>
+            <div className="col-lg-2">
+              <input
+                type="date"
+                className="form-control"
+                style={{ minHeight: "38px", color: "hsl(0, 0%, 50%)" }}
+                onChange={handleToDate}
+              />
+            </div>
+            <div className="col-lg-2">
+              <button
+                className="btn btn-primary"
+                style={{ minHeight: "38px" }}
+                onClick={handleTransactions}
+                disabled={btnSubmit}
+              >
+                {btnSubmit ? (
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    role="status"
+                    aria-hidden="true"
+                    size="sm"
+                  />
+                ) : (
+                  "Submit"
+                )}
+              </button>
+            </div>
+          </div>
+
+          {domLoaded && (
+            <DataTable
+              columns={columns}
+              data={TransactionData}
+              progressPending={loading}
+              pagination
+              paginationServer
+              paginationTotalRows={totalRows}
+              onChangePage={handlePageChange}
+              onChangeRowsPerPage={handlePerRowsChange}
+            />
+          )}
+        </div>
       </AdminLayout>
     </>
   );
