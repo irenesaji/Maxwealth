@@ -1,5 +1,10 @@
 import { USERID, USERTOKEN } from "./constants";
 
+export const getSubDomain = () => {
+  const hostname = window.location.hostname;
+  return hostname.split(".")[0];
+};
+
 export const getToken = () => {
   return localStorage.getItem(USERTOKEN);
 };

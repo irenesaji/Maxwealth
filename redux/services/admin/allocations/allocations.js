@@ -5,11 +5,12 @@ import { getToken } from "@/util/common";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
-export const getAllocations = async (page, perPage) => {
+export const getAllocations = async (page, perPage, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_MODEL_PORTFOLIOS}`, {
@@ -27,11 +28,12 @@ export const getAllocations = async (page, perPage) => {
   }
 };
 
-export const getSearchResults = async (value, page, perPage) => {
+export const getSearchResults = async (value, page, perPage, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_MODEL_PORTFOLIOS}`, {
@@ -49,11 +51,12 @@ export const getSearchResults = async (value, page, perPage) => {
   }
 };
 
-export const createAllocation = async (data) => {
+export const createAllocation = async (data, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(
@@ -68,11 +71,12 @@ export const createAllocation = async (data) => {
   }
 };
 
-export const updateAllocation = async (id, data) => {
+export const updateAllocation = async (id, data, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
     console.log(data);
 

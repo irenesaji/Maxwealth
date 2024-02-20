@@ -10,6 +10,7 @@ export default function NewAnswerWeightage({
   onHide,
   questions,
   weightages,
+  tenant,
 }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
@@ -37,7 +38,7 @@ export default function NewAnswerWeightage({
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     try {
-      const response = await createRiskAnswerChoices(values);
+      const response = await createRiskAnswerChoices(values, tenant);
       setMessage("Risk Profile Answer Choice created successfully!");
       setIsSubmitting(false);
       onHide(true);

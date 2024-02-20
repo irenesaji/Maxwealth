@@ -13,11 +13,12 @@ import { getToken } from "@/util/common";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
-export const getTransactionsList = async (page, perPage) => {
+export const getTransactionsList = async (page, perPage, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(
@@ -44,12 +45,14 @@ export const getTransactions = async (
   selectedFolio,
   selectedTypes,
   selectedFromDate,
-  selectedToDate
+  selectedToDate,
+  tenant
 ) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_TRANSACTIONS}`, {
@@ -68,11 +71,12 @@ export const getTransactions = async (
   }
 };
 
-export const getAllFolios = async () => {
+export const getAllFolios = async (tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_FOLIOS}`, {
@@ -85,11 +89,12 @@ export const getAllFolios = async () => {
   }
 };
 
-export const getAllRedemptionPlans = async () => {
+export const getAllRedemptionPlans = async (tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_REDEMPTION_PLANS}`, {
@@ -102,11 +107,16 @@ export const getAllRedemptionPlans = async () => {
   }
 };
 
-export const getRedemptionsList = async (selectedPlans, selectedStatus) => {
+export const getRedemptionsList = async (
+  selectedPlans,
+  selectedStatus,
+  tenant
+) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(
@@ -123,11 +133,12 @@ export const getRedemptionsList = async (selectedPlans, selectedStatus) => {
   }
 };
 
-export const getAllPurchasePlans = async () => {
+export const getAllPurchasePlans = async (tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_PURCHASE_PLANS}`, {
@@ -140,11 +151,16 @@ export const getAllPurchasePlans = async () => {
   }
 };
 
-export const getPurchaseList = async (selectedPlans, selectedStatus) => {
+export const getPurchaseList = async (
+  selectedPlans,
+  selectedStatus,
+  tenant
+) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(

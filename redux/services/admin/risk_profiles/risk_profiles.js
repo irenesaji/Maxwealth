@@ -10,11 +10,12 @@ import { getToken } from "@/util/common";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
-export const getRiskProfiles = async (page, perPage) => {
+export const getRiskProfiles = async (page, perPage, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_RISK_PROFILES}`, {
@@ -33,11 +34,12 @@ export const getRiskProfiles = async (page, perPage) => {
   }
 };
 
-export const createRiskProfile = async (data) => {
+export const createRiskProfile = async (data, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(
@@ -52,11 +54,12 @@ export const createRiskProfile = async (data) => {
   }
 };
 
-export const updateRiskProfile = async (data, id) => {
+export const updateRiskProfile = async (data, id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
     const response = await axios.patch(
       `${BASE_URL}${ADMIN_RISK_PROFILES}/${id}`,
@@ -70,11 +73,12 @@ export const updateRiskProfile = async (data, id) => {
   }
 };
 
-export const deleteRiskProfile = async (id) => {
+export const deleteRiskProfile = async (id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
     const response = await axios.delete(
       `${BASE_URL}${ADMIN_RISK_PROFILES}/${id}`,
@@ -87,11 +91,12 @@ export const deleteRiskProfile = async (id) => {
   }
 };
 
-export const getRiskProfileQuestions = async (page, perPage) => {
+export const getRiskProfileQuestions = async (page, perPage, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(
@@ -112,11 +117,12 @@ export const getRiskProfileQuestions = async (page, perPage) => {
   }
 };
 
-export const createRiskProfileQuestion = async (data) => {
+export const createRiskProfileQuestion = async (data, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(
@@ -131,11 +137,12 @@ export const createRiskProfileQuestion = async (data) => {
   }
 };
 
-export const updateRiskProfileQuestion = async (data, id) => {
+export const updateRiskProfileQuestion = async (data, id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
     const response = await axios.patch(
       `${BASE_URL}${ADMIN_RISK_PROFILES_QUESTIONS}/${id}`,
@@ -149,11 +156,12 @@ export const updateRiskProfileQuestion = async (data, id) => {
   }
 };
 
-export const deleteRiskProfileQuestion = async (id) => {
+export const deleteRiskProfileQuestion = async (id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
     const response = await axios.delete(
       `${BASE_URL}${ADMIN_RISK_PROFILES_QUESTIONS}/${id}`,
@@ -166,11 +174,12 @@ export const deleteRiskProfileQuestion = async (id) => {
   }
 };
 
-export const getRiskProfileAnswerWeightage = async (page, perPage) => {
+export const getRiskProfileAnswerWeightage = async (page, perPage, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(
@@ -191,11 +200,12 @@ export const getRiskProfileAnswerWeightage = async (page, perPage) => {
   }
 };
 
-export const createRiskAnswerWeightage = async (data) => {
+export const createRiskAnswerWeightage = async (data, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(
@@ -210,11 +220,12 @@ export const createRiskAnswerWeightage = async (data) => {
   }
 };
 
-export const updateRiskAnswerWeightage = async (data, id) => {
+export const updateRiskAnswerWeightage = async (data, id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
     const response = await axios.patch(
       `${BASE_URL}${ADMIN_RISK_ANSWER_WEIGHTAGE}/${id}`,
@@ -228,11 +239,12 @@ export const updateRiskAnswerWeightage = async (data, id) => {
   }
 };
 
-export const deleteRiskAnswerWeightage = async (id) => {
+export const deleteRiskAnswerWeightage = async (id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
     const response = await axios.delete(
       `${BASE_URL}${ADMIN_RISK_ANSWER_WEIGHTAGE}/${id}`,
@@ -245,11 +257,17 @@ export const deleteRiskAnswerWeightage = async (id) => {
   }
 };
 
-export const getRiskProfileAnswerChoices = async (page, perPage, id) => {
+export const getRiskProfileAnswerChoices = async (
+  page,
+  perPage,
+  id,
+  tenant
+) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(
@@ -272,11 +290,12 @@ export const getRiskProfileAnswerChoices = async (page, perPage, id) => {
   }
 };
 
-export const createRiskAnswerChoices = async (data) => {
+export const createRiskAnswerChoices = async (data, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(
@@ -291,11 +310,12 @@ export const createRiskAnswerChoices = async (data) => {
   }
 };
 
-export const updateRiskAnswerChoices = async (data, id) => {
+export const updateRiskAnswerChoices = async (data, id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
     const response = await axios.patch(
       `${BASE_URL}${ADMIN_RISK_ANSWER_CHOICES}/${id}`,
@@ -309,11 +329,12 @@ export const updateRiskAnswerChoices = async (data, id) => {
   }
 };
 
-export const deleteRiskProfileAnswerChoice = async (id) => {
+export const deleteRiskProfileAnswerChoice = async (id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
     const response = await axios.delete(
       `${BASE_URL}${ADMIN_RISK_ANSWER_CHOICES}/${id}`,

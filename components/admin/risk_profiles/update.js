@@ -7,7 +7,7 @@ import { updateRiskProfile } from "@/redux/services/admin/risk_profiles/risk_pro
 import { Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 
-export default function Update({ show, onHide, risk }) {
+export default function Update({ show, onHide, risk, tenant }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
@@ -82,7 +82,7 @@ export default function Update({ show, onHide, risk }) {
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     try {
-      const response = await updateRiskProfile(values, risk?.[0]?.id);
+      const response = await updateRiskProfile(values, risk?.[0]?.id, tenant);
       setMessage("Risk Profile updated successfully!");
       setIsSubmitting(false);
       onHide(true);

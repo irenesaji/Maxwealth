@@ -12,11 +12,12 @@ import { getToken } from "@/util/common";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
-export const getAumReport = async () => {
+export const getAumReport = async (tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(
@@ -30,11 +31,12 @@ export const getAumReport = async () => {
   }
 };
 
-export const getSummaryReport = async () => {
+export const getSummaryReport = async (tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(
@@ -48,11 +50,12 @@ export const getSummaryReport = async () => {
   }
 };
 
-export const getHoldingReport = async (account_id, folios, as_on) => {
+export const getHoldingReport = async (account_id, folios, as_on, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_REPORTS_HOLDINGS}`, {
@@ -74,12 +77,14 @@ export const getCapitalGainReport = async (
   account_id,
 
   traded_on_from,
-  traded_on_to
+  traded_on_to,
+  tenant
 ) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(
@@ -99,11 +104,12 @@ export const getCapitalGainReport = async (
   }
 };
 
-export const getSchemeWiseReport = async (account_id, traded_on_to) => {
+export const getSchemeWiseReport = async (account_id, traded_on_to, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(
@@ -123,11 +129,16 @@ export const getSchemeWiseReport = async (account_id, traded_on_to) => {
   }
 };
 
-export const getAccountWiseReport = async (account_id, traded_on_to) => {
+export const getAccountWiseReport = async (
+  account_id,
+  traded_on_to,
+  tenant
+) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(

@@ -13,7 +13,7 @@ import {
 import { useRouter } from "next/router";
 import { ADMIN_DASHBOARD, ADMIN_USERS } from "@/util/urls";
 import { isAuthenticated } from "@/util/auth";
-
+import { getSubDomain } from "@/util/common";
 export default function Home() {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -25,12 +25,14 @@ export default function Home() {
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [otpHasBeenSent, setotpHasBeenSent] = useState(true);
   const [handleOTP, setHandleOTP] = useState(0);
-
+  const [tenant, setTenant] = useState("");
   useEffect(() => {
+    setTenant(getSubDomain());
+
     if (isAuthenticated()) {
       router.push(ADMIN_DASHBOARD);
     }
-  }, []);
+  }, [tenant]);
   const LoginSchema = Yup.object().shape({
     phone: Yup.string().required("Mobile Number is required"),
   });
@@ -43,7 +45,7 @@ export default function Home() {
   const _handleSubmit = async (e, values) => {
     setIsSubmitting(true);
     try {
-      const response = await dispatch(initiateSignIn(values));
+      const response = await dispatch(initiateSignIn(values, tenant));
       if (response.status === 200) {
         setIsSubmitting(false);
         router.push(ADMIN_DASHBOARD);
@@ -58,11 +60,10 @@ export default function Home() {
 
   const generateOTP = async (e, values) => {
     setMobile(values.phone);
-
     try {
-      const response = await generateOTPService(values.phone || mobile);
+      const response = await generateOTPService(values.phone || mobile, tenant);
     } catch (error) {
-      console.log(error.response);
+      console.log(error);
     }
 
     var timeLeft = 30; // set the time limit in seconds
@@ -83,8 +84,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Findola Capital</title>
-        <meta name="description" content="Findola Capital" />
+        <title>Max Wealth</title>
+        <meta name="description" content="Max Wealth" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

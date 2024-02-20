@@ -6,6 +6,7 @@ import {
   getSummaryReport,
 } from "@/redux/services/admin/reports/reports";
 import { Spinner } from "react-bootstrap";
+import { getSubDomain } from "@/util/common";
 export default function Dashboard() {
   const [aum, setAum] = useState("");
   const [aumArr, setAumArr] = useState([]);
@@ -13,6 +14,8 @@ export default function Dashboard() {
   const [summaryArr, setSummaryArr] = useState([]);
   const [isClient, setIsClient] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(0);
+  const [tenant, setTenant] = useState("");
+
   const summaryOptions = [
     {
       value: "redemption",
@@ -55,14 +58,20 @@ export default function Dashboard() {
   ];
 
   useEffect(() => {
-    aumFunc();
-    summaryFunc();
+    setTenant(getSubDomain());
+  }, [tenant]);
+
+  useEffect(() => {
+    if (tenant) {
+      aumFunc();
+      summaryFunc();
+    }
     setIsClient(true);
-  }, []);
+  }, [tenant]);
 
   const summaryFunc = async () => {
     try {
-      const response = await getSummaryReport();
+      const response = await getSummaryReport(tenant);
       setSummaryArr(response);
     } catch (error) {
       console.log(error);
@@ -72,7 +81,7 @@ export default function Dashboard() {
   const aumFunc = async () => {
     setIsSubmitting(1);
     try {
-      const response = await getAumReport();
+      const response = await getAumReport(tenant);
       setAumArr(response);
       setIsSubmitting(0);
     } catch (error) {
@@ -86,14 +95,14 @@ export default function Dashboard() {
       return item[0] == selectedOption.value;
     });
 
-    setAum(res[0][1]);
+    setAum(res?.[0]?.[1]);
   };
 
   const handleSummary = async (selectedOption) => {
     let res = summaryArr?.filter((item) => {
       return item[0] == selectedOption.value;
     });
-    setSummary(res[0][1]);
+    setSummary(res?.[0]?.[1]);
   };
 
   return (
@@ -163,7 +172,7 @@ export default function Dashboard() {
                 aria-hidden="true"
                 size="sm"
               />
-            ) : aumArr.length != "" ? (
+            ) : aumArr?.length != "" ? (
               <Select
                 options={aumOptions}
                 onChange={handleAum}

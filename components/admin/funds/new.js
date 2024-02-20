@@ -5,7 +5,7 @@ import { createFund } from "@/redux/services/admin/allocations/funds";
 import { Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 
-export default function New({ show, onHide, allocationId }) {
+export default function New({ show, onHide, allocationId, tenant }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
@@ -53,7 +53,7 @@ export default function New({ show, onHide, allocationId }) {
       ],
     };
     try {
-      const response = await createFund(data);
+      const response = await createFund(data, tenant);
       setMessage("Fund created successfully!");
       setIsSubmitting(false);
       onHide(true);

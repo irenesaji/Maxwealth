@@ -3,7 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import { deleteRiskProfileQuestion } from "@/redux/services/admin/risk_profiles/risk_profiles";
 import { Spinner } from "react-bootstrap";
 
-export default function DeleteQuestion({ show, onHide, id }) {
+export default function DeleteQuestion({ show, onHide, id, tenant }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
@@ -16,7 +16,7 @@ export default function DeleteQuestion({ show, onHide, id }) {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      const response = await deleteRiskProfileQuestion(id);
+      const response = await deleteRiskProfileQuestion(id, tenant);
       setMessage("Risk Profile deleted successfully!");
       setIsSubmitting(false);
       onHide(true);

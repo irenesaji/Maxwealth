@@ -5,7 +5,7 @@ import { Field, Formik, Form } from "formik";
 import { updateAllocation } from "@/redux/services/admin/allocations/allocations";
 import { Spinner } from "react-bootstrap";
 
-export default function UpdateModal({ show, onHide, id, allocations }) {
+export default function UpdateModal({ show, onHide, id, allocations, tenant }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
@@ -22,7 +22,7 @@ export default function UpdateModal({ show, onHide, id, allocations }) {
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     try {
-      const response = await updateAllocation(id, values);
+      const response = await updateAllocation(id, values, tenant);
       setMessage("Values updated successfully!");
       setIsSubmitting(false);
       onHide(true);

@@ -3,7 +3,11 @@ import DataTable from "react-data-table-component";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faPenToSquare,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import NewModal from "@/components/admin/model_portfolios/new";
 import UpdateModal from "@/components/admin/allocations/update";
 import {
@@ -13,6 +17,7 @@ import {
 } from "@/redux/services/admin/allocations/allocations";
 import { useRouter } from "next/router";
 import { ADMIN_ALLOCATIONS } from "@/util/urls";
+import { getSubDomain } from "@/util/common";
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -31,6 +36,7 @@ export default function Index() {
   const handleShow = () => setShow(true);
   const handleCloseUpdate = () => setShowUpdate(false);
   const handleShowUpdate = () => setShowUpdate(true);
+  const [tenant, setTenant] = useState("");
 
   const columns = [
     {
@@ -107,7 +113,8 @@ export default function Index() {
     try {
       const response = await getAllocations(
         currentPage || page,
-        newPerPage || perPage
+        newPerPage || perPage,
+        tenant
       );
       setAllAllocations(response.data);
       setTotalRows(response.total);
@@ -122,8 +129,11 @@ export default function Index() {
   }, [user]);
 
   useEffect(() => {
-    allocations();
-  }, []);
+    setTenant(getSubDomain());
+    if (tenant) {
+      allocations();
+    }
+  }, [tenant]);
 
   const handlePageChange = (page) => {
     allocations(page);
@@ -138,7 +148,12 @@ export default function Index() {
 
   const handleSearch = async (e) => {
     try {
-      const response = await getSearchResults(e.target.value, page, perPage);
+      const response = await getSearchResults(
+        e.target.value,
+        page,
+        perPage,
+        tenant
+      );
       setAllAllocations(response.data);
       setTotalRows(response.total);
     } catch (error) {
@@ -172,8 +187,9 @@ export default function Index() {
             />
           </div>
           <div className="col-lg-8 d-flex justify-content-end">
-            <button className="btn btn-primary" onClick={handleShow}>
-              Create Allocation
+            <button className="btn btn-primary btn-sm" onClick={handleShow}>
+              <FontAwesomeIcon icon={faPlus} width={12} />
+              &nbsp; Create
             </button>
           </div>
         </div>
@@ -190,13 +206,14 @@ export default function Index() {
           />
         )}
 
-        <NewModal show={show} onHide={handleClose} />
+        <NewModal show={show} onHide={handleClose} tenant={tenant} />
 
         <UpdateModal
           show={showUpdate}
           onHide={handleCloseUpdate}
           id={id}
           allocations={selectedAllocation}
+          tenant={tenant}
         />
       </AdminLayout>
     </>

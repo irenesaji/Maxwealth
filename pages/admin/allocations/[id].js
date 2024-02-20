@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { ADMIN_ALLOCATIONS } from "@/util/urls";
+import { getSubDomain } from "@/util/common";
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -28,6 +29,7 @@ export default function Index() {
   const [selectedAllocation, setSelectedAllocation] = useState([]);
   const router = useRouter();
   const [allocationId, setAllocationId] = useState(null);
+  const [tenant, setTenant] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -35,6 +37,9 @@ export default function Index() {
   const handleCloseView = () => setShowView(false);
   const handleShowView = () => setShowView(true);
 
+  useEffect(() => {
+    setTenant(getSubDomain());
+  }, [tenant]);
   useEffect(() => {
     setAllocationId(router.query.id);
     allocationId ? allocations() : "";
@@ -86,7 +91,8 @@ export default function Index() {
       const response = await getFunds(
         currentPage || page,
         newPerPage || perPage,
-        allocationId
+        allocationId,
+        tenant
       );
       setAllAllocations(response.data);
       setTotalRows(response.total);
@@ -113,7 +119,7 @@ export default function Index() {
 
   const handleSearch = async (e) => {
     try {
-      const response = await getSearchResults(e.target.value);
+      const response = await getSearchResults(e.target.value, tenant);
       setAllAllocations(response.data.data);
       setTotalRows(response.total);
     } catch (error) {
@@ -174,12 +180,14 @@ export default function Index() {
           show={show}
           onHide={handleClose}
           allocationId={allocationId}
+          tenant={tenant}
         />
 
         <ViewModal
           show={showView}
           onHide={handleCloseView}
           fund={selectedAllocation}
+          tenant={tenant}
         />
       </AdminLayout>
     </>

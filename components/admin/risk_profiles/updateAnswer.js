@@ -11,6 +11,7 @@ export default function NewAnswerWeightage({
   questions,
   weightages,
   risk,
+  tenant,
 }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
@@ -38,7 +39,11 @@ export default function NewAnswerWeightage({
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     try {
-      const response = await updateRiskAnswerChoices(values, risk?.[0]?.id);
+      const response = await updateRiskAnswerChoices(
+        values,
+        risk?.[0]?.id,
+        tenant
+      );
       setMessage("Risk Profile Answer Choice updated successfully!");
       setIsSubmitting(false);
       onHide(true);

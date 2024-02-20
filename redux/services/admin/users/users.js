@@ -5,11 +5,12 @@ import { getToken } from "@/util/common";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
-export const getUsers = async (page, perPage) => {
+export const getUsers = async (page, perPage, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_USERS}`, {
@@ -28,11 +29,12 @@ export const getUsers = async (page, perPage) => {
   }
 };
 
-export const getSearchResults = async (value, page, perPage) => {
+export const getSearchResults = async (value, page, perPage, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_USERS}`, {
@@ -51,11 +53,12 @@ export const getSearchResults = async (value, page, perPage) => {
   }
 };
 
-export const updateUser = async (id, data) => {
+export const updateUser = async (id, data, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
     console.log(data);
 
@@ -73,11 +76,12 @@ export const updateUser = async (id, data) => {
   }
 };
 
-export const onBoarding = async () => {
+export const onBoarding = async (tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_USERS_ONBOARDING}`, {

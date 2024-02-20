@@ -9,6 +9,7 @@ import { getAllocations } from "@/redux/services/admin/allocations/allocations";
 import { getGoals } from "@/redux/services/admin/goals/goals";
 import { useRouter } from "next/router";
 import { ADMIN_ALLOCATIONS } from "@/util/urls";
+import { getSubDomain } from "@/util/common";
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -25,6 +26,7 @@ export default function Index() {
   const [allocationData, setAllocationData] = useState([]);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [tenant, setTenant] = useState("");
 
   const columns = [
     {
@@ -80,7 +82,8 @@ export default function Index() {
     try {
       const response = await getGoals(
         currentPage || page,
-        newPerPage || perPage
+        newPerPage || perPage,
+        tenant
       );
       setAllAllocations(response.data);
       setTotalRows(response.total);
@@ -95,9 +98,12 @@ export default function Index() {
   }, [user]);
 
   useEffect(() => {
-    goals();
-    getAllocationsData();
-  }, []);
+    setTenant(getSubDomain());
+    if (tenant) {
+      goals();
+      getAllocationsData();
+    }
+  }, [tenant]);
 
   const handlePageChange = (page) => {
     goals(page);
@@ -112,7 +118,12 @@ export default function Index() {
 
   const handleSearch = async (e) => {
     try {
-      const response = await getSearchResults(e.target.value, page, perPage);
+      const response = await getSearchResults(
+        e.target.value,
+        page,
+        perPage,
+        tenant
+      );
       setAllAllocations(response.data);
       setTotalRows(response.total);
     } catch (error) {
@@ -131,7 +142,7 @@ export default function Index() {
 
   const getAllocationsData = async () => {
     try {
-      const response = await getAllocations();
+      const response = await getAllocations(tenant);
       setAllocationData(response);
     } catch (error) {
       console.log(error.response);
@@ -177,6 +188,7 @@ export default function Index() {
           onHide={handleClose}
           allocationData={allocationData}
           goals={allAllocations}
+          tenant={tenant}
         />
       </AdminLayout>
     </>

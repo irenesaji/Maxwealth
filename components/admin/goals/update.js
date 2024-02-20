@@ -6,7 +6,7 @@ import { updateGoal } from "@/redux/services/admin/goals/goals";
 import { Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 
-export default function New({ show, onHide, allocationData, goals }) {
+export default function New({ show, onHide, allocationData, goals, tenant }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
@@ -29,7 +29,7 @@ export default function New({ show, onHide, allocationData, goals }) {
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     try {
-      const response = await updateGoal(values, goals?.[0]?.id);
+      const response = await updateGoal(values, goals?.[0]?.id, tenant);
       setMessage("Goal updated successfully!");
       setIsSubmitting(false);
       onHide(true);

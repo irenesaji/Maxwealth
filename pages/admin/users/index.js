@@ -14,7 +14,7 @@ import {
   getKYCProofs,
   getKYCOnboarding,
 } from "@/redux/services/admin/kyc/kyc";
-
+import { getSubDomain } from "@/util/common";
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -37,6 +37,7 @@ export default function Index() {
   const [bank, setBank] = useState([]);
   const [proofs, setProofs] = useState([]);
   const [nominee, setNominee] = useState([]);
+  const [tenant, setTenant] = useState("");
 
   const columns = [
     {
@@ -105,7 +106,8 @@ export default function Index() {
     try {
       const response = await getUsers(
         currentPage || page,
-        newPerPage || perPage
+        newPerPage || perPage,
+        tenant
       );
       setAllUsers(response.data);
       setTotalRows(response.total);
@@ -116,7 +118,7 @@ export default function Index() {
 
   const onboardingFunc = async (id) => {
     try {
-      const response = await getKYCOnboarding(id);
+      const response = await getKYCOnboarding(id, tenant);
       setOnboarding(response?.[0]);
     } catch (error) {
       console.log(error);
@@ -125,7 +127,7 @@ export default function Index() {
 
   const addressFunc = async (id) => {
     try {
-      const response = await getKYCAddress(id);
+      const response = await getKYCAddress(id, tenant);
       setAddress(response?.[0]);
     } catch (error) {
       console.log(error);
@@ -134,7 +136,7 @@ export default function Index() {
 
   const bankFunc = async (id) => {
     try {
-      const response = await getKYCBank(id);
+      const response = await getKYCBank(id, tenant);
       setBank(response?.[0]);
     } catch (error) {
       console.log(error);
@@ -143,7 +145,7 @@ export default function Index() {
 
   const proofsFunc = async (id) => {
     try {
-      const response = await getKYCProofs(id);
+      const response = await getKYCProofs(id, tenant);
       setProofs(response);
     } catch (error) {
       console.log(error);
@@ -152,7 +154,7 @@ export default function Index() {
 
   const nomineeFunc = async (id) => {
     try {
-      const response = await getKYCNominee(id);
+      const response = await getKYCNominee(id, tenant);
       setNominee(response);
     } catch (error) {
       console.log(error);
@@ -165,8 +167,11 @@ export default function Index() {
   }, [user]);
 
   useEffect(() => {
-    users();
-  }, []);
+    setTenant(getSubDomain());
+    if (tenant) {
+      users();
+    }
+  }, [tenant]);
 
   const handlePageChange = (page) => {
     users(page);
@@ -181,7 +186,12 @@ export default function Index() {
 
   const handleSearch = async (e) => {
     try {
-      const response = await getSearchResults(e.target.value, page, perPage);
+      const response = await getSearchResults(
+        e.target.value,
+        page,
+        perPage,
+        tenant
+      );
       setAllUsers(response.data);
       setTotalRows(response.total);
     } catch (error) {
@@ -253,6 +263,7 @@ export default function Index() {
           onHide={handleClose}
           id={id}
           user={selectedUser}
+          tenant={tenant}
         />
       </AdminLayout>
     </>

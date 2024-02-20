@@ -5,7 +5,7 @@ import { createRiskAnswerWeightage } from "@/redux/services/admin/risk_profiles/
 import { Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 
-export default function NewAnswerWeightage({ show, onHide }) {
+export default function NewAnswerWeightage({ show, onHide, tenant }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
@@ -25,7 +25,7 @@ export default function NewAnswerWeightage({ show, onHide }) {
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     try {
-      const response = await createRiskAnswerWeightage(values);
+      const response = await createRiskAnswerWeightage(values, tenant);
       setMessage("Risk Profile Answer Weightage created successfully!");
       setIsSubmitting(false);
       onHide(true);

@@ -7,6 +7,7 @@ import DataTable from "react-data-table-component";
 import NavigationReports from "@/components/admin/reports/navigationReports";
 import { Spinner } from "react-bootstrap";
 import { getAccountWiseReport } from "@/redux/services/admin/reports/reports";
+import { getSubDomain } from "@/util/common";
 export default function AccountWise() {
   const [folios, setFolios] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(0);
@@ -19,6 +20,7 @@ export default function AccountWise() {
   const [btnSubmit, setBtnSubmit] = useState(0);
   const [loading, setLoading] = useState(false);
   const [TransactionData, setTransactionData] = useState([]);
+  const [tenant, setTenant] = useState("");
 
   const columns = [
     {
@@ -71,14 +73,17 @@ export default function AccountWise() {
   ];
 
   useEffect(() => {
-    onBoardingFunc();
+    setTenant(getSubDomain());
+    if (tenant) {
+      onBoardingFunc();
+    }
     setDomLoaded(true);
-  }, []);
+  }, [tenant]);
 
   const onBoardingFunc = async () => {
     setIsSubmitting(1);
     try {
-      const response = await onBoarding();
+      const response = await onBoarding(tenant);
       setIsSubmitting(0);
       let accountsArr = [];
       response.map((res) => {
@@ -115,7 +120,8 @@ export default function AccountWise() {
     try {
       const response = await getAccountWiseReport(
         selectedAccountId,
-        selectedToDate
+        selectedToDate,
+        tenant
       );
 
       setTransactionData(response.data.data.rows);

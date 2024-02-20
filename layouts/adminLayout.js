@@ -5,15 +5,15 @@ export default function AdminLayout({ children }) {
   return (
     <>
       <Head>
-        <title>Findola Capital</title>
-        <meta name="description" content="Findola Capital" />
+        <title>Max Wealth</title>
+        <meta name="description" content="Max Wealth" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="row mx-0">
         <div className="col-lg-2 navigation">
           <p className="text-center mt-3">
-            <Image src="/images/logo.png" width={230} height={60} />
+            <Image src="/images/maxwealth-logo.png" width={150} height={40} />
           </p>
           <Navigation></Navigation>
         </div>

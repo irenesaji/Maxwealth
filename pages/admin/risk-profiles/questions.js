@@ -7,6 +7,7 @@ import {
   faEye,
   faPenToSquare,
   faTrashAlt,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import NewModal from "@/components/admin/risk_profiles/newQuestion";
 import UpdateModal from "@/components/admin/risk_profiles/updateQuestion";
@@ -15,7 +16,7 @@ import { useRouter } from "next/router";
 import { ADMIN_ALLOCATIONS } from "@/util/urls";
 import { getRiskProfileQuestions } from "@/redux/services/admin/risk_profiles/risk_profiles";
 import Navigation from "@/components/admin/risk_profiles/navigation";
-
+import { getSubDomain } from "@/util/common";
 const ExpandedComponent = ({ data }) => {
   // Use the data prop to render content
   return (
@@ -52,6 +53,7 @@ export default function Questions() {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [show, setShow] = useState(false);
+  const [tenant, setTenant] = useState("");
 
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -133,7 +135,8 @@ export default function Questions() {
     try {
       const response = await getRiskProfileQuestions(
         currentPage || page,
-        newPerPage || perPage
+        newPerPage || perPage,
+        tenant
       );
       setAllProfiles(response.data);
       setTotalRows(response.total);
@@ -148,8 +151,11 @@ export default function Questions() {
   }, [user]);
 
   useEffect(() => {
-    risk_profiles();
-  }, []);
+    setTenant(getSubDomain());
+    if (tenant) {
+      risk_profiles();
+    }
+  }, [tenant]);
 
   const handlePageChange = (page) => {
     risk_profiles(page);
@@ -164,7 +170,12 @@ export default function Questions() {
 
   const handleSearch = async (e) => {
     try {
-      const response = await getSearchResults(e.target.value, page, perPage);
+      const response = await getSearchResults(
+        e.target.value,
+        page,
+        perPage,
+        tenant
+      );
       setAllAllocations(response.data);
       setTotalRows(response.total);
     } catch (error) {
@@ -199,8 +210,9 @@ export default function Questions() {
             />
           </div>
           <div className="col-lg-8 d-flex justify-content-end">
-            <button className="btn btn-primary" onClick={handleShow}>
-              Create Question
+            <button className="btn btn-primary btn-sm" onClick={handleShow}>
+              <FontAwesomeIcon icon={faPlus} width={12} />
+              &nbsp;Create
             </button>
           </div>
         </div>
@@ -221,13 +233,19 @@ export default function Questions() {
           />
         )}
 
-        <NewModal show={show} onHide={handleClose} />
-        <DeleteModal show={showDelete} onHide={handleCloseDelete} id={id} />
+        <NewModal show={show} onHide={handleClose} tenant={tenant} />
+        <DeleteModal
+          show={showDelete}
+          onHide={handleCloseDelete}
+          id={id}
+          tenant={tenant}
+        />
 
         <UpdateModal
           show={showUpdate}
           onHide={handleCloseUpdate}
           risk={selectedRisk}
+          tenant={tenant}
         />
       </AdminLayout>
     </>

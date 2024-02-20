@@ -9,9 +9,9 @@ module.exports = {
   publicRuntimeConfig: {
     BASE_URL:
       process.env.REACT_APP_ENVIRONMENT === "development"
-        ? "https://findola.mindstack.in"
+        ? "https://api.maxwealth.money"
         : process.env.REACT_APP_ENVIRONMENT === "staging"
-        ? "https://staging.findola.in"
+        ? "https://api.maxwealth.money"
         : "",
   },
 };

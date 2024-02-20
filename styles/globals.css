@@ -60,7 +60,7 @@ body {
 }
 
 a {
-  color: #1bba00;
+  color: #8154bf;
   text-decoration: none;
 }
 
@@ -76,8 +76,8 @@ input {
 .btn-primary,
 .btn-primary:hover,
 .btn-primary:active {
-  background: #1bba00 !important;
-  border: 1px solid #1bba00 !important;
+  background: #8154bf !important;
+  border: 1px solid #8154bf !important;
   border-radius: 10px;
   min-height: 48px;
 }
@@ -94,9 +94,10 @@ h3 {
 .navigation {
   position: absolute;
   height: 100vh;
-  background-color: #def7e5;
+  background-color: #3b3740;
   padding: 0 !important;
   box-shadow: 0 0 10px #e9e4e4;
+  width: 200px;
 }
 
 .navigation .list-group {
@@ -108,18 +109,43 @@ h3 {
   background: none;
   border: none;
   border-radius: 0;
-  color: #000;
-
-  font-size: 18px;
-  padding: 20px 20px;
+  color: #fff;
+  margin: 5px;
+  font-size: 14px;
+  /* padding: 20px 20px; */
 }
 
 .navigation .list-group a.active,
 .navigation .list-group button.active {
-  background: #1bba00;
+  background: #8154bf;
   color: #fff;
+  margin-left: 10px;
+  width: 90%;
+  border-radius: 8px;
 }
 
+.has_collapse.active {
+  background: #2c2733 !important;
+}
+
+.collapse .list-group a {
+  /* width: 100% !important; */
+  margin-left: 0 !important;
+  /* padding: 0; */
+}
+.has_collapse ul {
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+.has_collapse ul li {
+  list-style: none;
+  margin-bottom: 5px;
+}
+
+.has_collapse ul li.active {
+  background: #8154bf;
+}
 .offset-lg-3 {
   margin-left: 22% !important;
 }
@@ -129,7 +155,7 @@ input[type="email"]:focus,
 input[type="number"]:focus,
 textarea:focus {
   /* border: 1px solid #1bba00; */
-  box-shadow: 0 0 5px 0.1rem #1bba00 !important;
+  box-shadow: 0 0 5px 0.1rem #8154bf !important;
 }
 
 table tr,
@@ -154,7 +180,7 @@ select.form-control {
 .content-area .list-group-item.active {
   background: none !important;
   border: none;
-  border-bottom: 3px solid #1bba00 !important;
+  border-bottom: 3px solid #8154bf !important;
   color: inherit;
   border-radius: 0 !important;
 }

@@ -8,11 +8,12 @@ import {
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
-export const getFunds = async (page, perPage, id) => {
+export const getFunds = async (page, perPage, id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(
@@ -35,11 +36,12 @@ export const getFunds = async (page, perPage, id) => {
   }
 };
 
-export const getSearchResults = async (value, page, perPage) => {
+export const getSearchResults = async (value, page, perPage, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_USERS}`, {
@@ -58,11 +60,12 @@ export const getSearchResults = async (value, page, perPage) => {
   }
 };
 
-export const createFund = async (data) => {
+export const createFund = async (data, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.post(

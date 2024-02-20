@@ -13,7 +13,7 @@ import {
   getAllRedemptionPlans,
 } from "@/redux/services/admin/transactions/transactions";
 import NavigationTransactions from "@/components/admin/transactions/navigationTransactions";
-
+import { getSubDomain } from "@/util/common";
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -37,6 +37,7 @@ export default function Index() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [btnSubmit, setBtnSubmit] = useState(0);
+  const [tenant, setTenant] = useState("");
 
   const typesOptions = [
     { value: "purchase", label: "Purchase" },
@@ -112,7 +113,8 @@ export default function Index() {
         selectedFolio,
         selectedTypes,
         selectedFromDate,
-        selectedToDate
+        selectedToDate,
+        tenant
       );
       setTransactionData(response.data.data);
       setBtnSubmit(0);
@@ -125,7 +127,7 @@ export default function Index() {
   const foliosFunc = async () => {
     setIsSubmitting(1);
     try {
-      const response = await getAllFolios();
+      const response = await getAllFolios(tenant);
       let foliosArr = [];
       response.data.map((res) => {
         foliosArr.push({
@@ -143,7 +145,7 @@ export default function Index() {
 
   const redemptionFunc = async () => {
     try {
-      const response = await getAllRedemptionPlans();
+      const response = await getAllRedemptionPlans(tenant);
       console.log(response.data);
       setRedemptiom(response);
     } catch (error) {
@@ -157,9 +159,12 @@ export default function Index() {
   }, [user]);
 
   useEffect(() => {
-    foliosFunc();
+    setTenant(getSubDomain());
+    if (tenant) {
+      foliosFunc();
+    }
     // redemptionFunc();
-  }, []);
+  }, [tenant]);
 
   const handlePageChange = (page) => {
     transactions(page);

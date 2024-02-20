@@ -12,7 +12,7 @@ import {
   getRedemptionsList,
 } from "@/redux/services/admin/transactions/transactions";
 import NavigationTransactions from "@/components/admin/transactions/navigationTransactions";
-
+import { getSubDomain } from "@/util/common";
 export default function Redemptions() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -27,6 +27,7 @@ export default function Redemptions() {
   const [folios, setFolios] = useState("");
   const [redemption, setRedemptiom] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(0);
+  const [tenant, setTenant] = useState("");
 
   const router = useRouter();
   const [TransactionData, setTransactionData] = useState([]);
@@ -113,7 +114,11 @@ export default function Redemptions() {
   const handleTransactions = async () => {
     setBtnSubmit(1);
     try {
-      const response = await getRedemptionsList(selectedPlans, selectedStatus);
+      const response = await getRedemptionsList(
+        selectedPlans,
+        selectedStatus,
+        tenant
+      );
       setTransactionData(response);
       setBtnSubmit(0);
     } catch (error) {
@@ -125,7 +130,7 @@ export default function Redemptions() {
   const redemptionFunc = async () => {
     setIsSubmitting(1);
     try {
-      const response = await getAllRedemptionPlans();
+      const response = await getAllRedemptionPlans(tenant);
 
       let foliosArr = [];
       response.data.map((res) => {
@@ -148,8 +153,11 @@ export default function Redemptions() {
   }, [user]);
 
   useEffect(() => {
-    redemptionFunc();
-  }, []);
+    setTenant(getSubDomain());
+    if (tenant) {
+      redemptionFunc();
+    }
+  }, [tenant]);
 
   const handleChangeFolio = (selectedOption) => {
     const valuesArray = selectedOption.map((item) => item.value);

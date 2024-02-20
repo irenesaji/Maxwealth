@@ -3,7 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import { deleteRiskAnswerWeightage } from "@/redux/services/admin/risk_profiles/risk_profiles";
 import { Spinner } from "react-bootstrap";
 
-export default function DeleteAnswerWeightage({ show, onHide, id }) {
+export default function DeleteAnswerWeightage({ show, onHide, id, tenant }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
@@ -16,7 +16,7 @@ export default function DeleteAnswerWeightage({ show, onHide, id }) {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      const response = await deleteRiskAnswerWeightage(id);
+      const response = await deleteRiskAnswerWeightage(id, tenant);
       setMessage("Risk Profile deleted successfully!");
       setIsSubmitting(false);
       onHide(true);

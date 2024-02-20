@@ -7,6 +7,7 @@ import DataTable from "react-data-table-component";
 import NavigationReports from "@/components/admin/reports/navigationReports";
 import { Spinner } from "react-bootstrap";
 import { getCapitalGainReport } from "@/redux/services/admin/reports/reports";
+import { getSubDomain } from "@/util/common";
 export default function CapitalGains() {
   const [folios, setFolios] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(0);
@@ -20,6 +21,7 @@ export default function CapitalGains() {
   const [loading, setLoading] = useState(false);
   const [TransactionData, setTransactionData] = useState([]);
   const [selectedFromDate, setSelectedFromDate] = useState("");
+  const [tenant, setTenant] = useState("");
   const columns = [
     {
       name: "Folio",
@@ -103,14 +105,17 @@ export default function CapitalGains() {
   ];
 
   useEffect(() => {
-    onBoardingFunc();
+    setTenant(getSubDomain());
+    if (tenant) {
+      onBoardingFunc();
+    }
     setDomLoaded(true);
-  }, []);
+  }, [tenant]);
 
   const onBoardingFunc = async () => {
     setIsSubmitting(1);
     try {
-      const response = await onBoarding();
+      const response = await onBoarding(tenant);
       setIsSubmitting(0);
       let accountsArr = [];
       response.map((res) => {
@@ -148,7 +153,8 @@ export default function CapitalGains() {
       const response = await getCapitalGainReport(
         selectedAccountId,
         selectedFromDate,
-        selectedToDate
+        selectedToDate,
+        tenant
       );
       setTransactionData(response.data.data.rows);
       setBtnSubmit(0);

@@ -7,7 +7,7 @@ import { createRiskProfile } from "@/redux/services/admin/risk_profiles/risk_pro
 import { Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 
-export default function New({ show, onHide }) {
+export default function New({ show, onHide, tenant }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
@@ -82,7 +82,7 @@ export default function New({ show, onHide }) {
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     try {
-      const response = await createRiskProfile(values);
+      const response = await createRiskProfile(values, tenant);
       setMessage("Risk Profile created successfully!");
       setIsSubmitting(false);
       onHide(true);

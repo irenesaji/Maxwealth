@@ -6,7 +6,7 @@ import { createAllocation } from "@/redux/services/admin/allocations/allocations
 import { Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 
-export default function New({ show, onHide }) {
+export default function New({ show, onHide, tenant }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
@@ -26,7 +26,7 @@ export default function New({ show, onHide }) {
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     try {
-      const response = await createAllocation(values);
+      const response = await createAllocation(values, tenant);
       setMessage("Allocation created successfully!");
       setIsSubmitting(false);
       onHide(true);

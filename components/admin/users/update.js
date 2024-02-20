@@ -5,7 +5,7 @@ import { Field, Formik, Form } from "formik";
 import { updateUser } from "@/redux/services/admin/users/users";
 import { Spinner } from "react-bootstrap";
 
-export default function Update({ show, onHide, id, user }) {
+export default function Update({ show, onHide, id, user, tenant }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
@@ -22,7 +22,7 @@ export default function Update({ show, onHide, id, user }) {
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     try {
-      const response = await updateUser(id, values);
+      const response = await updateUser(id, values, tenant);
       setMessage("Values updated successfully!");
       setIsSubmitting(false);
       onHide(true);

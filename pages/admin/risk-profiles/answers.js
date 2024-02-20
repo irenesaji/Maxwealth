@@ -7,6 +7,7 @@ import {
   faEye,
   faPenToSquare,
   faTrashAlt,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import NewModal from "@/components/admin/risk_profiles/newAnswer";
 import UpdateModal from "@/components/admin/risk_profiles/updateAnswer";
@@ -19,7 +20,7 @@ import {
   getRiskProfileAnswerWeightage,
 } from "@/redux/services/admin/risk_profiles/risk_profiles";
 import Navigation from "@/components/admin/risk_profiles/navigation";
-
+import { getSubDomain } from "@/util/common";
 export default function Answers() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -39,7 +40,7 @@ export default function Answers() {
   const router = useRouter();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  const [tenant, setTenant] = useState("");
   const handleCloseUpdate = () => setShowUpdate(false);
   const handleShowUpdate = () => setShowUpdate(true);
   const handleCloseDelete = () => setShowDelete(false);
@@ -120,7 +121,8 @@ export default function Answers() {
       const response = await getRiskProfileAnswerChoices(
         currentPage || page,
         newPerPage || perPage,
-        id
+        id,
+        tenant
       );
       setAllProfiles(response.data);
       setTotalRows(response.total);
@@ -136,9 +138,12 @@ export default function Answers() {
 
   useEffect(() => {
     // risk_profiles();
-    getQuestions();
-    getWeightage();
-  }, []);
+    setTenant(getSubDomain());
+    if (tenant) {
+      getQuestions();
+      getWeightage();
+    }
+  }, [tenant]);
 
   const handlePageChange = (page) => {
     risk_profiles(page);
@@ -154,7 +159,12 @@ export default function Answers() {
 
   const handleSearch = async (e) => {
     try {
-      const response = await getSearchResults(e.target.value, page, perPage);
+      const response = await getSearchResults(
+        e.target.value,
+        page,
+        perPage,
+        tenant
+      );
       setAllAllocations(response.data);
       setTotalRows(response.total);
     } catch (error) {
@@ -172,7 +182,7 @@ export default function Answers() {
   };
 
   const getQuestions = async () => {
-    const response = await getRiskProfileQuestions();
+    const response = await getRiskProfileQuestions(tenant);
     setAllQuestions(response);
   };
 
@@ -186,7 +196,7 @@ export default function Answers() {
 
   const getWeightage = async (id) => {
     try {
-      const response = await getRiskProfileAnswerWeightage();
+      const response = await getRiskProfileAnswerWeightage(tenant);
       setWeightageData(response);
     } catch (error) {
       console.log(error.response);
@@ -223,8 +233,9 @@ export default function Answers() {
             </select>
           </div>
           <div className="col-lg-8 d-flex justify-content-end">
-            <button className="btn btn-primary" onClick={handleShow}>
-              Create Answer
+            <button className="btn btn-primary btn-sm" onClick={handleShow}>
+              <FontAwesomeIcon icon={faPlus} width={12} />
+              &nbsp; Create
             </button>
           </div>
         </div>
@@ -250,8 +261,14 @@ export default function Answers() {
           onHide={handleClose}
           questions={allQuestions}
           weightages={weightageData}
+          tenant={tenant}
         />
-        <DeleteModal show={showDelete} onHide={handleCloseDelete} id={id} />
+        <DeleteModal
+          show={showDelete}
+          onHide={handleCloseDelete}
+          id={id}
+          tenant={tenant}
+        />
 
         <UpdateModal
           show={showUpdate}
@@ -259,6 +276,7 @@ export default function Answers() {
           questions={allQuestions}
           weightages={weightageData}
           risk={selectedRisk}
+          tenant={tenant}
         />
       </AdminLayout>
     </>

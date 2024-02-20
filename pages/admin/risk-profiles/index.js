@@ -7,6 +7,7 @@ import {
   faEye,
   faPenToSquare,
   faTrashAlt,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import NewModal from "@/components/admin/risk_profiles/new";
 import ViewModal from "@/components/admin/risk_profiles/view";
@@ -16,6 +17,7 @@ import { useRouter } from "next/router";
 import { ADMIN_ALLOCATIONS } from "@/util/urls";
 import { getRiskProfiles } from "@/redux/services/admin/risk_profiles/risk_profiles";
 import Navigation from "@/components/admin/risk_profiles/navigation";
+import { getSubDomain } from "@/util/common";
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -31,6 +33,7 @@ export default function Index() {
   const [showDelete, setShowDelete] = useState(false);
   const [id, setId] = useState("");
   const [selectedRisk, setSelectedRisk] = useState([]);
+  const [tenant, setTenant] = useState("");
   const router = useRouter();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -128,7 +131,8 @@ export default function Index() {
     try {
       const response = await getRiskProfiles(
         currentPage || page,
-        newPerPage || perPage
+        newPerPage || perPage,
+        tenant
       );
       setAllProfiles(response.data);
       setTotalRows(response.total);
@@ -143,8 +147,9 @@ export default function Index() {
   }, [user]);
 
   useEffect(() => {
+    setTenant(getSubDomain());
     risk_profiles();
-  }, []);
+  }, [tenant]);
 
   const handlePageChange = (page) => {
     risk_profiles(page);
@@ -159,7 +164,12 @@ export default function Index() {
 
   const handleSearch = async (e) => {
     try {
-      const response = await getSearchResults(e.target.value, page, perPage);
+      const response = await getSearchResults(
+        e.target.value,
+        page,
+        perPage,
+        tenant
+      );
       setAllAllocations(response.data);
       setTotalRows(response.total);
     } catch (error) {
@@ -194,8 +204,9 @@ export default function Index() {
             />
           </div>
           <div className="col-lg-8 d-flex justify-content-end">
-            <button className="btn btn-primary" onClick={handleShow}>
-              Create Risk Profile
+            <button className="btn btn-primary btn-sm" onClick={handleShow}>
+              <FontAwesomeIcon icon={faPlus} width={12} />
+              &nbsp;Create
             </button>
           </div>
         </div>
@@ -212,17 +223,24 @@ export default function Index() {
           />
         )}
 
-        <NewModal show={show} onHide={handleClose} />
-        <DeleteModal show={showDelete} onHide={handleCloseDelete} id={id} />
+        <NewModal show={show} onHide={handleClose} tenant={tenant} />
+        <DeleteModal
+          show={showDelete}
+          onHide={handleCloseDelete}
+          id={id}
+          tenant={tenant}
+        />
         <ViewModal
           show={showView}
           onHide={handleCloseView}
           risk={selectedRisk}
+          tenant={tenant}
         />
         <UpdateModal
           show={showUpdate}
           onHide={handleCloseUpdate}
           risk={selectedRisk}
+          tenant={tenant}
         />
       </AdminLayout>
     </>

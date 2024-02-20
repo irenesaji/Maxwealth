@@ -12,7 +12,7 @@ import {
   getPurchaseList,
 } from "@/redux/services/admin/transactions/transactions";
 import NavigationTransactions from "@/components/admin/transactions/navigationTransactions";
-
+import { getSubDomain } from "@/util/common";
 export default function Purchases() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -32,6 +32,7 @@ export default function Purchases() {
   const [selectedPlans, setSelectedPlans] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState([]);
   const [btnSubmit, setBtnSubmit] = useState(0);
+  const [tenant, setTenant] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -113,7 +114,11 @@ export default function Purchases() {
   const handleTransactions = async () => {
     setBtnSubmit(1);
     try {
-      const response = await getPurchaseList(selectedPlans, selectedStatus);
+      const response = await getPurchaseList(
+        selectedPlans,
+        selectedStatus,
+        tenant
+      );
       setTransactionData(response);
       setBtnSubmit(0);
     } catch (error) {
@@ -125,7 +130,7 @@ export default function Purchases() {
   const purchaseFunc = async () => {
     setIsSubmitting(1);
     try {
-      const response = await getAllPurchasePlans();
+      const response = await getAllPurchasePlans(tenant);
       let foliosArr = [];
       response.data.map((res) => {
         foliosArr.push({
@@ -147,8 +152,11 @@ export default function Purchases() {
   }, [user]);
 
   useEffect(() => {
-    purchaseFunc();
-  }, []);
+    setTenant(getSubDomain());
+    if (tenant) {
+      purchaseFunc();
+    }
+  }, [tenant]);
 
   const handleChangeFolio = (selectedOption) => {
     const valuesArray = selectedOption.map((item) => item.value);

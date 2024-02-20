@@ -11,11 +11,12 @@ import { getToken } from "@/util/common";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
-export const getKYCOnboarding = async (user_id) => {
+export const getKYCOnboarding = async (user_id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
     const response = await axios.get(`${BASE_URL}${ADMIN_KYC_ONBOARDING}`, {
       headers: headers,
@@ -32,11 +33,12 @@ export const getKYCOnboarding = async (user_id) => {
   }
 };
 
-export const getKYCAddress = async (user_id) => {
+export const getKYCAddress = async (user_id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_KYC_ADDRESS}`, {
@@ -54,11 +56,12 @@ export const getKYCAddress = async (user_id) => {
   }
 };
 
-export const getKYCBank = async (user_id) => {
+export const getKYCBank = async (user_id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_KYC_BANK}`, {
@@ -76,11 +79,12 @@ export const getKYCBank = async (user_id) => {
   }
 };
 
-export const getKYCNominee = async (user_id) => {
+export const getKYCNominee = async (user_id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_KYC_NOMINEE}`, {
@@ -98,11 +102,12 @@ export const getKYCNominee = async (user_id) => {
   }
 };
 
-export const getKYCProofs = async (user_id) => {
+export const getKYCProofs = async (user_id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_KYC_PROOFS}`, {

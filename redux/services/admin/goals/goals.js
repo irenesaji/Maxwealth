@@ -5,11 +5,12 @@ import { getToken } from "@/util/common";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
-export const getGoals = async (page, perPage) => {
+export const getGoals = async (page, perPage, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
 
     const response = await axios.get(`${BASE_URL}${ADMIN_GOALS}`, {
@@ -27,11 +28,12 @@ export const getGoals = async (page, perPage) => {
   }
 };
 
-export const updateGoal = async (data, id) => {
+export const updateGoal = async (data, id, tenant) => {
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
       "Content-Type": "application/json",
+      tenant_id: tenant,
     };
     const response = await axios.patch(
       `${BASE_URL}${ADMIN_GOALS}/${id}`,

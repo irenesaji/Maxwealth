@@ -7,18 +7,17 @@ import axios from "axios";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
-export const getCurrentUser = () => {
+export const getCurrentUser = (tenant) => {
   return async (dispatch) => {
     try {
       const headers = {
         Authorization: `Bearer ${getToken()}`,
         "Content-Type": "application/json",
+        tenant_id: tenant,
       };
       const response = await axios.get(`${BASE_URL}${CURRENT_USER}`, {
         headers: headers,
       });
-
-      console.log(response);
 
       dispatch(setUser(response.data));
     } catch (error) {
@@ -28,25 +27,42 @@ export const getCurrentUser = () => {
   };
 };
 
-export const generateOTPService = async (phone) => {
+export const generateOTPService = async (phone, tenant) => {
   try {
-    const response = await axios.post(`${BASE_URL}${GENERATE_OTP}`, {
-      mobile: phone,
-    });
+    const headers = {
+      "Content-Type": "application/json",
+      tenant_id: tenant,
+    };
+    const response = await axios.post(
+      `${BASE_URL}${GENERATE_OTP}`,
+      {
+        mobile: phone,
+      },
+      {
+        headers: headers,
+      }
+    );
     return response;
   } catch (error) {
     throw error.response;
   }
 };
 
-export const initiateSignIn = (values) => {
-  console.log(values);
+export const initiateSignIn = (values, tenant) => {
+  const headers = {
+    "Content-Type": "application/json",
+    tenant_id: tenant,
+  };
   return async (dispatch) => {
     try {
-      const response = await axios.post(`${BASE_URL}${SIGNIN}`, {
-        mobile: values.phone,
-        otp: values.otp,
-      });
+      const response = await axios.post(
+        `${BASE_URL}${SIGNIN}`,
+        {
+          mobile: values.phone,
+          otp: values.otp,
+        },
+        { headers: headers }
+      );
       setToken(response.data.access_token);
       setUserId(response.data.id);
       dispatch(setUser(response.data));

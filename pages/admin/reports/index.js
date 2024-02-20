@@ -7,6 +7,7 @@ import DataTable from "react-data-table-component";
 import NavigationReports from "@/components/admin/reports/navigationReports";
 import { Spinner } from "react-bootstrap";
 import { getHoldingReport } from "@/redux/services/admin/reports/reports";
+import { getSubDomain } from "@/util/common";
 export default function Index() {
   const [folios, setFolios] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(0);
@@ -19,6 +20,7 @@ export default function Index() {
   const [btnSubmit, setBtnSubmit] = useState(0);
   const [loading, setLoading] = useState(false);
   const [TransactionData, setTransactionData] = useState([]);
+  const [tenant, setTenant] = useState("");
 
   const columns = [
     {
@@ -109,15 +111,18 @@ export default function Index() {
   ];
 
   useEffect(() => {
-    foliosFunc();
-    onBoardingFunc();
+    setTenant(getSubDomain());
+    if (tenant) {
+      foliosFunc();
+      onBoardingFunc();
+    }
     setDomLoaded(true);
-  }, []);
+  }, [tenant]);
 
   const foliosFunc = async () => {
     setIsSubmitting(1);
     try {
-      const response = await getAllFolios();
+      const response = await getAllFolios(tenant);
       setIsSubmitting(0);
       let foliosArr = [];
       response.data.map((res) => {
@@ -136,7 +141,7 @@ export default function Index() {
   const onBoardingFunc = async () => {
     setIsSubmitting(1);
     try {
-      const response = await onBoarding();
+      const response = await onBoarding(tenant);
       setIsSubmitting(0);
       let accountsArr = [];
       response.map((res) => {
@@ -180,7 +185,8 @@ export default function Index() {
       const response = await getHoldingReport(
         selectedAccountId,
         selectedFolio,
-        selectedToDate
+        selectedToDate,
+        tenant
       );
 
       setTransactionData(response.data.folios);
