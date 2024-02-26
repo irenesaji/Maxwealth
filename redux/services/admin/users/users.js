@@ -17,7 +17,7 @@ export const getUsers = async (page, perPage, tenant) => {
       headers: headers,
       params: {
         fields:
-          "id,email,full_name,country_code,mobile,mobile_verified,is_active,is_blocked",
+          "id,email,full_name,country_code,mobile,mobile_verified,is_active,is_blocked,is_lead",
         limit: perPage,
         page: page,
       },

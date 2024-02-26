@@ -12,6 +12,7 @@ export default function Update({ show, onHide, id, user, tenant }) {
   const updateValues = {
     is_active: user?.[0]?.is_active,
     is_blocked: user?.[0]?.is_blocked,
+    is_lead: user?.[0]?.is_lead,
   };
 
   useEffect(() => {
@@ -90,6 +91,26 @@ export default function Update({ show, onHide, id, user, tenant }) {
                   />
                   &nbsp;
                   <label for="is_blocked">No</label>
+                </div>
+                <div className="d-flex align-items-center">
+                  <Field
+                    type="radio"
+                    name="is_lead"
+                    value={true}
+                    checked={values.is_lead === true}
+                    onChange={() => setFieldValue("is_lead", true)}
+                  />
+                  &nbsp;
+                  <label for="is_lead">Yes</label> &nbsp;
+                  <Field
+                    type="radio"
+                    name="is_lead"
+                    value={false}
+                    checked={values.is_lead === false}
+                    onChange={() => setFieldValue("is_lead", false)}
+                  />
+                  &nbsp;
+                  <label for="is_lead">No</label>
                 </div>
                 <button
                   type="submit"

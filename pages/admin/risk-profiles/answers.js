@@ -182,8 +182,9 @@ export default function Answers() {
   };
 
   const getQuestions = async () => {
-    const response = await getRiskProfileQuestions(tenant);
-    setAllQuestions(response);
+    const response = await getRiskProfileQuestions(1, 1000, tenant);
+
+    setAllQuestions(response.data);
   };
 
   const getQuestionName = (id) => {
@@ -196,8 +197,9 @@ export default function Answers() {
 
   const getWeightage = async (id) => {
     try {
-      const response = await getRiskProfileAnswerWeightage(tenant);
-      setWeightageData(response);
+      const response = await getRiskProfileAnswerWeightage(1, 1000, tenant);
+
+      setWeightageData(response.data);
     } catch (error) {
       console.log(error.response);
     }

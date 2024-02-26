@@ -69,6 +69,11 @@ export default function Index() {
       sortable: false,
     },
     {
+      name: "is_lead",
+      selector: (row) => <span>{row.is_lead ? "Yes" : "No"}</span>,
+      sortable: false,
+    },
+    {
       name: "Kyc Details",
       selector: (row) => (
         <a

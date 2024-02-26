@@ -175,6 +175,7 @@ export const deleteRiskProfileQuestion = async (id, tenant) => {
 };
 
 export const getRiskProfileAnswerWeightage = async (page, perPage, tenant) => {
+  console.log(tenant);
   try {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
