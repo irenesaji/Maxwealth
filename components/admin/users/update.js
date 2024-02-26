@@ -92,6 +92,7 @@ export default function Update({ show, onHide, id, user, tenant }) {
                   &nbsp;
                   <label for="is_blocked">No</label>
                 </div>
+                <label htmlFor="is_blocked">isLead?</label>
                 <div className="d-flex align-items-center">
                   <Field
                     type="radio"
