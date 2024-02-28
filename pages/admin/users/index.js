@@ -4,7 +4,11 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { getUsers, getSearchResults } from "@/redux/services/admin/users/users";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faEye } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPenToSquare,
+  faEye,
+  faFileCsv,
+} from "@fortawesome/free-solid-svg-icons";
 import UpdateModal from "@/components/admin/users/update";
 import View from "@/components/admin/kyc/view";
 import {
@@ -15,6 +19,7 @@ import {
   getKYCOnboarding,
 } from "@/redux/services/admin/kyc/kyc";
 import { getSubDomain } from "@/util/common";
+import { CSVLink, CSVDownload } from "react-csv";
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -28,6 +33,7 @@ export default function Index() {
   const [id, setId] = useState("");
   const [selectedUser, setSelectedUser] = useState([]);
   const [showKyc, setShowKyc] = useState(false);
+  const [csvData, setCSVData] = useState([]);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleCloseKyc = () => setShowKyc(false);
@@ -106,6 +112,37 @@ export default function Index() {
       sortable: false,
     },
   ];
+
+  const headers = [
+    { label: "Name", key: "full_name" },
+    { label: "Email", key: "email" },
+    { label: "Mobile", key: "mobile" },
+    { label: "isActive", key: "is_active" },
+    { label: "isBlocked", key: "is_blocked" },
+    { label: "isLead", key: "is_lead" },
+  ];
+
+  const csvDownload = async () => {
+    try {
+      const response = await getUsers(1, 1000000, tenant);
+
+      let csvData = [];
+      response?.data?.map((data) => {
+        csvData.push({
+          full_name: data?.full_name,
+          email: data?.email,
+          mobile: data?.mobile,
+          is_active: data?.is_active,
+          is_blocked: data?.is_blocked,
+          is_lead: data?.is_lead,
+        });
+      });
+
+      setCSVData(csvData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const users = async (currentPage, newPerPage) => {
     try {
@@ -238,7 +275,24 @@ export default function Index() {
               onChange={handleSearch}
             />
           </div>
-          <div className="col-lg-4"></div>
+          <div className="col-lg-8">
+            <div className="d-flex justify-content-end">
+              <CSVLink
+                data={csvData ? csvData : []}
+                headers={headers}
+                filename="users.csv"
+                onClick={csvDownload}
+              >
+                <span className="btn btn-sm btn-secondary">
+                  <FontAwesomeIcon
+                    icon={faFileCsv}
+                    width={15}
+                    style={{ cursor: "pointer" }}
+                  />
+                </span>
+              </CSVLink>
+            </div>
+          </div>
         </div>
         {domLoaded && allUsers && (
           <DataTable

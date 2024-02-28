@@ -8,6 +8,9 @@ import NavigationReports from "@/components/admin/reports/navigationReports";
 import { Spinner } from "react-bootstrap";
 import { getSchemeWiseReport } from "@/redux/services/admin/reports/reports";
 import { getSubDomain } from "@/util/common";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
+import { CSVLink, CSVDownload } from "react-csv";
 export default function SchemeWise() {
   const [folios, setFolios] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(0);
@@ -22,6 +25,24 @@ export default function SchemeWise() {
   const [TransactionData, setTransactionData] = useState([]);
   const [selectedFromDate, setSelectedFromDate] = useState("");
   const [tenant, setTenant] = useState("");
+  const [csvData, setCSVData] = useState([]);
+
+  const headers = [
+    { label: "Isin", key: "isin" },
+    { label: "Scheme Name", key: "scheme_name" },
+    { label: "Plan Type", key: "plan_type" },
+    { label: "Investment Option", key: "investment_option" },
+    { label: "As On", key: "as_on" },
+    { label: "Nav", key: "nav" },
+    { label: "Invested Amount", key: "invested_amount" },
+    { label: "Current Value", key: "current_value" },
+    { label: "Unrealized Gain", key: "unrealized_gain" },
+    { label: "Absolute Return", key: "absolute_returns" },
+    { label: "Average Buying Value", key: "average_buying_value" },
+    { label: "Units", key: "units" },
+    { label: "Xirr", key: "xirr" },
+  ];
+
   const columns = [
     {
       name: "Isin",
@@ -113,8 +134,9 @@ export default function SchemeWise() {
     if (tenant) {
       onBoardingFunc();
     }
+
     setDomLoaded(true);
-  }, []);
+  }, [tenant]);
 
   const onBoardingFunc = async () => {
     setIsSubmitting(1);
@@ -161,6 +183,28 @@ export default function SchemeWise() {
       );
 
       setTransactionData(response.data.data.rows);
+
+      let csvData = [];
+
+      response?.data?.data?.rows?.map((data) => {
+        csvData.push({
+          isin: data[0],
+          scheme_name: data[1],
+          plan_type: data[2],
+          investment_option: data[3],
+          as_on: data[4],
+          nav: data[5],
+          invested_amount: data[6],
+          current_value: data[7],
+          unrealized_gain: data[8],
+          absolute_returns: data[9],
+          average_buying_value: data[10],
+          units: data[11],
+          xirr: data[12],
+        });
+      });
+
+      setCSVData(csvData);
       setBtnSubmit(0);
     } catch (error) {
       setBtnSubmit(0);
@@ -248,11 +292,28 @@ export default function SchemeWise() {
             </div>
           </div>
           {domLoaded && (
-            <DataTable
-              columns={columns}
-              data={TransactionData}
-              progressPending={loading}
-            />
+            <>
+              <div className="d-flex justify-content-end">
+                <CSVLink
+                  data={csvData ? csvData : []}
+                  headers={headers}
+                  filename="scheme-wise-report.csv"
+                >
+                  <span className="btn btn-sm btn-secondary">
+                    <FontAwesomeIcon
+                      icon={faFileCsv}
+                      width={15}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </span>
+                </CSVLink>
+              </div>
+              <DataTable
+                columns={columns}
+                data={TransactionData}
+                progressPending={loading}
+              />
+            </>
           )}
         </div>
       </AdminLayout>

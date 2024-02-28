@@ -8,6 +8,9 @@ import NavigationReports from "@/components/admin/reports/navigationReports";
 import { Spinner } from "react-bootstrap";
 import { getHoldingReport } from "@/redux/services/admin/reports/reports";
 import { getSubDomain } from "@/util/common";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
+import { CSVLink, CSVDownload } from "react-csv";
 export default function Index() {
   const [folios, setFolios] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(0);
@@ -21,6 +24,7 @@ export default function Index() {
   const [loading, setLoading] = useState(false);
   const [TransactionData, setTransactionData] = useState([]);
   const [tenant, setTenant] = useState("");
+  const [csvData, setCSVData] = useState([]);
 
   const columns = [
     {
@@ -110,6 +114,20 @@ export default function Index() {
     },
   ];
 
+  const headers = [
+    { label: "Folio", key: "folio_number" },
+    { label: "Isin", key: "isin" },
+    { label: "Holdings - Units", key: "holdings_units" },
+    { label: "Holdings - As on", key: "holdings_as_on" },
+    { label: "Market Value", key: "market_value_amount" },
+    { label: "Market Value - As on", key: "market_value_as_on" },
+    { label: "Invested Value - As on", key: "invested_value_amount" },
+    { label: "Nav - As on", key: "nav_as_on" },
+    { label: "Payout - Amount", key: "payout_amount" },
+    { label: "Payout - As on", key: "payout_as_on" },
+    { label: "Scheme Name", key: "name" },
+  ];
+
   useEffect(() => {
     setTenant(getSubDomain());
     if (tenant) {
@@ -191,6 +209,28 @@ export default function Index() {
 
       setTransactionData(response.data.folios);
       setBtnSubmit(0);
+
+      let csvData = [];
+
+      response?.data?.folios?.map((data) => {
+        csvData.push({
+          folio_number: data?.folio_number,
+          isin: data?.schemes[0]?.isin,
+          holdings_units: data?.schemes[0]?.holdings?.units,
+          holdings_as_on: data?.schemes[0]?.holdings.as_on,
+          market_value_amount: data?.schemes[0]?.market_value.amount,
+          market_value_as_on: data?.schemes[0]?.market_value.as_on,
+          invested_value_amount: data?.schemes[0]?.invested_value.amount,
+          invested_value_as_on: data?.schemes[0]?.invested_value.as_on,
+          nav_value: data?.schemes[0]?.nav.value,
+          nav_as_on: data?.schemes[0]?.nav.as_on,
+          payout_amount: data?.schemes[0]?.payout.amount,
+          payout_as_on: data?.schemes[0]?.payout.as_on,
+          name: data?.schemes[0]?.name,
+        });
+      });
+
+      setCSVData(csvData);
     } catch (error) {
       setBtnSubmit(0);
       console.log(error);
@@ -207,7 +247,7 @@ export default function Index() {
           </h2>
           <div className="row">
             <div className="col-lg-3"></div>
-            <div className="col-lg-4"></div>
+            <div className="col-lg-8"></div>
             <div className="col-lg-2">
               <label style={{ color: "rgb(128, 128, 128)" }}>To</label>
             </div>
@@ -309,11 +349,28 @@ export default function Index() {
             </div>
           </div>
           {domLoaded && (
-            <DataTable
-              columns={columns}
-              data={TransactionData}
-              progressPending={loading}
-            />
+            <>
+              <div className="d-flex justify-content-end">
+                <CSVLink
+                  data={csvData ? csvData : []}
+                  headers={headers}
+                  filename="holdings-report.csv"
+                >
+                  <span className="btn btn-sm btn-secondary">
+                    <FontAwesomeIcon
+                      icon={faFileCsv}
+                      width={15}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </span>
+                </CSVLink>
+              </div>
+              <DataTable
+                columns={columns}
+                data={TransactionData}
+                progressPending={loading}
+              />
+            </>
           )}
         </div>
       </AdminLayout>

@@ -28,7 +28,7 @@ export default function NewQuestion({ show, onHide, tenant }) {
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     try {
-      const response = await createRiskProfileQuestion(value, tenant);
+      const response = await createRiskProfileQuestion(values, tenant);
       setMessage("Risk Profile Question created successfully!");
       setIsSubmitting(false);
       onHide(true);
@@ -108,6 +108,13 @@ export default function NewQuestion({ show, onHide, tenant }) {
                     &nbsp;
                     <label htmlFor="is_active">No</label>
                   </div>
+                  {errors.is_active ? (
+                    <>
+                      <p style={{ color: "red", fontSize: 12 }}>
+                        {errors.is_active}
+                      </p>
+                    </>
+                  ) : null}
                 </div>
 
                 <button

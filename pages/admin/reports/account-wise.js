@@ -8,6 +8,9 @@ import NavigationReports from "@/components/admin/reports/navigationReports";
 import { Spinner } from "react-bootstrap";
 import { getAccountWiseReport } from "@/redux/services/admin/reports/reports";
 import { getSubDomain } from "@/util/common";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
+import { CSVLink, CSVDownload } from "react-csv";
 export default function AccountWise() {
   const [folios, setFolios] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(0);
@@ -21,6 +24,7 @@ export default function AccountWise() {
   const [loading, setLoading] = useState(false);
   const [TransactionData, setTransactionData] = useState([]);
   const [tenant, setTenant] = useState("");
+  const [csvData, setCSVData] = useState([]);
 
   const columns = [
     {
@@ -70,6 +74,15 @@ export default function AccountWise() {
       sortable: true,
       width: "160px",
     },
+  ];
+  const headers = [
+    { label: "Accound Id", key: "account_id" },
+    { label: "Invested Amount", key: "invested_amount" },
+    { label: "Current Value", key: "current_value" },
+    { label: "Unrealized Gain", key: "unrealized_gain" },
+    { label: "Absolute Return", key: "absolute_returns" },
+    { label: "CAGR", key: "cagr" },
+    { label: "Xirr", key: "xirr" },
   ];
 
   useEffect(() => {
@@ -125,6 +138,22 @@ export default function AccountWise() {
       );
 
       setTransactionData(response.data.data.rows);
+
+      let csvData = [];
+
+      response?.data?.data?.rows?.map((data) => {
+        csvData.push({
+          account_id: data[0],
+          invested_amount: data[1],
+          current_value: data[2],
+          unrealized_gain: data[3],
+          absolute_returns: data[4],
+          cagr: data[5],
+          xirr: data[6],
+        });
+      });
+
+      setCSVData(csvData);
       setBtnSubmit(0);
     } catch (error) {
       setBtnSubmit(0);
@@ -212,11 +241,28 @@ export default function AccountWise() {
             </div>
           </div>
           {domLoaded && (
-            <DataTable
-              columns={columns}
-              data={TransactionData}
-              progressPending={loading}
-            />
+            <>
+              <div className="d-flex justify-content-end">
+                <CSVLink
+                  data={csvData ? csvData : []}
+                  headers={headers}
+                  filename="account-wise-report.csv"
+                >
+                  <span className="btn btn-sm btn-secondary">
+                    <FontAwesomeIcon
+                      icon={faFileCsv}
+                      width={15}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </span>
+                </CSVLink>
+              </div>
+              <DataTable
+                columns={columns}
+                data={TransactionData}
+                progressPending={loading}
+              />
+            </>
           )}
         </div>
       </AdminLayout>
