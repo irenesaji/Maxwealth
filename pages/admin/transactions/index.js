@@ -14,6 +14,8 @@ import {
 } from "@/redux/services/admin/transactions/transactions";
 import NavigationTransactions from "@/components/admin/transactions/navigationTransactions";
 import { getSubDomain } from "@/util/common";
+import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
+import { CSVLink, CSVDownload } from "react-csv";
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -38,6 +40,7 @@ export default function Index() {
   const handleShow = () => setShow(true);
   const [btnSubmit, setBtnSubmit] = useState(0);
   const [tenant, setTenant] = useState("");
+  const [csvData, setCSVData] = useState([]);
 
   const typesOptions = [
     { value: "purchase", label: "Purchase" },
@@ -49,6 +52,18 @@ export default function Index() {
     { value: "dividend_payout", label: "Dividend Payout" },
     { value: "dividend_reinvestment", label: "Dividend Reinvestment" },
     { value: "bonus", label: "Bonus" },
+  ];
+
+  const headers = [
+    { label: "Folio", key: "folio_number" },
+    { label: "Isin", key: "isin" },
+    { label: "Type", key: "type" },
+    { label: "Amount", key: "amount" },
+    { label: "Nav", key: "nav" },
+    { label: "Units", key: "units" },
+    { label: "Traded On", key: "traded_on" },
+    { label: "Fund Type", key: "fund_type" },
+    { label: "Scheme Name", key: "scheme_name" },
   ];
 
   const columns = [
@@ -117,6 +132,24 @@ export default function Index() {
         tenant
       );
       setTransactionData(response.data.data);
+
+      let csvData = [];
+
+      response?.data?.data?.map((data) => {
+        csvData.push({
+          folio_number: data?.folio_number,
+          isin: data?.isin,
+          type: data?.type,
+          amount: data?.amount,
+          nav: data?.traded_at,
+          units: data?.units,
+          traded_on: data?.traded_on,
+          fund_type: data?.rta_investment_option,
+          scheme_name: data?.rta_scheme_name,
+        });
+      });
+
+      setCSVData(csvData);
       setBtnSubmit(0);
     } catch (error) {
       setBtnSubmit(0);
@@ -280,16 +313,33 @@ export default function Index() {
           </div>
 
           {domLoaded && (
-            <DataTable
-              columns={columns}
-              data={TransactionData}
-              progressPending={loading}
-              pagination
-              paginationServer
-              paginationTotalRows={totalRows}
-              onChangePage={handlePageChange}
-              onChangeRowsPerPage={handlePerRowsChange}
-            />
+            <>
+              <div className="d-flex justify-content-end">
+                <CSVLink
+                  data={csvData ? csvData : []}
+                  headers={headers}
+                  filename="holdings-report.csv"
+                >
+                  <span className="btn btn-sm btn-secondary">
+                    <FontAwesomeIcon
+                      icon={faFileCsv}
+                      width={15}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </span>
+                </CSVLink>
+              </div>
+              <DataTable
+                columns={columns}
+                data={TransactionData}
+                progressPending={loading}
+                pagination
+                paginationServer
+                paginationTotalRows={totalRows}
+                onChangePage={handlePageChange}
+                onChangeRowsPerPage={handlePerRowsChange}
+              />
+            </>
           )}
         </div>
       </AdminLayout>

@@ -13,6 +13,8 @@ import {
 } from "@/redux/services/admin/transactions/transactions";
 import NavigationTransactions from "@/components/admin/transactions/navigationTransactions";
 import { getSubDomain } from "@/util/common";
+import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
+import { CSVLink, CSVDownload } from "react-csv";
 export default function Redemptions() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -28,7 +30,7 @@ export default function Redemptions() {
   const [redemption, setRedemptiom] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(0);
   const [tenant, setTenant] = useState("");
-
+  const [csvData, setCSVData] = useState([]);
   const router = useRouter();
   const [TransactionData, setTransactionData] = useState([]);
   const [selectedPlans, setSelectedPlans] = useState([]);
@@ -46,6 +48,19 @@ export default function Redemptions() {
     { value: "cancelled", label: "Cancelled" },
     { value: "refunded", label: "Refunded" },
     { value: "reversed", label: "Reversed" },
+  ];
+
+  const headers = [
+    { label: "Folio", key: "folio_number" },
+    { label: "Isin", key: "isin" },
+    { label: "Type", key: "type" },
+    { label: "Amount", key: "amount" },
+    { label: "State", key: "state" },
+    { label: "Redemeed Units", key: "alloted_units" },
+    { label: "Redemeed Price", key: "purchased_price" },
+    { label: "Traded On", key: "traded_on" },
+    { label: "Redemeed Amount", key: "purchased_amount" },
+    { label: "Failure Reason", key: "failure_reason" },
   ];
 
   const columns = [
@@ -93,7 +108,7 @@ export default function Redemptions() {
     },
     {
       name: "Traded On",
-      selector: (row) => row.traded_on,
+      selector: (row) => row[16],
       sortable: true,
       width: "150px",
     },
@@ -120,6 +135,25 @@ export default function Redemptions() {
         tenant
       );
       setTransactionData(response);
+
+      let csvData = [];
+
+      response?.map((data) => {
+        csvData.push({
+          folio_number: data[4],
+          isin: data[11],
+          type: data[12],
+          amount: data[6],
+          state: data[5],
+          redeemed_units: data[7],
+          redeemed_price: data[9],
+          traded_on: data[16],
+          redeemed_amount: data[8],
+          failure_reason: data[10],
+        });
+      });
+
+      setCSVData(csvData);
       setBtnSubmit(0);
     } catch (error) {
       setBtnSubmit(0);
@@ -241,11 +275,28 @@ export default function Redemptions() {
           </div>
 
           {domLoaded && (
-            <DataTable
-              columns={columns}
-              data={TransactionData}
-              progressPending={loading}
-            />
+            <>
+              <div className="d-flex justify-content-end">
+                <CSVLink
+                  data={csvData ? csvData : []}
+                  headers={headers}
+                  filename="holdings-report.csv"
+                >
+                  <span className="btn btn-sm btn-secondary">
+                    <FontAwesomeIcon
+                      icon={faFileCsv}
+                      width={15}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </span>
+                </CSVLink>
+              </div>
+              <DataTable
+                columns={columns}
+                data={TransactionData}
+                progressPending={loading}
+              />
+            </>
           )}
         </div>
       </AdminLayout>
