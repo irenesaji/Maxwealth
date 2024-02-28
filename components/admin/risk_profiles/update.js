@@ -7,11 +7,11 @@ import { updateRiskProfile } from "@/redux/services/admin/risk_profiles/risk_pro
 import { Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 
-export default function Update({ show, onHide, risk, tenant }) {
+export default function Update({ show, onHide, risk, tenant, portfolios }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
-  const [portfolios, setPortfolios] = useState([]);
+
   const newValues = {
     name: risk?.[0]?.name || "",
     description: risk?.[0]?.description || "",
@@ -64,19 +64,9 @@ export default function Update({ show, onHide, risk, tenant }) {
     model_portfolio_id: Yup.string().required("Model Portfilio is required"),
   });
 
-  const modelPortfolios = async () => {
-    try {
-      const response = await getAllocations();
-      setPortfolios(response);
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
-
   useEffect(() => {
     setMessage("");
     setError("");
-    modelPortfolios();
   }, []);
 
   const handleSubmit = async (values) => {

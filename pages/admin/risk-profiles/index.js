@@ -16,6 +16,7 @@ import DeleteModal from "@/components/admin/risk_profiles/delete";
 import { useRouter } from "next/router";
 import { ADMIN_ALLOCATIONS } from "@/util/urls";
 import { getRiskProfiles } from "@/redux/services/admin/risk_profiles/risk_profiles";
+import { getAllocations } from "@/redux/services/admin/allocations/allocations";
 import Navigation from "@/components/admin/risk_profiles/navigation";
 import { getSubDomain } from "@/util/common";
 export default function Index() {
@@ -34,6 +35,7 @@ export default function Index() {
   const [id, setId] = useState("");
   const [selectedRisk, setSelectedRisk] = useState([]);
   const [tenant, setTenant] = useState("");
+  const [portfolios, setPortfolios] = useState([]);
   const router = useRouter();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -148,7 +150,11 @@ export default function Index() {
 
   useEffect(() => {
     setTenant(getSubDomain());
-    risk_profiles();
+
+    if (tenant) {
+      risk_profiles();
+      modelPortfolios();
+    }
   }, [tenant]);
 
   const handlePageChange = (page) => {
@@ -184,6 +190,16 @@ export default function Index() {
     });
     setId(id);
     setSelectedRisk(selectedRisk);
+  };
+
+  const modelPortfolios = async () => {
+    try {
+      console.log("tenant=" + tenant);
+      const response = await getAllocations(1, 100000, tenant);
+      setPortfolios(response.data);
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   return (
@@ -223,7 +239,12 @@ export default function Index() {
           />
         )}
 
-        <NewModal show={show} onHide={handleClose} tenant={tenant} />
+        <NewModal
+          show={show}
+          onHide={handleClose}
+          tenant={tenant}
+          portfolios={portfolios}
+        />
         <DeleteModal
           show={showDelete}
           onHide={handleCloseDelete}
@@ -241,6 +262,7 @@ export default function Index() {
           onHide={handleCloseUpdate}
           risk={selectedRisk}
           tenant={tenant}
+          portfolios={portfolios}
         />
       </AdminLayout>
     </>

@@ -5,13 +5,14 @@ import { Field, Formik, Form } from "formik";
 import { getAllocations } from "@/redux/services/admin/allocations/allocations";
 import { createRiskProfile } from "@/redux/services/admin/risk_profiles/risk_profiles";
 import { Spinner } from "react-bootstrap";
+import { getSubDomain } from "@/util/common";
 import * as Yup from "yup";
 
-export default function New({ show, onHide, tenant }) {
+export default function New({ show, onHide, tenant, portfolios }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
-  const [portfolios, setPortfolios] = useState([]);
+
   const newValues = {
     name: "",
     description: "",
@@ -64,19 +65,9 @@ export default function New({ show, onHide, tenant }) {
     model_portfolio_id: Yup.string().required("Model Portfilio is required"),
   });
 
-  const modelPortfolios = async () => {
-    try {
-      const response = await getAllocations();
-      setPortfolios(response);
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
-
   useEffect(() => {
     setMessage("");
     setError("");
-    modelPortfolios();
   }, []);
 
   const handleSubmit = async (values) => {
@@ -122,7 +113,7 @@ export default function New({ show, onHide, tenant }) {
                       Select an option
                     </option>
                     {portfolios &&
-                      portfolios.map((portfolio) => {
+                      portfolios?.map((portfolio) => {
                         return (
                           <option value={portfolio.id} key={portfolio.id}>
                             {portfolio.name}

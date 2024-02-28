@@ -142,8 +142,8 @@ export default function Index() {
 
   const getAllocationsData = async () => {
     try {
-      const response = await getAllocations(tenant);
-      setAllocationData(response);
+      const response = await getAllocations(1, 1000000, tenant);
+      setAllocationData(response?.data);
     } catch (error) {
       console.log(error.response);
     }
