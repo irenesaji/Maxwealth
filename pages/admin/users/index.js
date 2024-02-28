@@ -8,6 +8,7 @@ import {
   faPenToSquare,
   faEye,
   faFileCsv,
+  faDownload,
 } from "@fortawesome/free-solid-svg-icons";
 import UpdateModal from "@/components/admin/users/update";
 import View from "@/components/admin/kyc/view";
@@ -19,7 +20,8 @@ import {
   getKYCOnboarding,
 } from "@/redux/services/admin/kyc/kyc";
 import { getSubDomain } from "@/util/common";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
+import { Spinner } from "react-bootstrap";
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -44,6 +46,7 @@ export default function Index() {
   const [proofs, setProofs] = useState([]);
   const [nominee, setNominee] = useState([]);
   const [tenant, setTenant] = useState("");
+  const [loadingCSV, setLoadingCSV] = useState(false);
 
   const columns = [
     {
@@ -123,6 +126,7 @@ export default function Index() {
   ];
 
   const csvDownload = async () => {
+    setLoadingCSV(true);
     try {
       const response = await getUsers(1, 1000000, tenant);
 
@@ -139,7 +143,9 @@ export default function Index() {
       });
 
       setCSVData(csvData);
+      setLoadingCSV(false);
     } catch (error) {
+      setLoadingCSV(false);
       console.log(error);
     }
   };
@@ -277,19 +283,39 @@ export default function Index() {
           </div>
           <div className="col-lg-8">
             <div className="d-flex justify-content-end">
+              <button
+                onClick={csvDownload}
+                disabled={loading}
+                style={{ border: "none" }}
+              >
+                {loadingCSV ? (
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <span className="btn btn-sm btn-secondary">
+                    <FontAwesomeIcon
+                      icon={faFileCsv}
+                      width={15}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </span>
+                )}
+              </button>
+
               <CSVLink
                 data={csvData ? csvData : []}
                 headers={headers}
                 filename="users.csv"
-                onClick={csvDownload}
+                style={{
+                  marginLeft: 10,
+                  display: csvData.length > 0 ? "inline" : "none",
+                }}
               >
-                <span className="btn btn-sm btn-secondary">
-                  <FontAwesomeIcon
-                    icon={faFileCsv}
-                    width={15}
-                    style={{ cursor: "pointer" }}
-                  />
-                </span>
+                <FontAwesomeIcon icon={faDownload} width={15} />
               </CSVLink>
             </div>
           </div>
