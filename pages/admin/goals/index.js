@@ -132,11 +132,13 @@ export default function Index() {
   };
 
   const handleUpdate = (id) => {
+    console.log(id);
     handleShow();
     const selectedAllocation = allAllocations.filter((allocation) => {
       return allocation.id === id;
     });
     setId(id);
+    console.log(selectedAllocation);
     setSelectedAllocation(selectedAllocation);
   };
 
@@ -189,6 +191,7 @@ export default function Index() {
           allocationData={allocationData}
           goals={allAllocations}
           tenant={tenant}
+          selectedAllocation={selectedAllocation}
         />
       </AdminLayout>
     </>

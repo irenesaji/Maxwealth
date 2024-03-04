@@ -6,15 +6,22 @@ import { updateGoal } from "@/redux/services/admin/goals/goals";
 import { Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 
-export default function New({ show, onHide, allocationData, goals, tenant }) {
+export default function New({
+  show,
+  onHide,
+  allocationData,
+  goals,
+  tenant,
+  selectedAllocation,
+}) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState("");
   const newValues = {
-    model_portfolio_id: goals?.[0]?.model_portfolio_id || "",
-    name: goals?.[0]?.name || "",
-    description: goals?.[0]?.description || "",
-    icon: goals?.[0]?.icon || "",
+    model_portfolio_id: selectedAllocation?.[0]?.model_portfolio_id || "",
+    name: selectedAllocation?.[0]?.name || "",
+    description: selectedAllocation?.[0]?.description || "",
+    icon: selectedAllocation?.[0]?.icon || "",
   };
   const Schema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -29,7 +36,11 @@ export default function New({ show, onHide, allocationData, goals, tenant }) {
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     try {
-      const response = await updateGoal(values, goals?.[0]?.id, tenant);
+      const response = await updateGoal(
+        values,
+        selectedAllocation?.[0]?.id,
+        tenant
+      );
       setMessage("Goal updated successfully!");
       setIsSubmitting(false);
       onHide(true);
