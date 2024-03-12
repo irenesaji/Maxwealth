@@ -7,6 +7,7 @@ import {
   faEye,
   faPenToSquare,
   faPlus,
+  faTrashCan
 } from "@fortawesome/free-solid-svg-icons";
 import NewModal from "@/components/admin/model_portfolios/new";
 import UpdateModal from "@/components/admin/allocations/update";
@@ -18,6 +19,7 @@ import {
 import { useRouter } from "next/router";
 import { ADMIN_ALLOCATIONS } from "@/util/urls";
 import { getSubDomain } from "@/util/common";
+import ConfirmationModal from "@/components/admin/allocations/confirmationModal";
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -37,6 +39,8 @@ export default function Index() {
   const handleCloseUpdate = () => setShowUpdate(false);
   const handleShowUpdate = () => setShowUpdate(true);
   const [tenant, setTenant] = useState("");
+  const [selectedRecord, setSelectedRecord] = useState(null);
+
 
   const columns = [
     {
@@ -58,6 +62,7 @@ export default function Index() {
     {
       name: "",
       selector: (row) => (
+        <>
         <a
           href="javascript:void(0);"
           onClick={() => {
@@ -70,6 +75,23 @@ export default function Index() {
             style={{ cursor: "pointer" }}
           />
         </a>
+        <a
+          className="ms-2"
+          href="javascript:void(0);"
+          onClick={() => {
+            handleDelete(row)
+          }}
+        >
+          <FontAwesomeIcon
+            icon={faTrashCan}
+            width={10}
+            style={{ cursor: "pointer" }}
+          />
+        </a>
+        </>
+        
+
+
       ),
       sortable: false,
     },
@@ -171,6 +193,26 @@ export default function Index() {
     setSelectedAllocation(selectedAllocation);
   };
 
+  // confirmation modal logic
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
+  const handleDelete=(rowData)=>{
+    setSelectedRecord(rowData);
+    handleOpenConfirmationModal();
+  }
+  
+  const handleOpenConfirmationModal=()=>{
+    setShowConfirmationModal(true);
+  }
+
+  const handleCloseConfirmationModal=()=>{
+    setShowConfirmationModal(false);
+  }
+
+  const handleOnProceed=()=>{
+    setShowConfirmationModal(false);
+  }
+
   return (
     <>
       <AdminLayout>
@@ -207,6 +249,7 @@ export default function Index() {
         )}
 
         <NewModal show={show} onHide={handleClose} tenant={tenant} />
+        <ConfirmationModal show={showConfirmationModal} onHide={handleCloseConfirmationModal} onProceed={handleOnProceed}/>
 
         <UpdateModal
           show={showUpdate}

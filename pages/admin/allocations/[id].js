@@ -3,7 +3,7 @@ import DataTable from "react-data-table-component";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faEye } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faEye,faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import NewModal from "@/components/admin/funds/new";
 import ViewModal from "@/components/admin/funds/view";
 import {
@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { ADMIN_ALLOCATIONS } from "@/util/urls";
 import { getSubDomain } from "@/util/common";
+import ConfirmationModal from "@/components/admin/allocations/confirmationModal";
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -30,6 +31,7 @@ export default function Index() {
   const router = useRouter();
   const [allocationId, setAllocationId] = useState(null);
   const [tenant, setTenant] = useState("");
+
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -69,6 +71,7 @@ export default function Index() {
     {
       name: "",
       selector: (row) => (
+        <>
         <a
           href="javascript:void(0);"
           onClick={() => {
@@ -81,6 +84,23 @@ export default function Index() {
             style={{ cursor: "pointer" }}
           />
         </a>
+
+          <a
+          className="ms-2"
+          href="javascript:void(0);"
+          onClick={() => {
+            handleDelete(row)
+          }}
+          >
+          <FontAwesomeIcon
+            icon={faTrashCan}
+            width={10}
+            style={{ cursor: "pointer" }}
+          />
+          </a>
+        
+        </>
+        
       ),
       sortable: false,
     },
@@ -134,6 +154,27 @@ export default function Index() {
     });
     setSelectedAllocation(selectedAllocation);
   };
+
+  // confirmation modal logic
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false)
+
+  const handleDelete=(rowData)=>{
+    setSelectedRecord(rowData);
+    handleOpenConfirmationModal();
+  }
+  
+  const handleOpenConfirmationModal=()=>{
+    setShowConfirmationModal(true);
+  }
+
+  const handleCloseConfirmationModal=()=>{
+    setShowConfirmationModal(false);
+    setSelectedRecord(null);
+  }
+
+  const handleOnProceed=()=>{
+    setShowConfirmationModal(false);
+  }
 
   return (
     <>
@@ -190,6 +231,7 @@ export default function Index() {
           tenant={tenant}
         />
       </AdminLayout>
+      <ConfirmationModal show={showConfirmationModal} onHide={handleCloseConfirmationModal} onProceed={handleOnProceed}/>
     </>
   );
 }
