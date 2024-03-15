@@ -6,10 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Select from "react-select";
 import { Spinner } from "react-bootstrap";
+import Form from 'react-bootstrap/Form';
 import { useRouter } from "next/router";
 import {
   getAllPurchasePlans,
   getPurchaseList,
+  getPurchases
 } from "@/redux/services/admin/transactions/transactions";
 import NavigationTransactions from "@/components/admin/transactions/navigationTransactions";
 import { getSubDomain } from "@/util/common";
@@ -37,6 +39,10 @@ export default function Purchases() {
   const [btnSubmit, setBtnSubmit] = useState(0);
   const [tenant, setTenant] = useState("");
   const [csvData, setCSVData] = useState([]);
+  const [purchases, setPurchases] = useState([]);
+  const [selectedPurchases, setSelectedPurchases] = useState([]);
+
+
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -74,6 +80,24 @@ export default function Purchases() {
     },
     {
       name: "Isin",
+      selector: (row) => row[11],
+      sortable: true,
+      width: "160px",
+    },
+    {
+      name: "FP Purchase ID ",
+      selector: (row) => row[1],
+      sortable: true,
+      width: "160px",
+    },
+    {
+      name: "FP Invesment Account ID ",
+      selector: (row) => row[3],
+      sortable: true,
+      width: "200px",
+    },
+    {
+      name: "Date",
       selector: (row) => row[11],
       sortable: true,
       width: "160px",
@@ -134,6 +158,7 @@ export default function Purchases() {
       const response = await getPurchaseList(
         selectedPlans,
         selectedStatus,
+        selectedPurchases,
         tenant
       );
       setTransactionData(response);
@@ -164,7 +189,7 @@ export default function Purchases() {
     }
   };
 
-  const purchaseFunc = async () => {
+  const purchasePlansFunc = async () => {
     setIsSubmitting(1);
     try {
       const response = await getAllPurchasePlans(tenant);
@@ -183,6 +208,27 @@ export default function Purchases() {
     }
   };
 
+  const PurchasesFunc = async () => {
+    setIsSubmitting(1);
+    try {
+      const response = await getPurchases(tenant);
+
+      const arr=response?.map((res) => {
+        return {
+          value: res?.purchases_fp_id,
+          label: `${res?.purchases_scheme}-${res?.user_email}`,
+        }
+      });
+
+      setIsSubmitting(0);
+      setPurchases(arr);
+    } catch (error) {
+      setIsSubmitting(0);
+      console.log(error);
+    }
+  };
+
+
   useEffect(() => {
     setDomLoaded(true);
     setUser(userStore);
@@ -191,7 +237,9 @@ export default function Purchases() {
   useEffect(() => {
     setTenant(getSubDomain());
     if (tenant) {
-      purchaseFunc();
+      purchasePlansFunc();
+      PurchasesFunc();
+
     }
   }, [tenant]);
 
@@ -200,6 +248,12 @@ export default function Purchases() {
     console.log(selectedOption);
     setSelectedPlans(valuesArray);
   };
+
+  const handleChangePurchases = (selectedOption) => {
+    const valuesArray = selectedOption.map((item) => item.value);
+    setSelectedPurchases(valuesArray);
+  };
+
   const handleChangeTypes = (selectedOption) => {
     const valuesArray = selectedOption.map((item) => item.value);
     setSelectedStatus(valuesArray);
@@ -214,6 +268,31 @@ export default function Purchases() {
             <strong>Purchases</strong>
           </h2>
           <div className="row mb-5" style={{ minHeight: "100px" }}>
+          <div className="col-lg-3">
+          {isSubmitting ? (
+                <Spinner
+                  as="span"
+                  animation="border"
+                  role="status"
+                  aria-hidden="true"
+                  size="sm"
+                />
+              ) :(
+                purchases && <>
+                  <Form.Label>Select Purchase</Form.Label>
+                  <Select
+                   options={purchases}
+                   onChange={handleChangePurchases}
+                   isMulti
+                   className="basic-multi-select"
+                   classNamePrefix="select"
+                   placeholder="Select Purchase"
+                  />
+                </>
+              )}
+              
+            </div>
+
             <div className="col-lg-3">
               {isSubmitting ? (
                 <Spinner
@@ -225,6 +304,8 @@ export default function Purchases() {
                 />
               ) : (
                 redemption && (
+                  <>
+                  <Form.Label>Select User Plans</Form.Label>
                   <Select
                     options={redemption}
                     onChange={handleChangeFolio}
@@ -233,6 +314,9 @@ export default function Purchases() {
                     classNamePrefix="select"
                     placeholder="Select User"
                   />
+
+                  </>
+                  
                 )
               )}
 
@@ -244,6 +328,7 @@ export default function Purchases() {
             /> */}
             </div>
             <div className="col-lg-3">
+              <Form.Label>Select Status</Form.Label>
               <Select
                 options={typesOptions}
                 onChange={handleChangeTypes}
@@ -255,8 +340,9 @@ export default function Purchases() {
             </div>
 
             <div className="col-lg-2">
+            <Form.Label style={{visibility:'hidden'}}>Select Status</Form.Label>
               <button
-                className="btn btn-primary"
+                className="btn btn-primary "
                 style={{ minHeight: "38px" }}
                 onClick={handleTransactions}
                 disabled={btnSubmit}

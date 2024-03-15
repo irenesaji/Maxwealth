@@ -6,6 +6,7 @@ import {
   ADMIN_REDEMPTIONS_LIST,
   ADMIN_PURCHASE_PLANS,
   ADMIN_PURCHASE_LIST,
+  ADMIN_PURCHASES,
 } from "@/util/endpoints";
 import getConfig from "next/config";
 import axios from "axios";
@@ -154,6 +155,7 @@ export const getAllPurchasePlans = async (tenant) => {
 export const getPurchaseList = async (
   selectedPlans,
   selectedStatus,
+  selectedPurchases,
   tenant
 ) => {
   try {
@@ -168,10 +170,31 @@ export const getPurchaseList = async (
       {
         plans: selectedPlans,
         states: selectedStatus,
+        purchase:selectedPurchases
       },
       { headers: headers }
     );
     return response.data.data.data.rows;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const getPurchases = async (
+  tenant
+) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+      tenant_id: tenant,
+    };
+
+    const response = await axios.get(
+      `${BASE_URL}${ADMIN_PURCHASES}`,
+      { headers: headers }
+    );
+    return response.data.data;
   } catch (error) {
     throw error.response;
   }
