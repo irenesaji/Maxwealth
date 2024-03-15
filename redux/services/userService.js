@@ -7,6 +7,7 @@ import axios from "axios";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
+console.log("inside user service" , publicRuntimeConfig)
 export const getCurrentUser = (tenant) => {
   return async (dispatch) => {
     try {

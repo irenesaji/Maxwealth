@@ -12,6 +12,8 @@ import { getToken } from "@/util/common";
 const { publicRuntimeConfig } = getConfig();
 const BASE_URL = publicRuntimeConfig.BASE_URL;
 
+console.log("inside reports",publicRuntimeConfig)
+
 export const getAumReport = async (tenant) => {
   try {
     const headers = {
