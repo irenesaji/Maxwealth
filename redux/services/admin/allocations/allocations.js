@@ -28,6 +28,27 @@ export const getAllocations = async (page, perPage, tenant) => {
   }
 };
 
+export const deleteAllocation = async ( id, tenant) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+      tenant_id: tenant,
+    };
+
+    const response = await axios.delete(
+      `${BASE_URL}${ADMIN_MODEL_PORTFOLIOS}/${id}`,
+      {
+        headers: headers,
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
 export const getSearchResults = async (value, page, perPage, tenant) => {
   try {
     const headers = {
