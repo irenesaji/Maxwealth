@@ -170,7 +170,7 @@ export const getPurchaseList = async (
       {
         plans: selectedPlans,
         states: selectedStatus,
-        purchase:selectedPurchases
+        ids:selectedPurchases
       },
       { headers: headers }
     );
