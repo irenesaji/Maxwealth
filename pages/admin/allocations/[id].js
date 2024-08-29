@@ -7,6 +7,7 @@ import { faChevronLeft, faEye,faTrashCan } from "@fortawesome/free-solid-svg-ico
 import NewModal from "@/components/admin/funds/new";
 import ViewModal from "@/components/admin/funds/view";
 import {
+  deleteFund,
   getFunds,
   getSearchResults,
 } from "@/redux/services/admin/allocations/funds";
@@ -31,6 +32,8 @@ export default function Index() {
   const router = useRouter();
   const [allocationId, setAllocationId] = useState(null);
   const [tenant, setTenant] = useState("");
+  const [selectedRecord, setSelectedRecord] = useState(null);
+
 
 
   const handleClose = () => setShow(false);
@@ -173,7 +176,12 @@ export default function Index() {
   }
 
   const handleOnProceed=()=>{
-    setShowConfirmationModal(false);
+    deleteFund(selectedRecord.id,tenant).then((res)=>{
+      setShowConfirmationModal(false);
+      location.reload()
+    }).catch((err)=>{
+      console.log(err)
+    })
   }
 
   return (

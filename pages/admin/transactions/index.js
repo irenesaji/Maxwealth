@@ -16,6 +16,22 @@ import NavigationTransactions from "@/components/admin/transactions/navigationTr
 import { getSubDomain } from "@/util/common";
 import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
 import { CSVLink, CSVDownload } from "react-csv";
+import { getUsers } from "@/redux/services/admin/users/users";
+
+const data=[
+  {
+    label:'shazad@gmail.com',
+    value:'3'
+  },
+  {
+    label:'hemanth@gmail.com',
+    value:'26'
+  },
+  {
+    label:'kumar@gmail.com',
+    value:'114'
+  }
+]
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -28,6 +44,8 @@ export default function Index() {
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
   const [folios, setFolios] = useState("");
+  const [filterFolios, setFilterFolios] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [redemption, setRedemptiom] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(0);
   const router = useRouter();
@@ -166,15 +184,37 @@ export default function Index() {
         foliosArr.push({
           value: res.transaction_basket_items_folio_number,
           label: `${res.user_email}-${res.transaction_basket_items_folio_number}`,
+          user_id:res.user_id,
         });
       });
       setFolios(foliosArr);
+      setFilterFolios(foliosArr);
       setIsSubmitting(0);
     } catch (error) {
       setIsSubmitting(0);
       console.log(error);
     }
   };
+
+  const getAllUsers=async()=>{
+
+    try {
+      const response = await getUsers(null,null,tenant);
+      if( Array.isArray(response)){
+        const array=response.map((user)=>{
+          return {
+            ...user,
+            label:user.full_name,
+            value:user.id
+          }
+        })
+        setAllUsers(array);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
 
   const redemptionFunc = async () => {
     try {
@@ -195,6 +235,7 @@ export default function Index() {
     setTenant(getSubDomain());
     if (tenant) {
       foliosFunc();
+      getAllUsers();
     }
     // redemptionFunc();
   }, [tenant]);
@@ -225,6 +266,16 @@ export default function Index() {
     setSelectedToDate(e.target.value);
   };
 
+  const handleFilterFolio=(data)=>{
+
+    const filteredArray=folios?.filter((folio,i)=>{
+      return folio.user_id==data.value
+    })
+
+    setFilterFolios(filteredArray)
+  }
+
+
   return (
     <>
       <AdminLayout>
@@ -235,6 +286,16 @@ export default function Index() {
           </h2>
 
           <div className="row mb-5" style={{ minHeight: "100px" }}>
+          <div className="col-lg-2">
+              <Select
+                options={allUsers}
+                onChange={handleFilterFolio}
+              isMulti={false}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                placeholder="Select User"
+              />
+            </div>
             <div className="col-lg-3">
               {isSubmitting ? (
                 <Spinner
@@ -245,9 +306,9 @@ export default function Index() {
                   size="sm"
                 />
               ) : (
-                folios && (
+                filterFolios && (
                   <Select
-                    options={folios}
+                    options={filterFolios}
                     onChange={handleChangeFolio}
                     isMulti
                     className="basic-multi-select"
@@ -264,7 +325,8 @@ export default function Index() {
               onChange={handleSearch}
             /> */}
             </div>
-            <div className="col-lg-3">
+            
+            <div className="col-lg-2">
               <Select
                 options={typesOptions}
                 onChange={handleChangeTypes}
@@ -290,7 +352,7 @@ export default function Index() {
                 onChange={handleToDate}
               />
             </div>
-            <div className="col-lg-2">
+            <div className="col-lg-1">
               <button
                 className="btn btn-primary"
                 style={{ minHeight: "38px" }}

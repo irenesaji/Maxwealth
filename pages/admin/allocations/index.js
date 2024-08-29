@@ -15,6 +15,7 @@ import {
   getAllocations,
   createAllocation,
   getSearchResults,
+  deleteAllocation,
 } from "@/redux/services/admin/allocations/allocations";
 import { useRouter } from "next/router";
 import { ADMIN_ALLOCATIONS } from "@/util/urls";
@@ -210,7 +211,17 @@ export default function Index() {
   }
 
   const handleOnProceed=()=>{
-    setShowConfirmationModal(false);
+    
+    deleteAllocation(selectedRecord.id,tenant)
+    .then(res=>{
+      setShowConfirmationModal(false);
+      location.reload()
+    }).catch((err)=>{
+      console.log(err)
+    })
+    // .then((res)=>{
+    //   console.log(res)
+    // })
   }
 
   return (
