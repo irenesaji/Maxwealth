@@ -13,14 +13,19 @@ export const getUsers = async (page, perPage, tenant) => {
       tenant_id: tenant,
     };
 
+    const params={
+      fields:
+        "id,email,full_name,country_code,mobile,mobile_verified,is_active,is_blocked,is_lead",
+      // limit: perPage,
+      // page: page,
+    }
+    if(page) params.page=page;
+    if(perPage) params.limit=perPage;
+
+
     const response = await axios.get(`${BASE_URL}${ADMIN_USERS}`, {
       headers: headers,
-      params: {
-        fields:
-          "id,email,full_name,country_code,mobile,mobile_verified,is_active,is_blocked,is_lead",
-        limit: perPage,
-        page: page,
-      },
+      params
     });
 
     return response.data;
