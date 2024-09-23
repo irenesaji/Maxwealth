@@ -208,3 +208,9 @@ select.form-control {
 .rdt_TableHeadRow {
   background: #fafafa !important;
 }
+
+
+.folio-multi-selelct .select__value-container--is-multi{
+  overflow-y: auto!important;
+  max-height: 200px!important;
+}
