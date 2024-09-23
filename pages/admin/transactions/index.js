@@ -18,18 +18,18 @@ import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
 import { CSVLink, CSVDownload } from "react-csv";
 import { getUsers } from "@/redux/services/admin/users/users";
 
-const data=[
+const data = [
   {
-    label:'shazad@gmail.com',
-    value:'3'
+    label: 'shazad@gmail.com',
+    value: '3'
   },
   {
-    label:'hemanth@gmail.com',
-    value:'26'
+    label: 'hemanth@gmail.com',
+    value: '26'
   },
   {
-    label:'kumar@gmail.com',
-    value:'114'
+    label: 'kumar@gmail.com',
+    value: '114'
   }
 ]
 export default function Index() {
@@ -51,6 +51,7 @@ export default function Index() {
   const router = useRouter();
   const [TransactionData, setTransactionData] = useState([]);
   const [selectedFolio, setSelectedFolio] = useState("");
+  const [selectedFolioData, setSelectedFolioData] = useState([])
   const [selectedTypes, setSelectedTypes] = useState("");
   const [selectedFromDate, setSelectedFromDate] = useState("");
   const [selectedToDate, setSelectedToDate] = useState("");
@@ -184,7 +185,7 @@ export default function Index() {
         foliosArr.push({
           value: res.transaction_basket_items_folio_number,
           label: `${res.user_email}-${res.transaction_basket_items_folio_number}`,
-          user_id:res.user_id,
+          user_id: res.user_id,
         });
       });
       setFolios(foliosArr);
@@ -196,16 +197,16 @@ export default function Index() {
     }
   };
 
-  const getAllUsers=async()=>{
+  const getAllUsers = async () => {
 
     try {
-      const response = await getUsers(null,null,tenant);
-      if( Array.isArray(response)){
-        const array=response.map((user)=>{
+      const response = await getUsers(null, null, tenant);
+      if (Array.isArray(response)) {
+        const array = response.map((user) => {
           return {
             ...user,
-            label:user.full_name,
-            value:user.id
+            label: user.full_name,
+            value: user.id
           }
         })
         setAllUsers(array);
@@ -253,8 +254,19 @@ export default function Index() {
 
   const handleChangeFolio = (selectedOption) => {
     const values = selectedOption.map((item) => item.value).join(",");
+    console.log(filterFolios, selectedOption, values)
+    setSelectedFolioData(selectedOption);
     setSelectedFolio(values);
   };
+  console.log(selectedFolioData, selectedFolio)
+
+  const handleSelectAll = () => {
+    const values = filterFolios.map((item) => item.value).join(",");
+    console.log(filterFolios, values)
+    setSelectedFolioData(filterFolios.length === selectedFolioData.length ? [] : filterFolios);
+    setSelectedFolio(filterFolios.length === selectedFolioData.length ? '' : values); // Select all options
+  };
+
   const handleChangeTypes = (selectedOption) => {
     const values = selectedOption.map((item) => item.value).join(",");
     setSelectedTypes(values);
@@ -266,13 +278,14 @@ export default function Index() {
     setSelectedToDate(e.target.value);
   };
 
-  const handleFilterFolio=(data)=>{
+  const handleFilterFolio = (data) => {
 
-    const filteredArray=folios?.filter((folio,i)=>{
-      return folio.user_id==data.value
+    const filteredArray = folios?.filter((folio, i) => {
+      return folio.user_id == data.value
     })
 
     setFilterFolios(filteredArray)
+    setSelectedFolioData([])
   }
 
 
@@ -286,11 +299,11 @@ export default function Index() {
           </h2>
 
           <div className="row mb-5" style={{ minHeight: "100px" }}>
-          <div className="col-lg-2">
+            <div className="col-lg-2">
               <Select
                 options={allUsers}
                 onChange={handleFilterFolio}
-              isMulti={false}
+                isMulti={false}
                 className="basic-multi-select"
                 classNamePrefix="select"
                 placeholder="Select User"
@@ -307,14 +320,26 @@ export default function Index() {
                 />
               ) : (
                 filterFolios && (
-                  <Select
-                    options={filterFolios}
-                    onChange={handleChangeFolio}
-                    isMulti
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                    placeholder="Select Folio"
-                  />
+                  <div className="">
+                    {/* {selectedFolioData.length} */}
+
+                    <Select
+                      options={filterFolios}
+                      value={selectedFolioData.length == 0 ? '' : selectedFolioData}
+                      onChange={handleChangeFolio}
+                      isMulti
+                      className="basic-multi-select folio-multi-selelct"
+                      classNamePrefix="select"
+                      placeholder="Select Folio"
+                    />
+                    {filterFolios.length > 0 && (
+                    <div className="d-flex justify-content-end mt-1">
+                      <button onClick={handleSelectAll} className="btn btn-primary p-1" style={{ fontSize: '10px', minHeight: '20px' }}>
+                        {filterFolios.length === selectedFolioData.length ? "Deselect All" : "Select All"}
+                      </button>
+                    </div>
+                    )}
+                  </div>
                 )
               )}
 
@@ -325,7 +350,7 @@ export default function Index() {
               onChange={handleSearch}
             /> */}
             </div>
-            
+
             <div className="col-lg-2">
               <Select
                 options={typesOptions}
