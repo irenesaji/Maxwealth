@@ -5,6 +5,7 @@ import {
   getAumReport,
   getSummaryReport,
 } from "@/redux/services/admin/reports/reports";
+import { getUsers } from "@/redux/services/admin/users/users";
 import { Spinner } from "react-bootstrap";
 import { getSubDomain } from "@/util/common";
 export default function Dashboard() {
@@ -15,7 +16,10 @@ export default function Dashboard() {
   const [isClient, setIsClient] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(0);
   const [tenant, setTenant] = useState("");
-
+  const [totalAum, setTotalAum] = useState(null);
+  const [totalRows, setTotalRows] = useState(null);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
   const summaryOptions = [
     {
       value: "redemption",
@@ -65,14 +69,33 @@ export default function Dashboard() {
     if (tenant) {
       aumFunc();
       summaryFunc();
+      users();
     }
     setIsClient(true);
   }, [tenant]);
+
+  const users = async (currentPage, newPerPage) => {
+    try {
+      const response = await getUsers(
+        currentPage || page,
+        newPerPage || perPage,
+        tenant
+      );
+      console.log(response.total);
+      setTotalRows(response.total);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const summaryFunc = async () => {
     try {
       const response = await getSummaryReport(tenant);
       setSummaryArr(response);
+      console.log(response?.[1]?.[1]);
+      if (response?.[1]?.[0] == "purchase" && response?.[2]?.[0] == "sip") {
+        setTotalAum(response?.[1]?.[1] + response?.[2]?.[1]);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -109,86 +132,174 @@ export default function Dashboard() {
     <>
       <AdminLayout>
         <div className="row" style={{ marginTop: "80px", minHeight: "150px" }}>
-          <div
-            className="col-lg-4"
-            style={{
-              border: "1px solid rgb(235, 234, 242)",
-
-              fontSize: "18px",
-              padding: "15px",
-              borderRadius: "10px",
-            }}
-          >
-            <h4 className="mb-3" style={{ fontSize: "18px" }}>
-              Transactions Summary
-            </h4>
-            {isSubmitting ? (
-              <Spinner
-                as="span"
-                animation="border"
-                role="status"
-                aria-hidden="true"
-                size="sm"
-              />
-            ) : (
-              isClient &&
-              summaryArr.length != "" && (
-                <Select
-                  options={summaryOptions}
-                  onChange={handleSummary}
-                  className="basic-multi-select"
-                  classNamePrefix="select"
-                  placeholder="Select Types"
-                  menuPortalTarget={document.body}
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                />
-              )
-            )}
-
+          <div className="col-lg-3">
             <div
-              className="d-flex align-items-center justify-content-center"
-              style={{ minHeight: "150px" }}
+              className=""
+              style={{
+                padding: "15px",
+                background: "green",
+                color: "white",
+                minHeight: "255px",
+                borderRadius: "10px",
+              }}
             >
-              <h1>{summary && `₹` + summary}</h1>
+              <h4 className="mb-3" style={{ fontSize: "18px" }}>
+                Transactions Summary
+              </h4>
+              {isSubmitting ? (
+                <Spinner
+                  as="span"
+                  animation="border"
+                  role="status"
+                  aria-hidden="true"
+                  size="sm"
+                />
+              ) : (
+                isClient &&
+                summaryArr.length != "" && (
+                  <Select
+                    options={summaryOptions}
+                    onChange={handleSummary}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    placeholder="Select Types"
+                    menuPortalTarget={document.body}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
+                  />
+                )
+              )}
+
+              <div
+                className="d-flex align-items-center justify-content-center"
+                style={{ minHeight: "150px" }}
+              >
+                <h2>
+                  {summary &&
+                    `₹` + new Intl.NumberFormat("en-IN").format(summary)}
+                </h2>
+              </div>
             </div>
           </div>
-          <div
-            className="col-lg-4"
-            style={{
-              border: "1px solid rgb(235, 234, 242)",
-              marginLeft: "40px",
-              padding: "15px",
-              borderRadius: "10px",
-            }}
-          >
-            <h4 className="mb-3" style={{ fontSize: "18px" }}>
-              AUM Summary
-            </h4>
-            {isSubmitting ? (
-              <Spinner
-                as="span"
-                animation="border"
-                role="status"
-                aria-hidden="true"
-                size="sm"
-              />
-            ) : aumArr?.length != "" ? (
-              <Select
-                options={aumOptions}
-                onChange={handleAum}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                placeholder="Select Aum type"
-              />
-            ) : (
-              ""
-            )}
-
+          <div className="col-lg-3">
             <div
-              className="d-flex align-items-center justify-content-center"
-              style={{ minHeight: "150px" }}
+              className="c"
+              style={{
+                padding: "15px",
+                background: "purple",
+                color: "white",
+                minHeight: "255px",
+                borderRadius: "10px",
+              }}
             >
-              <h1>{aum && `₹` + aum}</h1>
+              <h4 className="mb-3" style={{ fontSize: "18px" }}>
+                AUM Summary
+              </h4>
+              {isSubmitting ? (
+                <Spinner
+                  as="span"
+                  animation="border"
+                  role="status"
+                  aria-hidden="true"
+                  size="sm"
+                />
+              ) : aumArr?.length != "" ? (
+                <Select
+                  options={aumOptions}
+                  onChange={handleAum}
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  placeholder="Select Aum type"
+                  menuPortalTarget={document.body}
+                  styles={{
+                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                  }}
+                />
+              ) : (
+                ""
+              )}
+
+              <div
+                className="d-flex align-items-center justify-content-center"
+                style={{ minHeight: "150px" }}
+              >
+                <h2>
+                  {aum && `₹` + new Intl.NumberFormat("en-IN").format(aum)}
+                </h2>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-3">
+            <div
+              style={{
+                padding: "15px",
+                background: "grey",
+                color: "white",
+                minHeight: "255px",
+                borderRadius: "10px",
+              }}
+            >
+              <h4 className="mb-3" style={{ fontSize: "18px" }}>
+                Total Aum Managed
+              </h4>
+
+              <div
+                className="d-flex align-items-center justify-content-center"
+                style={{ minHeight: "180px" }}
+              >
+                {isSubmitting ? (
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    role="status"
+                    aria-hidden="true"
+                    size="sm"
+                  />
+                ) : aumArr?.length != "" ? (
+                  <h2>
+                    {totalAum &&
+                      `₹` + new Intl.NumberFormat("en-IN").format(totalAum)}
+                  </h2>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-3">
+            <div
+              style={{
+                padding: "15px",
+                background: "darkblue",
+                color: "white",
+                minHeight: "255px",
+                borderRadius: "10px",
+              }}
+            >
+              <h4 className="mb-3" style={{ fontSize: "18px" }}>
+                Total Investors
+              </h4>
+
+              <div
+                className="d-flex align-items-center justify-content-center"
+                style={{ minHeight: "180px" }}
+              >
+                {isSubmitting ? (
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    role="status"
+                    aria-hidden="true"
+                    size="sm"
+                  />
+                ) : aumArr?.length != "" ? (
+                  <h2>{new Intl.NumberFormat("en-IN").format(totalRows)}</h2>
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
           </div>
         </div>
