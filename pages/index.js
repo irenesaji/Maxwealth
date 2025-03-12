@@ -96,12 +96,17 @@ export default function Home() {
         >
           <div className={`col-lg-4 ${styles.login_form}`}>
             <p className="text-center">
-              <Image
-                src={tenant === 'elixir' ? '/images/Paisa_Smart.svg' : '/images/maxwealth-logo.png'}
-                width={250}
-                height={80}
-                alt="logo"
-              />
+              {tenant ?
+                <Image
+                  src={tenant === 'elixir' ? '/images/Paisa_Smart.svg' : '/images/maxwealth-logo.png'}
+                  width={250}
+                  height={80}
+                  alt="logo"
+                />
+                :
+                <div style={{ width: '250px', height: '80px' }}>
+                </div>
+              }
             </p>
 
             <p className="error">{error}</p>
@@ -124,7 +129,7 @@ export default function Home() {
                             label=""
                             className="form-control"
 
-                            // placeholder="Enter email"
+                          // placeholder="Enter email"
                           />
                         </div>
                         {errors.phone ? (
@@ -164,7 +169,7 @@ export default function Home() {
                             type="text"
                             label=""
                             className="form-control"
-                            // placeholder="Enter password"
+                          // placeholder="Enter password"
                           />
                         </div>
                         {errors.otp ? (
