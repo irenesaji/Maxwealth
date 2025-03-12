@@ -97,7 +97,7 @@ export default function Home() {
           <div className={`col-lg-4 ${styles.login_form}`}>
             <p className="text-center">
               <Image
-                src="/images/maxwealth-logo.png"
+                src={tenant === 'elixir' ? '/images/Paisa_Smart.svg' : '/images/maxwealth-logo.png'}
                 width={250}
                 height={80}
                 alt="logo"

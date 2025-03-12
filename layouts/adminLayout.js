@@ -1,7 +1,15 @@
 import Navigation from "@/components/navigation";
 import Image from "next/image";
 import Head from "next/head";
+import { useEffect, useState } from "react";
+import { getSubDomain } from "@/util/common";
 export default function AdminLayout({ children }) {
+    const [tenant, setTenant] = useState("");
+
+    useEffect(() => {
+      setTenant(getSubDomain());
+     
+    }, [tenant]);
   return (
     <>
       <Head>
@@ -13,7 +21,10 @@ export default function AdminLayout({ children }) {
       <div className="row mx-0">
         <div className="col-lg-2 navigation">
           <p className="text-center mt-3">
-            <Image src="/images/maxwealth-logo.png" width={150} height={40} />
+            <Image
+              src={tenant === 'elixir' ? '/images/Paisa_Smart_white.svg' : '/images/maxwealth-logo.png'}
+              width={tenant === 'elixir' ? 200 : 150} height={tenant === 'elixir'? 60:40}
+              />
           </p>
           <Navigation></Navigation>
         </div>
