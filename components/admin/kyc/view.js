@@ -16,7 +16,7 @@ export default function View({
 }) {
   return (
     <>
-      <Modal show={show} onHide={onHide}>
+      <Modal show={show} onHide={onHide} size="lg">
         <Modal.Header closeButton>
           {/* <Modal.Title>{fund?.[0]?.scheme_name}</Modal.Title> */}
         </Modal.Header>

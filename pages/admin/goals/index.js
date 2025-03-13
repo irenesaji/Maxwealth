@@ -159,12 +159,12 @@ export default function Index() {
         </h2>
         <div className="row mb-5">
           <div className="col-lg-4">
-            <input
+            {/* <input
               type="text"
               className="form-control"
               placeholder="Search.."
               onChange={handleSearch}
-            />
+            /> */}
           </div>
           {/* <div className="col-lg-8 d-flex justify-content-end">
             <button className="btn btn-primary" onClick={handleShow}>

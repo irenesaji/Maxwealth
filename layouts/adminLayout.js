@@ -20,7 +20,7 @@ export default function AdminLayout({ children }) {
       </Head>
       <div className="row mx-0">
         <div className="col-lg-2 navigation">
-          <p className="text-center mt-3">
+          <div className=" d-flex justify-content-center text-center mt-3">
             {tenant ?
               <Image
                 src={tenant === 'elixir' ? '/images/Paisa_Smart_white.svg' : '/images/maxwealth-logo.png'}
@@ -30,7 +30,7 @@ export default function AdminLayout({ children }) {
               <div style={{ width: '180px', height: '50px' }}>
               </div>
             }
-          </p>
+          </div>
           <Navigation></Navigation>
         </div>
         <div className="col-lg-10 offset-lg-2 pe-5 content-area">

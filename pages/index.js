@@ -95,7 +95,7 @@ export default function Home() {
           style={{ height: "100vh" }}
         >
           <div className={`col-lg-4 ${styles.login_form}`}>
-            <p className="text-center">
+            <div className="d-flex justify-content-center text-center">
               {tenant ?
                 <Image
                   src={tenant === 'elixir' ? '/images/Paisa_Smart.svg' : '/images/maxwealth-logo.png'}
@@ -107,7 +107,7 @@ export default function Home() {
                 <div style={{ width: '250px', height: '80px' }}>
                 </div>
               }
-            </p>
+            </div>
 
             <p className="error">{error}</p>
 

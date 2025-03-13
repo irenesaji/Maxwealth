@@ -42,7 +42,8 @@ export default function View({ show, onHide, fund }) {
                   <img
                     src={fund?.[0]?.scheme_logo}
                     alt={fund?.[0]?.scheme_name}
-                    width={20}
+                    width={60}
+                    className="img-fluid"
                   />
                 ) : (
                   ""
