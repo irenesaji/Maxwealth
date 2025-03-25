@@ -92,10 +92,22 @@ export default function Dashboard() {
     try {
       const response = await getSummaryReport(tenant);
       setSummaryArr(response);
-      console.log(response?.[1]?.[1]);
-      if (response?.[1]?.[0] == "purchase" && response?.[2]?.[0] == "sip") {
-        setTotalAum(response?.[1]?.[1] + response?.[2]?.[1]);
-      }
+      // console.log(response?.[1]?.[1]);
+      // if (response?.[0]?.[0] == "purchase" && response?.[2]?.[0] == "sip") {
+      //   setTotalAum(response?.[0]?.[1] + response?.[2]?.[1]);
+      // }
+      // Dynamically find purchase and sip regardless of position:
+      const purchaseValue = response.find(item => item[0] === "purchase")?.[1] || 0;
+      const sipValue = response.find(item => item[0] === "sip")?.[1] || 0;
+      setTotalAum(purchaseValue + sipValue);
+
+      // if (purchaseEntry && sipEntry) {
+      //   const totalAum = purchaseEntry[1] + sipEntry[1];
+      //   setTotalAum(totalAum);
+      // } else {
+      //   // Optionally, you could reset or handle if not both found:
+      //   setTotalAum(0);
+      // }
     } catch (error) {
       console.log(error);
     }
