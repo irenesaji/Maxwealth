@@ -1,13 +1,10 @@
-import getConfig from "next/config";
 import { setUser } from "../reducers/userReducer";
 import { setUserId, setToken, clearAll, getToken } from "@/util/common";
 import { SIGNIN, CURRENT_USER, GENERATE_OTP } from "@/util/endpoints";
 import axios from "axios";
 
-const { publicRuntimeConfig } = getConfig();
-const BASE_URL = publicRuntimeConfig.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
 
-console.log("inside user service" , publicRuntimeConfig)
 export const getCurrentUser = (tenant) => {
   return async (dispatch) => {
     try {

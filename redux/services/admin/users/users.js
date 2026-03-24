@@ -1,9 +1,7 @@
 import { ADMIN_USERS, ADMIN_USERS_ONBOARDING } from "@/util/endpoints";
-import getConfig from "next/config";
 import axios from "axios";
 import { getToken } from "@/util/common";
-const { publicRuntimeConfig } = getConfig();
-const BASE_URL = publicRuntimeConfig.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
 
 export const getUsers = async (page, perPage, tenant) => {
   try {

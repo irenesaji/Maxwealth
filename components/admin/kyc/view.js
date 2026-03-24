@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import moment from "moment";
-import getConfig from "next/config";
-const { publicRuntimeConfig } = getConfig();
-const BASE_URL = publicRuntimeConfig.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
 
 export default function View({
   show,

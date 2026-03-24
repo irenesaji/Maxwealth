@@ -1,12 +1,10 @@
-import getConfig from "next/config";
 import axios from "axios";
 import { getToken } from "@/util/common";
 import {
   ADMIN_MODEL_PORTFOLIOS_FUNDS,
   ADMIN_MODEL_PORTFOLIOS_FUNDS_NEW,
 } from "@/util/endpoints";
-const { publicRuntimeConfig } = getConfig();
-const BASE_URL = publicRuntimeConfig.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
 
 export const getFunds = async (page, perPage, id, tenant) => {
   try {

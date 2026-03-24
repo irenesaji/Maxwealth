@@ -4,11 +4,9 @@ import {
   ADMIN_RISK_ANSWER_WEIGHTAGE,
   ADMIN_RISK_ANSWER_CHOICES,
 } from "@/util/endpoints";
-import getConfig from "next/config";
 import axios from "axios";
 import { getToken } from "@/util/common";
-const { publicRuntimeConfig } = getConfig();
-const BASE_URL = publicRuntimeConfig.BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
 
 export const getRiskProfiles = async (page, perPage, tenant) => {
   try {
