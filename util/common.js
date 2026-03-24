@@ -1,7 +1,14 @@
 import { USERID, USERTOKEN } from "./constants";
 
 export const getSubDomain = () => {
+  if (typeof window === "undefined") return "";
   const hostname = window.location.hostname;
+  const localHosts = ["localhost", "127.0.0.1", "::1"];
+
+  if (localHosts.includes(hostname)) {
+    return process.env.NEXT_PUBLIC_TENANT_ID || "";
+  }
+
   return hostname.split(".")[0];
 };
 
