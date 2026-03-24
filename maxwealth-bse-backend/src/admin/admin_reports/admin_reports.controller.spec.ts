@@ -1,0 +1,5 @@
+﻿describe('admin_reports.controller.spec', () => {
+  it('should pass', () => {
+    expect(true).toBe(true);
+  });
+});

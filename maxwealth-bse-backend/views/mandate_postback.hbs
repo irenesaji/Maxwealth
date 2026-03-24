@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .container{
+      border:2px solid rgb(172, 167, 167);
+      padding:0.5rem 0rem;
+          padding-bottom: 25px;
+         text-align: center;
+    }
+    .header>.icon-wrapper{
+      
+      text-align: center;
+    }
+    .text-wrapper{
+      text-align: center;
+    }
+    .main-content>.row{
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .main-content{
+      padding:0 2rem
+    }
+
+    .footer>button{
+      width: 50%;
+      background-color: green;
+      color: white;
+      border-radius: 5px;
+      padding: 0.5rem 0rem;
+      border: none;
+      cursor: pointer;
+
+    }
+
+
+    .footer{
+      text-align: center;
+      margin-bottom: 1rem;
+
+    }
+
+    .btn{
+        background-color: #1BBA00;
+        padding: 8px 80px;
+        color: white;
+        text-decoration:none;
+        font-weight:bold;
+        border-radius:5px;
+        cursor:pointer;
+ 
+        text-align: center;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container card">
+    <div class="header">
+      <div class="icon-wrapper">
+    
+      </div>
+      <div class="text-wrapper">
+        <h3>{{ message }}</h3>
+      </div>
+    </div>
+    <div class="main-content">
+      
+      <div class="row">
+        <!-- <div>Mandate has been successfully placed</div> -->
+      </div>
+    </div>
+    <a href="/api/transaction-baskets/success" class="btn">Continue</a>
+  </div>
+  
+</body>
+</html>

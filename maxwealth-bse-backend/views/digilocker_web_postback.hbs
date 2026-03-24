@@ -1,0 +1,31 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <title>Digilocker Redirect</title>
+    <script>
+      function notifyParent() { if (window.opener) {
+      window.opener.postMessage('done', '*'); window.close(); } }
+    </script>
+    <style>
+      body { font-family: Arial, sans-serif; background-color: #f6f6f6; margin:
+      0; padding: 0; } .container { max-width: 500px; margin: 50px auto; border:
+      1px solid #ccc; background: #fff; border-radius: 8px; padding: 20px;
+      text-align: center; } .message { margin: 20px 0; font-size: 1.1rem; color:
+      #333; } .btn { display: inline-block; margin: 10px; background-color:
+      #1bba00; padding: 10px 30px; color: white; text-decoration: none;
+      font-weight: bold; border-radius: 5px; }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <h3>Digilocker Document Redirect</h3>
+
+      <div class='message'>
+        {{message}}
+      </div>
+
+      <a href='https://yourfrontend.com/cams/success' onclick='{()='>{
+        notifyParent() }} class='btn'>Continue</a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    .container{
+      border:2px solid rgb(172, 167, 167);
+      padding:0.5rem 0rem;
+          padding-bottom: 25px;
+         text-align: center;
+    }
+    .header>.icon-wrapper{
+      
+      text-align: center;
+    }
+    .text-wrapper{
+      text-align: center;
+    }
+    .main-content>.row{
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .main-content{
+      padding:0 2rem
+    }
+
+    .footer>button{
+      width: 50%;
+      background-color: green;
+      color: white;
+      border-radius: 5px;
+      padding: 0.5rem 0rem;
+      border: none;
+      cursor: pointer;
+
+    }
+
+
+    .footer{
+      text-align: center;
+      margin-bottom: 1rem;
+
+    }
+
+    .btn{
+        background-color: #1BBA00;
+        padding: 8px 80px;
+        color: white;
+        text-decoration:none;
+        font-weight:bold;
+        border-radius:5px;
+        cursor:pointer;
+ 
+        text-align: center;
+    }
+
+  </style>
+</head>
+<body >
+{{!-- <button id="rzp-button1">Pay</button> --}}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+function redirect_pg(){
+console.log("omieee");
+
+options = {
+
+      "name": "Torus Mutual Fund Aggregator",
+      "redirect": true,
+      "key": "{{rzp_key}}",
+      "order_id": "{{mandate_id}}",
+      "customer_id":  "{{customer_id}}",
+      "recurring": "1",
+      "callback_url":  "{{postback_url}}",
+
+
+      "theme": {
+        "color": "#F37254"
+      }
+    };
+
+var rzp1 = new Razorpay(options);
+
+//document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+   // e.preventDefault();
+//}
+}
+
+redirect_pg();
+</script>
+
+
+ redirecting....
+</body>
+</html>
