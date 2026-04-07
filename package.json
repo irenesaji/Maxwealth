@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "start:dev": "npm --prefix maxwealth-bse-backend run start:dev",
+    "start:dev:backend": "npm --prefix maxwealth-bse-backend run start:dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

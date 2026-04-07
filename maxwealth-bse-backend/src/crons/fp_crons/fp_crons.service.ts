@@ -151,12 +151,14 @@ export class FpCronsService {
     this.mf_base_url = this.configService.get('MF_BASE_URL');
     this.broke_code = this.configService.get('BROK_CD');
     this.filepath = this.configService.get('FILE_PATH');
+    const fallbackKey = Buffer.alloc(32).toString('base64');
+    const fallbackIv = Buffer.alloc(16).toString('base64');
     this.digilocker_aes_key = Buffer.from(
-      process.env.DIGILOCKER_AES_KEY,
+      process.env.DIGILOCKER_AES_KEY || fallbackKey,
       'base64',
     );
     this.digilocker_aes_iv = Buffer.from(
-      process.env.DIGILOCKER_AES_IV,
+      process.env.DIGILOCKER_AES_IV || fallbackIv,
       'base64',
     );
     this.digilocker_public_key = process.env.DIGILOCKER_PUBLIC_KEY;

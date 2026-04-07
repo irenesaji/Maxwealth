@@ -112,30 +112,26 @@ export class AuthService {
         ) {
           user.otp = 1111;
         }
-        if (tenant_id == 'miles') {
-          const send = await this.enablexService.hasEnablexSMS();
-          if (send) {
-            const data = await this.enablexService.findOneSms('enablex');
-            console.log('hi', data.keys_json.from);
-            const info = {
-              var1: `${user.otp}`,
-            };
-            if (generateOtpDto.is_generate) {
-              this.enablexService.sendSMS(
-                generateOtpDto.mobile,
-                data.keys_json.from,
-                data.keys_json.campaign_id.otp,
-                data.keys_json.type,
-                data.keys_json.template_id.otp,
-                info,
-              );
-            }
-          } else {
-            user.otp = 1111;
-            //     // sms.send("64e4b8f7d6fc056dac46c8d2", { 'mobile': "+91" + generateOtpDto.mobile, "otp": user.otp.toString() });
+        const send = await this.enablexService.hasEnablexSMS();
+        if (send) {
+          const data = await this.enablexService.findOneSms('enablex');
+          console.log('hi', data.keys_json.from);
+          const info = {
+            var1: `${user.otp}`,
+          };
+          if (generateOtpDto.is_generate) {
+            this.enablexService.sendSMS(
+              generateOtpDto.mobile,
+              data.keys_json.from,
+              data.keys_json.campaign_id.otp,
+              data.keys_json.type,
+              data.keys_json.template_id.otp,
+              info,
+            );
           }
         } else {
           user.otp = 1111;
+          //     // sms.send("64e4b8f7d6fc056dac46c8d2", { 'mobile': "+91" + generateOtpDto.mobile, "otp": user.otp.toString() });
         }
 
         const otpExpiry = 5 * 60 * 1000;

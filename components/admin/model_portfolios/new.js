@@ -9,31 +9,46 @@ import * as Yup from "yup";
 export default function New({ show, onHide, tenant }) {
   const [error, setError] = useState("");
   const [msg, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const newValues = {
     name: "",
     description: "",
   };
   const Schema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
+    name: Yup.string()
+      .trim()
+      .max(40, "Name must be at most 40 characters")
+      .required("Name is required"),
   });
 
   useEffect(() => {
     setMessage("");
     setError("");
-  });
+  }, [show]);
 
   const handleSubmit = async (values) => {
+    if (!tenant) {
+      setError("Tenant is missing. Please refresh and try again.");
+      return;
+    }
+
     setIsSubmitting(true);
+    setError("");
     try {
-      const response = await createAllocation(values, tenant);
+      await createAllocation(
+        {
+          name: values.name?.trim(),
+          description: values.description?.trim() || null,
+        },
+        tenant
+      );
       setMessage("Allocation created successfully!");
-      setIsSubmitting(false);
       onHide(true);
       location.reload();
     } catch (error) {
+      setError(error?.message || "Failed to create allocation");
+    } finally {
       setIsSubmitting(false);
-      setError(error.response);
     }
   };
 

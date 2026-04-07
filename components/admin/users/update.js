@@ -126,7 +126,7 @@ export default function Update({ show, onHide, id, user, tenant }) {
                       aria-hidden="true"
                     />
                   ) : (
-                    "Update"
+                    "Modify"
                   )}
                 </button>
                 <p style={{ color: "red" }}>{error}</p>

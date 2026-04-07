@@ -13,7 +13,7 @@ export const getUsers = async (page, perPage, tenant) => {
 
     const params={
       fields:
-        "id,email,full_name,country_code,mobile,mobile_verified,is_active,is_blocked,is_lead",
+        "id,email,full_name,country_code,mobile,mobile_verified,is_active,is_blocked,is_lead,user_code,referral_code",
       // limit: perPage,
       // page: page,
     }
@@ -44,12 +44,30 @@ export const getSearchResults = async (value, page, perPage, tenant) => {
       headers: headers,
       params: {
         fields:
-          "id,email,full_name,country_code,mobile,mobile_verified,is_active,is_blocked",
+          "id,email,full_name,country_code,mobile,mobile_verified,is_active,is_blocked,is_lead,user_code,referral_code",
         limit: perPage,
         page: page,
         s: `{"$or":[{"full_name": {"$contL": "${value}"} }, {"email": {"$contL": "${value}"} } , {"mobile": {"$contL": "${value}"} } ]  }`,
       },
     });
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const createUser = async (data, tenant) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+      tenant_id: tenant,
+    };
+
+    const response = await axios.post(`${BASE_URL}${ADMIN_USERS}`, data, {
+      headers: headers,
+    });
+
     return response.data;
   } catch (error) {
     throw error.response;
@@ -72,6 +90,24 @@ export const updateUser = async (id, data, tenant) => {
         headers: headers,
       }
     );
+
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
+export const deleteUser = async (id, tenant) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${getToken()}`,
+      "Content-Type": "application/json",
+      tenant_id: tenant,
+    };
+
+    const response = await axios.delete(`${BASE_URL}${ADMIN_USERS}/${id}`, {
+      headers: headers,
+    });
 
     return response.data;
   } catch (error) {

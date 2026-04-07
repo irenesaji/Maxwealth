@@ -5,5 +5,12 @@
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
-  }
+  },
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/../src/$1",
+    "^file_feature$": "<rootDir>/../file_feature.ts",
+    "^multer.config$": "<rootDir>/../multer.config.ts",
+    "^typeOrmCon.config$": "<rootDir>/../typeOrmCon.config.ts"
+  },
+  "moduleDirectories": ["node_modules", "<rootDir>", "<rootDir>/.."]
 }

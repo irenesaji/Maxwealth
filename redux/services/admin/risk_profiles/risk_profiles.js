@@ -6,7 +6,27 @@ import {
 } from "@/util/endpoints";
 import axios from "axios";
 import { getToken } from "@/util/common";
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
+const BASE_URL =
+  (process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3021").replace(
+    /\/+$/,
+    ""
+  );
+const API_TIMEOUT_MS = 15000;
+
+const mapApiError = (error) => {
+  const status = error?.response?.status;
+  const message =
+    error?.response?.data?.message ||
+    error?.response?.data?.error ||
+    error?.message ||
+    "Request failed";
+
+  return {
+    status,
+    message,
+    raw: error?.response?.data,
+  };
+};
 
 export const getRiskProfiles = async (page, perPage, tenant) => {
   try {
@@ -43,12 +63,12 @@ export const createRiskProfile = async (data, tenant) => {
     const response = await axios.post(
       `${BASE_URL}${ADMIN_RISK_PROFILES}`,
       data,
-      { headers: headers }
+      { headers: headers, timeout: API_TIMEOUT_MS }
     );
 
     return response.data;
   } catch (error) {
-    throw error.response;
+    throw mapApiError(error);
   }
 };
 

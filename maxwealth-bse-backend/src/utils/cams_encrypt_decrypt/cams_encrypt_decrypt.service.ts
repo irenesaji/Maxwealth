@@ -31,12 +31,15 @@ export class CamsEncryptDecryptService {
     private readonly configService: ConfigService,
     private readonly usersOnboardingRepository: UserOnboardingDetailsRepository,
   ) {
+    const fallbackKey = Buffer.alloc(32).toString('base64');
+    const fallbackIv = Buffer.alloc(16).toString('base64');
+
     this.digilocker_aes_key = Buffer.from(
-      configService.get<string>('DIGILOCKER_AES_KEY'),
+      configService.get<string>('DIGILOCKER_AES_KEY') || fallbackKey,
       'base64',
     );
     this.digilocker_aes_iv = Buffer.from(
-      configService.get<string>('DIGILOCKER_AES_IV'),
+      configService.get<string>('DIGILOCKER_AES_IV') || fallbackIv,
       'base64',
     );
     this.digilocker_public_key = configService.get('DIGILOCKER_PUBLIC_KEY');

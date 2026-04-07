@@ -63,7 +63,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     setTenant(getSubDomain());
-  }, [tenant]);
+  }, []);
 
   useEffect(() => {
     if (tenant) {

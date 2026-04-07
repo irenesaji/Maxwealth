@@ -16,7 +16,7 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import UpdateModal from "@/components/admin/users/update";
-import NewModal from "@/components/admin/users/new";
+import NewModal from "@/components/admin/manage_team/new";
 import View from "@/components/admin/kyc/view";
 import {
   getKYCAddress,
@@ -28,6 +28,7 @@ import {
 import { getSubDomain } from "@/util/common";
 import { CSVLink } from "react-csv";
 import { Spinner, Dropdown } from "react-bootstrap";
+
 export default function Index() {
   const userStore = useSelector((state) => state.user);
   const [user, setUser] = useState(null);
@@ -43,12 +44,6 @@ export default function Index() {
   const [selectedUser, setSelectedUser] = useState([]);
   const [showKyc, setShowKyc] = useState(false);
   const [csvData, setCSVData] = useState([]);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const handleCloseNew = () => setShowNew(false);
-  const handleShowNew = () => setShowNew(true);
-  const handleCloseKyc = () => setShowKyc(false);
-  const handleShowKyc = () => setShowKyc(true);
   const [onboarding, setOnboarding] = useState([]);
   const [address, setAddress] = useState([]);
   const [bank, setBank] = useState([]);
@@ -56,8 +51,13 @@ export default function Index() {
   const [nominee, setNominee] = useState([]);
   const [tenant, setTenant] = useState("");
   const [loadingCSV, setLoadingCSV] = useState(false);
-  const subBrokers = (allUsers || []).filter((item) => item.is_lead === true);
-  const investorsData = (allUsers || []).filter((item) => item.is_lead !== true);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const handleCloseNew = () => setShowNew(false);
+  const handleShowNew = () => setShowNew(true);
+  const handleCloseKyc = () => setShowKyc(false);
+  const handleShowKyc = () => setShowKyc(true);
 
   const columns = [
     {
@@ -77,18 +77,6 @@ export default function Index() {
       selector: (row) => row.mobile,
       sortable: true,
     },
-    {
-      name: "Subbroker",
-      selector: (row) => {
-        const assigned = subBrokers.find(
-          (subbroker) => subbroker.user_code === row.referral_code
-        );
-        return <span>{assigned ? assigned.full_name : "-"}</span>;
-      },
-      sortable: false,
-      width: "180px",
-    },
-
     {
       name: "is_active",
       selector: (row) => <span>{row.is_active ? "Yes" : "No"}</span>,
@@ -143,11 +131,9 @@ export default function Index() {
     try {
       const response = await getUsers(1, 1000000, tenant);
 
-      let csvData = [];
-      response?.data
-        ?.filter((data) => data?.is_lead !== true)
-        .map((data) => {
-        csvData.push({
+      const rows = [];
+      response?.data?.map((data) => {
+        rows.push({
           full_name: data?.full_name,
           email: data?.email,
           mobile: data?.mobile,
@@ -157,7 +143,7 @@ export default function Index() {
         });
       });
 
-      setCSVData(csvData);
+      setCSVData(rows);
       setLoadingCSV(false);
     } catch (error) {
       setLoadingCSV(false);
@@ -236,13 +222,13 @@ export default function Index() {
     }
   }, [tenant]);
 
-  const handlePageChange = (page) => {
-    users(page);
+  const handlePageChange = (newPage) => {
+    users(newPage);
   };
 
-  const handlePerRowsChange = async (newPerPage, page) => {
+  const handlePerRowsChange = async (newPerPage, newPage) => {
     setLoading(true);
-    users(page, newPerPage);
+    users(newPage, newPerPage);
     setPerPage(newPerPage);
     setLoading(false);
   };
@@ -262,31 +248,31 @@ export default function Index() {
     }
   };
 
-  const handleView = (id) => {
-    setId(id);
-    onboardingFunc(id);
-    addressFunc(id);
-    bankFunc(id);
-    proofsFunc(id);
-    nomineeFunc(id);
+  const handleView = (selectedId) => {
+    setId(selectedId);
+    onboardingFunc(selectedId);
+    addressFunc(selectedId);
+    bankFunc(selectedId);
+    proofsFunc(selectedId);
+    nomineeFunc(selectedId);
     handleShowKyc();
   };
 
-  const handleUpdate = (id) => {
+  const handleUpdate = (selectedId) => {
     handleShow();
-    const selectedUser = allUsers.filter((user) => {
-      return user.id === id;
+    const selectedUserRows = allUsers.filter((row) => {
+      return row.id === selectedId;
     });
-    setId(id);
-    setSelectedUser(selectedUser);
+    setId(selectedId);
+    setSelectedUser(selectedUserRows);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (selectedId) => {
     const confirmed = window.confirm("Are you sure you want to delete this user?");
     if (!confirmed) return;
 
     try {
-      await deleteUser(id, tenant);
+      await deleteUser(selectedId, tenant);
       users(page, perPage);
     } catch (error) {
       console.log(error);
@@ -298,7 +284,7 @@ export default function Index() {
     <>
       <AdminLayout>
         <h2 className="mt-5 mb-5">
-          <strong>Investors</strong>
+          <strong>Manage Team</strong>
         </h2>
         <div className="row mb-5">
           <div className="col-lg-4">
@@ -313,7 +299,7 @@ export default function Index() {
             <div className="d-flex justify-content-end">
               <button className="btn btn-primary btn-sm me-2" onClick={handleShowNew}>
                 <FontAwesomeIcon icon={faPlus} width={12} />
-                &nbsp;Add Investor
+                &nbsp;Add Staff
               </button>
 
               <button
@@ -342,7 +328,7 @@ export default function Index() {
               <CSVLink
                 data={csvData ? csvData : []}
                 headers={headers}
-                filename="users.csv"
+                filename="manage-team.csv"
                 style={{
                   marginLeft: 10,
                   display: csvData.length > 0 ? "inline" : "none",
@@ -356,7 +342,7 @@ export default function Index() {
         {domLoaded && allUsers && (
           <DataTable
             columns={columns}
-            data={investorsData}
+            data={allUsers}
             progressPending={loading}
             pagination
             paginationServer
@@ -384,12 +370,7 @@ export default function Index() {
           tenant={tenant}
         />
 
-        <NewModal
-          show={showNew}
-          onHide={handleCloseNew}
-          tenant={tenant}
-          subBrokers={subBrokers}
-        />
+        <NewModal show={showNew} onHide={handleCloseNew} tenant={tenant} />
       </AdminLayout>
     </>
   );

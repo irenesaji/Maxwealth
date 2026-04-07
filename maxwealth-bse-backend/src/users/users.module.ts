@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from 'src/auth/auth.module';
 import { NotificationsModule } from 'src/utils/notifications/notifications.module';
 
 import { Users } from './entities/users.entity';

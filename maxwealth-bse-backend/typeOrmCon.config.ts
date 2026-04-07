@@ -10,9 +10,12 @@ config();
 
 const configService = new ConfigService();
 
-const tenant_list_string = configService.get('TENANTS_LIST');
+const tenant_list_string = configService.get('TENANTS_LIST') || 'maxwealth';
 
-const tenants_array = tenant_list_string.split(",");
+const tenants_array = tenant_list_string
+  .split(',')
+  .map((tenant) => tenant.trim())
+  .filter((tenant) => tenant.length > 0);
 
 
 var completeConfigs = {};
@@ -29,10 +32,11 @@ for(let tenant of tenants_array){
   
   configuration = {
     "type": "mysql",
-    "host": configService.get('MILES_MYSQL_HOST'),
-    "port": configService.get('MILES_MYSQL_PORT'),
-    "username": configService.get('MILES_MYSQL_USER'),
-    "password": configService.get('MILES_MYSQL_PASSWORD'),
+    "connectorPackage": "mysql2",
+    "host": configService.get('MILES_MYSQL_HOST') || '127.0.0.1',
+    "port": Number(configService.get('MILES_MYSQL_PORT') || 3306),
+    "username": configService.get('MILES_MYSQL_USER') || 'root',
+    "password": configService.get('MILES_MYSQL_PASSWORD') || '',
     "database": tenant,
     "entities": [
       "dist/**/*.entity{.ts,.js}"
@@ -52,10 +56,11 @@ for(let tenant of tenants_array){
 }else{
   configuration = {
     "type": "mysql",
-    "host": configService.get('MYSQL_HOST'),
-    "port": configService.get('MYSQL_PORT'),
-    "username": configService.get('MYSQL_USER'),
-    "password": configService.get('MYSQL_PASSWORD'),
+    "connectorPackage": "mysql2",
+    "host": configService.get('MYSQL_HOST') || '127.0.0.1',
+    "port": Number(configService.get('MYSQL_PORT') || 3306),
+    "username": configService.get('MYSQL_USER') || 'root',
+    "password": configService.get('MYSQL_PASSWORD') || '',
     "database": tenant,
     "entities": [
       "dist/**/*.entity{.ts,.js}"

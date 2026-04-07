@@ -64,8 +64,10 @@ export default function Index() {
       name: "",
       selector: (row) => (
         <>
-        <a
-          href="javascript:void(0);"
+        <button
+          type="button"
+          className="btn btn-link p-0"
+          aria-label={`View allocation ${row.id}`}
           onClick={() => {
             handleView(row.id);
           }}
@@ -75,10 +77,11 @@ export default function Index() {
             width={12}
             style={{ cursor: "pointer" }}
           />
-        </a>
-        <a
-          className="ms-2"
-          href="javascript:void(0);"
+        </button>
+        <button
+          type="button"
+          className="btn btn-link p-0 ms-2"
+          aria-label={`Delete allocation ${row.id}`}
           onClick={() => {
             handleDelete(row)
           }}
@@ -88,7 +91,7 @@ export default function Index() {
             width={10}
             style={{ cursor: "pointer" }}
           />
-        </a>
+        </button>
         </>
         
 
@@ -149,14 +152,17 @@ export default function Index() {
   useEffect(() => {
     setDomLoaded(true);
     setUser(userStore);
-  }, [user]);
+  }, [userStore]);
 
   useEffect(() => {
     setTenant(getSubDomain());
+  }, []);
+
+  useEffect(() => {
     if (tenant) {
       allocations();
     }
-  }, [tenant]);
+  }, [tenant, page, perPage]);
 
   const handlePageChange = (page) => {
     allocations(page);

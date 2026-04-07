@@ -14,7 +14,30 @@ async function bootstrap() {
   // const ipBlockService = app.get(IpBlockService);
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
-  app.enableCors();
+  const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000,http://127.0.0.1:3000')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  app.enableCors({
+    origin: (origin, callback) => {
+      // Allow server-to-server and CLI requests that do not send Origin.
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      if (corsOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`Origin ${origin} is not allowed by CORS`), false);
+    },
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'tenant_id'],
+    credentials: true,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       // whitelist: true,

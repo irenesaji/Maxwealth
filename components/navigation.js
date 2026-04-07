@@ -29,6 +29,7 @@ import {
   ADMIN_REDEMPTIONS,
   ADMIN_PURCHASE,
   ADMIN_DASHBOARD,
+  ADMIN_MANAGE_TEAM,
   ADMIN_REPORTS,
   ADMIN_REPORTS_CAPITAL_GAINS,
   ADMIN_REPORTS_SCHEME_WISE,
@@ -77,7 +78,16 @@ export default function Navigation() {
           className="d-flex align-items-center"
         >
           <FontAwesomeIcon icon={faUser} width={12} />
-          &nbsp;Users
+          &nbsp;Investors
+        </ListGroup.Item>
+        <ListGroup.Item
+          action
+          href={ADMIN_MANAGE_TEAM}
+          active={router.pathname === ADMIN_MANAGE_TEAM}
+          className="d-flex align-items-center"
+        >
+          <FontAwesomeIcon icon={faUser} width={12} />
+          &nbsp;Manage Team
         </ListGroup.Item>
         <ListGroup.Item
           action

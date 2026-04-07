@@ -56,7 +56,6 @@ import { BseSwitchOrderRepository } from 'src/repositories/bsev1_switch_order.re
 import { BsePurchaseRedemOrderRepository } from 'src/repositories/bsev1_purchase_order.repository';
 import { UniqueReferenceNoRepository } from 'src/repositories/unique_reference_no.repository';
 import { ModelPortfolioRepository } from 'src/repositories/model_portfolio.repository';
-import { ModelPortfolioModule } from 'src/model_portfolio/model_portfolio.module';
 
 @Module({
   imports: [

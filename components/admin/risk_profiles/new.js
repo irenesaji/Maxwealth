@@ -68,19 +68,38 @@ export default function New({ show, onHide, tenant, portfolios }) {
   useEffect(() => {
     setMessage("");
     setError("");
-  }, []);
+  }, [show]);
 
   const handleSubmit = async (values) => {
+    if (!tenant) {
+      setError("Tenant is missing. Please refresh and try again.");
+      return;
+    }
+
     setIsSubmitting(true);
+    setError("");
     try {
-      const response = await createRiskProfile(values, tenant);
+      const payload = {
+        ...values,
+        low: Number(values.low),
+        high: Number(values.high),
+        min_equity_allocation: Number(values.min_equity_allocation),
+        max_equity_allocation: Number(values.max_equity_allocation),
+        min_debt_allocation: Number(values.min_debt_allocation),
+        max_debt_allocation: Number(values.max_debt_allocation),
+        min_liquid_allocation: Number(values.min_liquid_allocation),
+        max_liquid_allocation: Number(values.max_liquid_allocation),
+        model_portfolio_id: Number(values.model_portfolio_id),
+      };
+
+      await createRiskProfile(payload, tenant);
       setMessage("Risk Profile created successfully!");
       setIsSubmitting(false);
       onHide(true);
       location.reload();
     } catch (error) {
       setIsSubmitting(false);
-      setError(error.response);
+      setError(error?.message || "Failed to create risk profile");
     }
   };
 
