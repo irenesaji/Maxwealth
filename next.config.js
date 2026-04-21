@@ -10,7 +10,7 @@ const resolveBaseUrl = () => {
     return "https://api.maxwealth.money";
   }
 
-  return "";
+  return "https://api.maxwealth.money";
 };
 
 const nextConfig = {
