@@ -14,7 +14,7 @@ async function bootstrap() {
   // const ipBlockService = app.get(IpBlockService);
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
-  const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000,http://127.0.0.1:3000')
+  const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001')
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean);
@@ -122,6 +122,8 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  await app.listen(3021);
+  const port = process.env.PORT || 5000;
+  await app.listen(port);
+  console.log(`Backend API listening on port ${port}`);
 }
 bootstrap();
