@@ -9,7 +9,14 @@ export const getSubDomain = () => {
     return process.env.NEXT_PUBLIC_TENANT_ID || "";
   }
 
-  return hostname.split(".")[0];
+  // For Vercel deployments and other hosting platforms, use environment variable
+  if (hostname.includes("vercel.app")) {
+    return process.env.NEXT_PUBLIC_TENANT_ID || "maxwealth";
+  }
+
+  // For custom domains, extract subdomain
+  const parts = hostname.split(".");
+  return parts[0];
 };
 
 export const getToken = () => {
