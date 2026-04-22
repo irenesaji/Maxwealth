@@ -15,20 +15,30 @@ export class TenantCheckMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     let connection: boolean;
 
-    // console.log('Request...',req.headers);
+    // Skip tenant check for certain routes
+    const skipTenantRoutes = ['/api/auth', '/uploads', '/health', '/api/v1/ai', '/html-cleaner'];
+    const shouldSkip = skipTenantRoutes.some(route => req.originalUrl.includes(route));
+    
+    if (shouldSkip) {
+      console.log('Skipping tenant check for route:', req.originalUrl);
+      next();
+      return;
+    }
+
     let tenant_id: string = req.headers.tenant_id
       ? req.headers.tenant_id.toString()
-      : null;
+      : 'maxwealth'; // Default to maxwealth if not provided
+    
     console.log('req.url', req.originalUrl);
+    console.log('tenant_id from headers:', tenant_id);
 
     if (req.originalUrl.includes('postback')) {
       const tenant_url_array = req.originalUrl.split('/');
-
       tenant_id = tenant_url_array[tenant_url_array.length - 1].split('?')[0];
       console.log('GOT tenant from params', tenant_id);
     }
 
-    if (!tenant_id && tenant_id != '' && !req.originalUrl.includes('uploads')) {
+    if (!tenant_id) {
       throw new HttpException(
         {
           status: HttpStatus.FORBIDDEN,
@@ -37,28 +47,30 @@ export class TenantCheckMiddleware implements NestMiddleware {
         403,
       );
     }
+    
     connection = false;
 
+    console.log('Available configurations:', ormconfig['configurations'].map(c => c.database));
     for (const datasource of ormconfig['configurations']) {
-      // console.log("datasource ss",datasource);
+      console.log('Checking datasource:', datasource.database, 'against:', tenant_id);
       if (datasource.database == tenant_id) {
         connection = true;
-
-        // connection = new DataSource(datasource);
         break;
       }
     }
 
-    if (!connection && !req.originalUrl.includes('uploads')) {
+    if (!connection) {
+      console.error(`Tenant "${tenant_id}" not found in configurations`);
       throw new HttpException(
         {
           status: HttpStatus.FORBIDDEN,
-          error: 'No Tenant ' + tenant_id + ' Configured',
+          error: `No Tenant ${tenant_id} Configured`,
         },
         403,
       );
     }
 
+    console.log(`Tenant "${tenant_id}" validated successfully`);
     next();
   }
 }
