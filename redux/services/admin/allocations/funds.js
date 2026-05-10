@@ -1,10 +1,10 @@
 import axios from "axios";
-import { getToken } from "@/util/common";
+import { getToken, getApiBaseUrl } from "@/util/common";
 import {
   ADMIN_MODEL_PORTFOLIOS_FUNDS,
   ADMIN_MODEL_PORTFOLIOS_FUNDS_NEW,
 } from "@/util/endpoints";
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
+const BASE_URL = getApiBaseUrl();
 
 export const getFunds = async (page, perPage, id, tenant) => {
   try {

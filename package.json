@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "start:dev": "npm --prefix maxwealth-bse-backend run start:dev",
-    "start:dev:backend": "npm --prefix maxwealth-bse-backend run start:dev",
+    "dev": "node scripts/dev.js",
+    "dev:frontend": "next dev",
+    "dev:backend": "npm --prefix maxwealth-bse-backend run start:dev",
+    "start:dev": "npm run dev:backend",
+    "start:dev:backend": "npm run dev:backend",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

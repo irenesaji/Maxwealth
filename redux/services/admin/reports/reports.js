@@ -7,8 +7,8 @@ import {
   ADMIN_REPORTS_SCHEME_WISE,
 } from "@/util/endpoints";
 import axios from "axios";
-import { getToken } from "@/util/common";
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
+import { getToken, getApiBaseUrl } from "@/util/common";
+const BASE_URL = getApiBaseUrl();
 
 
 export const getAumReport = async (tenant) => {

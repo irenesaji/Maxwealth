@@ -1,5 +1,25 @@
 import { USERID, USERTOKEN } from "./constants";
 
+export const getApiBaseUrl = () => {
+  const configuredBaseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "").trim().replace(/\/+$/, "");
+
+  if (typeof window === "undefined") {
+    return configuredBaseUrl || "http://localhost:5000";
+  }
+
+  const hostname = window.location.hostname;
+  const isLocalHostname = ["localhost", "127.0.0.1", "::1"].includes(hostname);
+  const isLocalConfigured =
+    !configuredBaseUrl ||
+    /:\/\/(localhost|127\.0\.0\.1|::1)(:\d+)?$/.test(configuredBaseUrl);
+
+  if (isLocalConfigured && !isLocalHostname) {
+    return `${window.location.protocol}//${hostname}:5000`;
+  }
+
+  return configuredBaseUrl || "http://localhost:5000";
+};
+
 export const getSubDomain = () => {
   if (typeof window === "undefined") return "";
   const hostname = window.location.hostname;

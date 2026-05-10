@@ -1,7 +1,7 @@
 import { ADMIN_GOALS } from "@/util/endpoints";
 import axios from "axios";
-import { getToken } from "@/util/common";
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
+import { getToken, getApiBaseUrl } from "@/util/common";
+const BASE_URL = getApiBaseUrl();
 
 export const getGoals = async (page, perPage, tenant) => {
   try {

@@ -6,8 +6,8 @@ import {
   ADMIN_KYC_PROOFS,
 } from "@/util/endpoints";
 import axios from "axios";
-import { getToken } from "@/util/common";
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
+import { getToken, getApiBaseUrl } from "@/util/common";
+const BASE_URL = getApiBaseUrl();
 
 export const getKYCOnboarding = async (user_id, tenant) => {
   try {

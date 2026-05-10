@@ -5,12 +5,8 @@ import {
   ADMIN_RISK_ANSWER_CHOICES,
 } from "@/util/endpoints";
 import axios from "axios";
-import { getToken } from "@/util/common";
-const BASE_URL =
-  (process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3021").replace(
-    /\/+$/,
-    ""
-  );
+import { getToken, getApiBaseUrl } from "@/util/common";
+const BASE_URL = getApiBaseUrl();
 const API_TIMEOUT_MS = 15000;
 
 const mapApiError = (error) => {

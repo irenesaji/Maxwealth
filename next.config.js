@@ -2,8 +2,8 @@
 const resolveBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_BASE_URL) return process.env.NEXT_PUBLIC_BASE_URL;
 
-  if (process.env.REACT_APP_ENVIRONMENT === "development") {
-    return "https://api.maxwealth.money";
+  if (process.env.NODE_ENV === "development") {
+    return "http://localhost:5000";
   }
 
   if (process.env.REACT_APP_ENVIRONMENT === "staging") {

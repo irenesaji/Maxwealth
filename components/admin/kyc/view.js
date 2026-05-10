@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import moment from "moment";
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "";
+import { getApiBaseUrl } from "@/util/common";
+const BASE_URL = getApiBaseUrl();
 
 export default function View({
   show,

@@ -1,10 +1,9 @@
 import { setUser } from "../reducers/userReducer";
-import { setUserId, setToken, clearAll, getToken } from "@/util/common";
+import { setUserId, setToken, clearAll, getToken, getApiBaseUrl } from "@/util/common";
 import { SIGNIN, CURRENT_USER, GENERATE_OTP } from "@/util/endpoints";
 import axios from "axios";
 
-const RAW_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL?.trim();
-const BASE_URL = (RAW_BASE_URL || "http://localhost:3021").replace(/\/+$/, "");
+const BASE_URL = getApiBaseUrl();
 const API_TIMEOUT_MS = 15000;
 
 const resolveApiError = (error, fallbackMessage) => {
