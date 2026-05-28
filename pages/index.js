@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
 import styles from "@/styles/Home.module.css";
 import { Field, Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -141,12 +140,11 @@ export default function Home() {
         >
           <div className={`col-lg-4 ${styles.login_form}`}>
             <div className="d-flex justify-content-center text-center">
-              <Image
+              <img
                 src={logoSrc}
                 width={250}
                 height={80}
                 alt="Max Wealth logo"
-                priority
               />
             </div>
 
@@ -172,7 +170,7 @@ export default function Home() {
                             inputMode="numeric"
                             pattern="[0-9]*"
                             maxLength={10}
-                            onInput={(e) => {
+                            onChange={(e) => {
                               const value = (e.target.value || "")
                                 .replace(/\D/g, "")
                                 .slice(0, 10);
@@ -220,7 +218,7 @@ export default function Home() {
                             inputMode="numeric"
                             pattern="[0-9]*"
                             maxLength={6}
-                            onInput={(e) => {
+                            onChange={(e) => {
                               const value = (e.target.value || "")
                                 .replace(/\D/g, "")
                                 .slice(0, 6);

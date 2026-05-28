@@ -42,9 +42,10 @@ export const getCurrentUser = (tenant) => {
 
 export const generateOTPService = async (phone, tenant) => {
   try {
+    const effectiveTenant = tenant || process.env.NEXT_PUBLIC_TENANT_ID || "maxwealth";
     const headers = {
       "Content-Type": "application/json",
-      tenant_id: tenant,
+      tenant_id: effectiveTenant,
     };
     const response = await axios.post(
       `${BASE_URL}${GENERATE_OTP}`,
